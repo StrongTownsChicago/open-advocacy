@@ -11,6 +11,7 @@ from app.models.pydantic.models import ProjectBase, EntityStatusRecord, EntitySt
 
 WARD_OPT_IN_INFO = {
     1:  {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
+    3:  {"type": "not_eligible", "block_limits": False, "homeowner_req": False, "admin_adj": False, "notes": "not eligible (no SFH zoning to opt-in)"},
     4:  {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
     6:  {"type": "full", "notes": "Whole ward (including the part currently in the pilot)", "block_limits": True, "homeowner_req": True, "admin_adj": True},
     12: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
