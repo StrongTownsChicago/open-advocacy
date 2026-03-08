@@ -19,8 +19,9 @@
     "noUnusedLocals": false,         
     "noUnusedParameters": false,   
     "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": false,      
-    
+    "strictNullChecks": false,
+    "types": ["vitest/globals"],
+
     /* Paths */
     "baseUrl": ".",
     "paths": {
