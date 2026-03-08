@@ -50,3 +50,71 @@ class TestCreateStatusRecordValidation:
         )
         with pytest.raises(ValueError, match="Entity not found"):
             await self.service.create_status_record(record)
+
+
+class TestCreateStatusRecordUpsert:
+    """Tests for the upsert behavior in create_status_record."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from app.services.status_service import StatusService
+
+        self.status_records_provider = MockDatabaseProvider()
+        self.projects_provider = MockDatabaseProvider()
+        self.entities_provider = MockDatabaseProvider()
+        self.service = StatusService(
+            status_records_provider=self.status_records_provider,
+            projects_provider=self.projects_provider,
+            entities_provider=self.entities_provider,
+        )
+
+    async def test_creates_new_when_no_existing(self):
+        """When no existing record for entity+project, a new record should be created."""
+        project = make_project()
+        self.projects_provider.seed(project)
+        entity = make_entity()
+        self.entities_provider.seed(entity)
+
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.NEUTRAL,
+        )
+        result = await self.service.create_status_record(record)
+
+        assert result.entity_id == entity.id
+        assert result.project_id == project.id
+        assert result.status == EntityStatus.NEUTRAL
+
+        # Verify it was stored
+        all_records = await self.status_records_provider.list()
+        assert len(all_records) == 1
+
+    async def test_updates_existing_when_entity_project_match(self):
+        """When a record for the same entity+project exists, it should be updated."""
+        project = make_project()
+        self.projects_provider.seed(project)
+        entity = make_entity()
+        self.entities_provider.seed(entity)
+
+        # Create the initial record
+        original_record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.UNKNOWN,
+        )
+        await self.service.create_status_record(original_record)
+
+        # Create a new record with the same entity+project but different status
+        updated_record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+        )
+        result = await self.service.create_status_record(updated_record)
+
+        assert result.status == EntityStatus.SOLID_APPROVAL
+
+        # Verify no duplicate was created - still only one record
+        all_records = await self.status_records_provider.list()
+        assert len(all_records) == 1

@@ -10,7 +10,12 @@ from app.models.pydantic.models import (
     ProjectStatus,
 )
 from app.services.project_service import ProjectService
-from tests.factories import make_group, make_jurisdiction, make_project, make_status_record
+from tests.factories import (
+    make_group,
+    make_jurisdiction,
+    make_project,
+    make_status_record,
+)
 from tests.mock_provider import MockDatabaseProvider
 
 

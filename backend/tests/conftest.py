@@ -6,6 +6,8 @@ from tests.mock_provider import MockDatabaseProvider
 from app.services.project_service import ProjectService
 from app.services.status_service import StatusService
 from app.services.user_service import UserService
+from app.services.entity_service import EntityService
+from app.services.district_service import DistrictService
 
 
 @pytest.fixture
@@ -38,4 +40,22 @@ def user_service() -> UserService:
     return UserService(
         users_provider=MockDatabaseProvider(),
         groups_provider=MockDatabaseProvider(),
+    )
+
+
+@pytest.fixture
+def entity_service() -> EntityService:
+    return EntityService(
+        entities_provider=MockDatabaseProvider(),
+        jurisdictions_provider=MockDatabaseProvider(),
+        districts_provider=MockDatabaseProvider(),
+        geo_provider=None,
+    )
+
+
+@pytest.fixture
+def district_service() -> DistrictService:
+    return DistrictService(
+        districts_provider=MockDatabaseProvider(),
+        jurisdictions_provider=MockDatabaseProvider(),
     )

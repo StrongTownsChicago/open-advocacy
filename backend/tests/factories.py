@@ -102,6 +102,22 @@ def make_status_record(
     )
 
 
+def make_district(
+    id: UUID | None = None,
+    name: str = "Test District",
+    code: str | None = None,
+    jurisdiction_id: UUID | None = None,
+):
+    from app.models.pydantic.models import District
+
+    return District(
+        id=id or uuid4(),
+        name=name,
+        code=code,
+        jurisdiction_id=jurisdiction_id or uuid4(),
+    )
+
+
 def make_user(
     id: UUID | None = None,
     email: str = "test@example.com",
