@@ -121,6 +121,29 @@ Key variables (set in `.env` for local dev, Railway for production):
 - `VITE_APPLICATION_NAME` — (Frontend) App display name (default: `Strong Towns Chicago Advocacy Tracker`)
 - `VITE_APPLICATION_DESCRIPTION` — (Frontend) App tagline
 
+## After Making Changes
+
+Always run these checks before considering work complete. All must pass with zero errors.
+
+### Backend (from `backend/`)
+
+```bash
+poetry run ruff check .                   # Lint — no warnings allowed
+poetry run ruff format --check .          # Format — reformat if needed with `ruff format .`
+poetry run mypy .                         # Type check — no `# type: ignore` comments
+poetry run pytest                         # Unit tests — all must pass
+```
+
+### Frontend (from `frontend/`)
+
+```bash
+npm run lint                              # ESLint — no warnings allowed
+npm run type-check                        # TypeScript strict mode — no `@ts-ignore`
+npm test                                  # Unit tests — all must pass
+```
+
+Run backend and frontend checks independently. Fix any failures before moving on. Do not suppress errors with ignore comments — fix the actual types.
+
 ### Adding a New Import Location
 
 1. Create `backend/app/imports/locations/<location>.py` with location config and import steps
