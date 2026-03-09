@@ -14,8 +14,8 @@ router = APIRouter()
 async def list_projects(
     skip: int = 0,
     limit: int = 100,
-    status: ProjectStatus = None,
-    group_id: UUID = None,
+    status: ProjectStatus | None = None,
+    group_id: UUID | None = None,
     project_service: ProjectService = Depends(get_project_service),
 ):
     """List projects with optional filtering."""

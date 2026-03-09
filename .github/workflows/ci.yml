@@ -28,6 +28,12 @@ jobs:
           restore-keys: poetry-${{ runner.os }}-
       - name: Install dependencies
         run: poetry install --with dev --no-root
+      - name: Ruff check
+        run: poetry run ruff check .
+      - name: Ruff format check
+        run: poetry run ruff format --check .
+      - name: Mypy
+        run: poetry run mypy .
       - name: Run tests
         run: poetry run pytest tests/ -v --cov=app --cov-report=term-missing
         env:
@@ -49,6 +55,10 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run type-check
       - name: Run tests
         run: npm test
       - name: Build

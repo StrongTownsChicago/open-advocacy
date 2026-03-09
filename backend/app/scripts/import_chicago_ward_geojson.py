@@ -9,7 +9,7 @@ from app.geo.provider_factory import get_geo_provider
 
 
 async def import_chicago_wards(
-    file_path: str = "app/data/chicago-wards.geojson", jurisdiction_id: UUID = None
+    file_path: str = "app/data/chicago-wards.geojson", jurisdiction_id: UUID | None = None
 ):
     """
     Import Chicago wards from a GeoJSON file into District model
@@ -79,6 +79,8 @@ async def import_chicago_wards(
         else:
             print(f"Creating new ward: {ward_name}")
             # Create new district for ward
+            if jurisdiction_id is None:
+                raise ValueError("jurisdiction_id is required to create districts")
             new_district = DistrictBase(
                 name=ward_name,
                 code=str(ward_num),

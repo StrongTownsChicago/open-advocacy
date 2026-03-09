@@ -13,7 +13,7 @@ class JurisdictionImporter(DataImporter):
         self.jurisdiction_service = jurisdiction_service
 
     async def import_data(
-        self, name: str, description: str, level: str, id: UUID | None = None, **kwargs
+        self, name: str = "", description: str = "", level: str = "", id: UUID | None = None, **kwargs: Any
     ) -> dict[str, Any]:
         """Import a jurisdiction."""
         jurisdiction = JurisdictionBase(name=name, description=description, level=level)
@@ -43,7 +43,7 @@ class JurisdictionImporter(DataImporter):
         result = await self.jurisdiction_service.create_jurisdiction(jurisdiction)
         return {"operation": "created", "jurisdiction": result}
 
-    async def validate_import(self, **kwargs) -> bool:
+    async def validate_import(self, **kwargs: Any) -> bool:
         """Validate jurisdiction data."""
         required = ["name", "description", "level"]
         return all(field in kwargs for field in required)

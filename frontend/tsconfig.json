@@ -14,12 +14,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* I relaxed type checking to get things building */
-    "strict": false,                 // TODO: Re-enable these at some point
-    "noUnusedLocals": false,         
-    "noUnusedParameters": false,   
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "types": ["vitest/globals"],
 
     /* Paths */

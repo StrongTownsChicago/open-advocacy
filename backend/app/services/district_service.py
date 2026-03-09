@@ -18,7 +18,7 @@ class DistrictService:
         return await self.districts_provider.get(district_id)
 
     async def list_districts(
-        self, jurisdiction_id: UUID = None, skip: int = 0, limit: int = 100
+        self, jurisdiction_id: UUID | None = None, skip: int = 0, limit: int = 100
     ) -> list[District]:
         """List districts, optionally filtered by jurisdiction."""
         if jurisdiction_id:

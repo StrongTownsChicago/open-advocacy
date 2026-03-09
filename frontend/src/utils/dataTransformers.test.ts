@@ -39,7 +39,7 @@ describe('transformProjectFromApi', () => {
     expect(result.title).toBe('Test Project');
     expect(result.status).toBe(ProjectStatus.ACTIVE);
     expect(result.preferred_status).toBe(EntityStatus.SOLID_APPROVAL);
-    expect(result.status_distribution.total).toBe(21);
+    expect(result.status_distribution!.total).toBe(21);
   });
 
   it('provides default values for missing optional fields', () => {

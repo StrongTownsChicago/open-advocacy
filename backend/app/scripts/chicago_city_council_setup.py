@@ -7,10 +7,10 @@ import uuid
 import aiohttp
 import random
 from datetime import datetime, timezone
+from typing import Any
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession,async_sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from app.core.config import settings
 
@@ -86,7 +86,7 @@ async def init_db(create_tables: bool = False, drop_existing: bool = False) -> t
                 logger.info("Created all necessary tables")
 
         # Create session factory
-        async_session = sessionmaker(
+        async_session = async_sessionmaker(
             engine, class_=AsyncSession, expire_on_commit=False
         )
         logger.info("Session factory created")
@@ -176,7 +176,7 @@ async def create_aldermen_entities(
     try:
         entities = []
         # Track districts we've created
-        district_map = {}
+        district_map: dict[str, Any] = {}
 
         for alderman in aldermen_data:
             # Extract name

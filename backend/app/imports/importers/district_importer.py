@@ -42,14 +42,14 @@ class DistrictImporter(DataImporter):
 
     async def import_data(
         self,
-        jurisdiction_name: str,
-        data: list[dict[str, Any]] | dict[str, Any] = None,
-        geojson_data: dict[str, Any] = None,
+        jurisdiction_name: str = "",
+        data: list[dict[str, Any]] | dict[str, Any] | None = None,
+        geojson_data: dict[str, Any] | None = None,
         name_format: str = "District {code}",
         code_field: str = "district_number",
-        district_name_property: str = None,
+        district_name_property: str | None = None,
         district_name_prefix: str = "",
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Import districts from data source, with optional boundary data.
@@ -73,7 +73,7 @@ class DistrictImporter(DataImporter):
         created_count = 0
         updated_count = 0
         error_count = 0
-        districts = []
+        districts: list[Any] = []
 
         # Check if data is actually GeoJSON
         if isinstance(data, dict) and data.get("type") == "FeatureCollection":
@@ -81,7 +81,7 @@ class DistrictImporter(DataImporter):
             data = None
 
         # Handle tabular data import
-        if data:
+        if data and isinstance(data, list):
             await self._import_from_tabular_data(
                 data=data,
                 jurisdiction_id=jurisdiction_id,
@@ -156,18 +156,11 @@ class DistrictImporter(DataImporter):
                 existing_district = existing_by_code.get(code)
 
                 # Create district object
-                district_data = {
-                    "name": name,
-                    "code": code,
-                    "jurisdiction_id": jurisdiction_id,
-                }
-
-                # Add any additional fields if provided
-                for field in ["description"]:
-                    if field in item:
-                        district_data[field] = item[field]
-
-                district_create = DistrictBase(**district_data)
+                district_create = DistrictBase(
+                    name=name,
+                    code=code,
+                    jurisdiction_id=jurisdiction_id,
+                )
 
                 if existing_district:
                     # Update existing district
@@ -289,7 +282,7 @@ class DistrictImporter(DataImporter):
                 logger.error(f"Error processing district feature: {str(e)}")
                 error_count += 1
 
-    async def validate_import(self, **kwargs) -> bool:
+    async def validate_import(self, **kwargs: Any) -> bool:
         """Validate district import parameters."""
         if "jurisdiction_name" not in kwargs:
             logger.error(f"Jurisdiction name not in kwargs: {kwargs}")

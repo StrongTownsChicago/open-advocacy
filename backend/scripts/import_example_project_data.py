@@ -6,7 +6,7 @@ from app.services.service_factory import (
     get_cached_group_service,
     get_cached_project_service,
 )
-from app.models.pydantic.models import ProjectBase
+from app.models.pydantic.models import ProjectBase, ProjectStatus, EntityStatus
 
 # Configure logging
 logging.basicConfig(
@@ -174,10 +174,10 @@ async def import_projects():
                     ProjectBase(
                         title=project_data["title"],
                         description=project_data["description"],
-                        status="active",
+                        status=ProjectStatus.ACTIVE,
                         active=True,
                         link=project_data.get("link"),
-                        preferred_status="solid_approval",
+                        preferred_status=EntityStatus.SOLID_APPROVAL,
                         template_response=project_data.get("template_response"),
                         jurisdiction_id=chicago_jurisdiction.id,
                         group_id=group.id,
@@ -198,10 +198,10 @@ async def import_projects():
                     ProjectBase(
                         title=project_data["title"],
                         description=project_data["description"],
-                        status="active",
+                        status=ProjectStatus.ACTIVE,
                         active=True,
                         link=project_data.get("link"),
-                        preferred_status="solid_approval",
+                        preferred_status=EntityStatus.SOLID_APPROVAL,
                         template_response=project_data.get("template_response"),
                         jurisdiction_id=il_house_jurisdiction.id,
                         group_id=group.id,
@@ -222,10 +222,10 @@ async def import_projects():
                     ProjectBase(
                         title=project_data["title"],
                         description=project_data["description"],
-                        status="active",
+                        status=ProjectStatus.ACTIVE,
                         active=True,
                         link=project_data.get("link"),
-                        preferred_status="solid_approval",
+                        preferred_status=EntityStatus.SOLID_APPROVAL,
                         template_response=project_data.get("template_response"),
                         jurisdiction_id=il_senate_jurisdiction.id,
                         group_id=group.id,

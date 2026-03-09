@@ -6,8 +6,7 @@ import sys
 from datetime import datetime, timezone
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
@@ -99,7 +98,7 @@ async def init_db(drop_existing: bool = False) -> tuple:
             logger.info("Created all necessary tables")
 
         # Create session factory
-        async_session = sessionmaker(
+        async_session = async_sessionmaker(
             engine, class_=AsyncSession, expire_on_commit=False
         )
         logger.info("Session factory created")
@@ -459,7 +458,7 @@ async def seed_database() -> None:
         # Initialize database
         if args.data_only:
             engine = create_async_engine(settings.DATABASE_URL, echo=False)
-            async_session = sessionmaker(
+            async_session = async_sessionmaker(
                 engine, class_=AsyncSession, expire_on_commit=False
             )
             logger.info("Using existing database tables")

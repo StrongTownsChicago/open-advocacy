@@ -21,7 +21,7 @@ async def import_boundary(file_path: str, jurisdiction_id: UUID):
         return False
 
     # Store in database
-    success = await geo_provider.store_jurisdiction_boundary(
+    success = await geo_provider.store_district_boundary(
         jurisdiction_id, geojson_data
     )
 

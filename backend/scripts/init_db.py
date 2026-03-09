@@ -1,7 +1,6 @@
 import asyncio
 import logging
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy import text
 
 from app.core.config import settings
@@ -47,7 +46,7 @@ async def init_db(create_tables: bool = True, drop_existing: bool = False):
                 logger.info("PostGIS extension initialized")
 
         # Create session factory
-        async_session = sessionmaker(
+        async_session = async_sessionmaker(
             engine, class_=AsyncSession, expire_on_commit=False
         )
         logger.info("Session factory created")

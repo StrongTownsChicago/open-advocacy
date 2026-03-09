@@ -1,11 +1,12 @@
-from typing import Type, TypeVar, List, Any, Optional
+from typing import Callable, Type, TypeVar, List, Any, Optional
 from uuid import UUID
 from sqlalchemy import select, func
+from pydantic import BaseModel
 
 from app.db.base import DatabaseProvider
 from app.models.orm.models import Base
 
-T = TypeVar("T")  # Pydantic model type
+T = TypeVar("T", bound=BaseModel)  # Pydantic model type
 ModelType = TypeVar("ModelType", bound=Base)  # SQLAlchemy model type
 
 
@@ -18,7 +19,7 @@ class SQLProvider(DatabaseProvider[T, UUID]):
         self,
         pydantic_model: Type[T],
         orm_model: Type[ModelType],
-        session_factory: callable,
+        session_factory: Callable[..., Any],
     ):
         self.pydantic_model = pydantic_model
         self.orm_model = orm_model
@@ -123,7 +124,7 @@ class SQLProvider(DatabaseProvider[T, UUID]):
             orm_models = result.scalars().all()
             return [self._to_pydantic(item) for item in orm_models]
 
-    async def filter_multiple(self, filters: dict, in_filters: dict = None) -> List[T]:
+    async def filter_multiple(self, filters: dict[str, Any], in_filters: dict[str, List[Any]] | None = None) -> List[T]:
         """
         Filter items by multiple conditions including IN clauses.
 

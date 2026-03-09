@@ -28,7 +28,7 @@ interface RepresentativeItemProps {
   entity: Entity;
   statusRecord?: EntityStatusRecord;
   project: Project;
-  getStatusLabel?: (status: string) => string;
+  getStatusLabel?: (status: EntityStatus) => string;
 }
 
 const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
@@ -191,7 +191,7 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
 interface UserEntityProjectSectionProps {
   project: Project;
   statusRecords: EntityStatusRecord[];
-  getStatusLabel?: (status: string) => string;
+  getStatusLabel?: (status: EntityStatus) => string;
   representativeTitle?: string;
 }
 

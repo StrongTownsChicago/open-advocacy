@@ -19,8 +19,8 @@ class StatusService:
         self, project_id: UUID | None = None, entity_id: UUID | None = None
     ) -> list[EntityStatusRecord]:
         """List status records with optional filtering."""
-        filters = {}
-        in_filters = {}
+        filters: dict[str, object] = {}
+        in_filters: dict[str, list[object]] = {}
 
         if project_id:
             filters["project_id"] = project_id
@@ -66,6 +66,8 @@ class StatusService:
                 updated_record = await self.status_records_provider.update(
                     record.id, status_record
                 )
+                if updated_record is None:
+                    raise ValueError("Failed to update existing status record")
                 return updated_record
 
         return await self.status_records_provider.create(status_record)

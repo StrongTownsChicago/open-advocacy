@@ -1,11 +1,12 @@
 from typing import Type, TypeVar, Any
+from uuid import UUID
+from pydantic import BaseModel
 
 from app.db.base import DatabaseProvider
 from app.db.sql import SQLProvider
 from app.db.session import get_session_factory
 
-T = TypeVar("T")
-ID = TypeVar("ID")
+T = TypeVar("T", bound=BaseModel)
 
 
 class ProviderFactory:
@@ -15,7 +16,7 @@ class ProviderFactory:
     def get_provider(
         pydantic_model: Type[T],
         orm_model: Type[Any],
-    ) -> DatabaseProvider[T, ID]:
+    ) -> DatabaseProvider[T, UUID]:
         """Get the appropriate SQL database provider."""
 
         # Get the correct session factory based on configured database type

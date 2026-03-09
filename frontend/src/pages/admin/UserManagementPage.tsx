@@ -218,7 +218,7 @@ const UserManagement: React.FC = () => {
                         <Button
                           variant="outlined"
                           size="small"
-                          onClick={() => openPasswordDialog(userItem.id, userItem.name)}
+                          onClick={() => openPasswordDialog(userItem.id, userItem.name ?? '')}
                         >
                           Change Password
                         </Button>

@@ -7,7 +7,7 @@ from app.services.service_factory import (
     get_cached_group_service,
     get_cached_status_service,
 )
-from app.models.pydantic.models import ProjectBase, EntityStatusRecord, EntityStatus
+from app.models.pydantic.models import ProjectBase, EntityStatusRecord, EntityStatus, ProjectStatus
 
 WARD_OPT_IN_INFO = {
     1: {
@@ -226,7 +226,7 @@ async def import_adu_project_data():
         ProjectBase(
             title=PROJECT_TITLE,
             description=PROJECT_DESCRIPTION,
-            status="active",
+            status=ProjectStatus.ACTIVE,
             active=True,
             link=PROJECT_LINK,
             preferred_status=EntityStatus.SOLID_APPROVAL,
@@ -254,9 +254,9 @@ async def import_adu_project_data():
             except Exception:
                 pass
 
-        info = WARD_OPT_IN_INFO.get(ward_number)
-        notes = None
-        status = None
+        info = WARD_OPT_IN_INFO.get(ward_number) if ward_number is not None else None
+        notes: str | None = None
+        status: EntityStatus = EntityStatus.UNKNOWN
         if info:
             if info["type"] == "not_eligible":
                 status = EntityStatus.NEUTRAL
@@ -265,7 +265,7 @@ async def import_adu_project_data():
             elif info["type"] == "partial":
                 status = EntityStatus.LEANING_APPROVAL
             if "notes" in info:
-                notes = info["notes"]
+                notes = str(info["notes"])
                 restriction_notes = format_restriction_notes(info)
                 if restriction_notes:
                     notes = f"{notes}. Restrictions: {restriction_notes}"

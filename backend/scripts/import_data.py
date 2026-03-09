@@ -21,7 +21,7 @@ logger = logging.getLogger("import-data")
 
 
 async def import_data(
-    location_key: str, steps_to_run: List[str] = None, **kwargs
+    location_key: str, steps_to_run: List[str] | None = None, **kwargs
 ) -> dict[str, Any]:
     """Import data for a specific location."""
     logger.info(f"Importing data for location: {location_key}")

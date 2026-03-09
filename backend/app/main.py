@@ -27,7 +27,7 @@ app = FastAPI(
 )
 
 if settings.ALLOWED_ORIGIN:
-    origins = settings.ALLOWED_ORIGIN
+    origins: list[str] = [settings.ALLOWED_ORIGIN]
 else:
     origins = [
         "http://localhost:3000",

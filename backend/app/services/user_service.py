@@ -61,7 +61,10 @@ class UserService:
 
     async def update_user_role(self, user_id: UUID, new_role: UserRole) -> User:
         """Update a user's role."""
-        return await self.users_provider.update(user_id, {"role": new_role})
+        updated_user = await self.users_provider.update(user_id, {"role": new_role})
+        if updated_user is None:
+            raise ValueError("User not found")
+        return updated_user
 
     async def update_user_password(self, user_id: UUID, new_password: str) -> bool:
         """Update a user's password."""

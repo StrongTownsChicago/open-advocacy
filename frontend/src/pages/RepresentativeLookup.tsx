@@ -78,7 +78,10 @@ const RepresentativeLookup: React.FC = () => {
       const foundDistricts = [];
 
       for (let i = 0; i < reps.length; i++) {
-        foundDistricts.push(reps[i].district_name);
+        const districtName = reps[i].district_name;
+        if (districtName) {
+          foundDistricts.push(districtName);
+        }
       }
 
       setRepresentatives(reps);
@@ -107,7 +110,7 @@ const RepresentativeLookup: React.FC = () => {
     clearUserRepresentatives();
   };
 
-  const handleCloseToast = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseToast = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

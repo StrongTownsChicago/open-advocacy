@@ -48,7 +48,7 @@ interface EntityListProps {
   project: Project;
   statusRecords: EntityStatusRecord[];
   onStatusUpdated: () => void;
-  getStatusLabel?: (status: string) => string;
+  getStatusLabel?: (status: EntityStatus) => string;
 }
 
 const EntityRow = ({
@@ -62,7 +62,7 @@ const EntityRow = ({
   project: Project;
   statusRecord?: EntityStatusRecord;
   onStatusUpdated: () => void;
-  getStatusLabel?: (status: string) => string;
+  getStatusLabel?: (status: EntityStatus) => string;
 }) => {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<EntityStatus>(statusRecord?.status || EntityStatus.UNKNOWN);
@@ -174,7 +174,7 @@ const EntityRow = ({
             <Chip
               size="small"
               sx={{
-                bgcolor: getStatusColor(statusRecord?.status),
+                bgcolor: getStatusColor(statusRecord?.status ?? EntityStatus.UNKNOWN),
                 width: 10,
                 height: 10,
                 borderRadius: '50%',
@@ -192,10 +192,10 @@ const EntityRow = ({
 
         <TableCell align="right">
           <Chip
-            label={getStatusLabel(statusRecord?.status)}
+            label={getStatusLabel(statusRecord?.status ?? EntityStatus.UNKNOWN)}
             size="small"
             sx={{
-              bgcolor: getStatusColor(statusRecord?.status),
+              bgcolor: getStatusColor(statusRecord?.status ?? EntityStatus.UNKNOWN),
               color: '#fff',
               fontWeight: 500,
             }}
@@ -454,10 +454,12 @@ const EntityList: React.FC<EntityListProps> = ({
   // Sort entities based on orderBy and order
   const sortedEntities = useMemo(() => {
     const comparator = (a: Entity, b: Entity, orderBy: keyof Entity) => {
-      if (b[orderBy] < a[orderBy]) {
+      const aVal = a[orderBy] ?? '';
+      const bVal = b[orderBy] ?? '';
+      if (bVal < aVal) {
         return order === 'desc' ? -1 : 1;
       }
-      if (b[orderBy] > a[orderBy]) {
+      if (bVal > aVal) {
         return order === 'desc' ? 1 : -1;
       }
       return 0;

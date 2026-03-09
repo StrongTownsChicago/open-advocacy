@@ -36,13 +36,13 @@ class EntityImporter(DataImporter):
 
     async def import_data(
         self,
-        data: list[dict[str, Any]] | dict[str, list[dict[str, Any]]],
-        jurisdiction_name: str,
-        entity_type: str,
-        title: str,
-        mapping: dict[str, str | list[str]],
-        data_key: str = None,
-        **kwargs,
+        data: list[dict[str, Any]] | dict[str, list[dict[str, Any]]] | None = None,
+        jurisdiction_name: str = "",
+        entity_type: str = "",
+        title: str = "",
+        mapping: dict[str, str | list[str]] | None = None,
+        data_key: str | None = None,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Import entities from data source.
@@ -58,17 +58,24 @@ class EntityImporter(DataImporter):
         Returns:
             Dict with import results
         """
+        if data is None:
+            raise ValueError("data is required")
+        if mapping is None:
+            raise ValueError("mapping is required")
+
         # Lookup jurisdiction ID from name
         jurisdiction_id = await self._get_jurisdiction_id(jurisdiction_name)
 
         # Handle data that might be nested under a key
-        actual_data = data
+        actual_data: list[dict[str, Any]] = []
         if data_key:
             if not isinstance(data, dict) or data_key not in data:
                 raise ValueError(
                     f"Invalid data format: expected dict with key '{data_key}'"
                 )
             actual_data = data[data_key]
+        elif isinstance(data, list):
+            actual_data = data
 
         # Track results
         created_count = 0
@@ -209,7 +216,7 @@ class EntityImporter(DataImporter):
         # Handle simple field
         return data.get(field_spec)
 
-    async def validate_import(self, **kwargs) -> bool:
+    async def validate_import(self, **kwargs: Any) -> bool:
         """Validate entity import parameters."""
         required = ["jurisdiction_name", "entity_type", "title", "mapping"]
         if "data_key" in kwargs:

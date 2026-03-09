@@ -37,9 +37,8 @@ pythonpath = ["."]
 explicit_package_bases = true
 mypy_path = "."
 ignore_missing_imports = true
-no_implicit_optional = false
-check_untyped_defs = false
-disable_error_code = ["override", "valid-type", "return-value", "arg-type", "assignment", "var-annotated", "union-attr", "attr-defined", "index", "misc", "call-overload", "operator", "name-defined"]
+no_implicit_optional = true
+check_untyped_defs = true
 
 [dependency-groups]
 dev = [

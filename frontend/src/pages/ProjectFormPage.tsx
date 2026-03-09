@@ -3,7 +3,7 @@ import { Container, Typography, Box, Button, CircularProgress } from '@mui/mater
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ProjectForm from '../components/Project/ProjectForm';
-import { Project } from '../types';
+import { Project, ProjectCreateData } from '../types';
 import { projectService } from '../services/projects';
 
 const ProjectFormPage: React.FC = () => {
@@ -32,7 +32,7 @@ const ProjectFormPage: React.FC = () => {
     }
   }, [id, isEditing]);
 
-  const handleSubmit = async (formData: Project) => {
+  const handleSubmit = async (formData: ProjectCreateData) => {
     try {
       let response;
 

@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
 api.interceptors.request.use(config => {
   // Force HTTPS for all requests
-  if (config.url.startsWith('http://')) {
+  if (config.url && config.url.startsWith('http://')) {
     config.url = config.url.replace('http://', 'https://');
   }
   return config;

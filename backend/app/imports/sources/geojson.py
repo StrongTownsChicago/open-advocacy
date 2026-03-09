@@ -1,4 +1,4 @@
-from typing import Any
+from typing import IO, Any
 import json
 import os
 import aiohttp
@@ -11,7 +11,7 @@ from app.imports.base import DataSource
 logger = logging.getLogger(__name__)
 
 
-class GeoJSONDataSource(DataSource):
+class GeoJSONDataSource(DataSource[dict[str, Any]]):
     """Data source for GeoJSON district boundaries."""
 
     def __init__(
@@ -34,7 +34,7 @@ class GeoJSONDataSource(DataSource):
         self.file_path = file_path
         self.url = url
         self.stream_threshold = stream_threshold
-        self._temp_file = None
+        self._temp_file: IO[bytes] | None = None
 
     async def fetch_data(self) -> dict[str, Any]:
         """Read GeoJSON data from file or URL."""
@@ -45,6 +45,7 @@ class GeoJSONDataSource(DataSource):
 
     async def _read_local_file(self) -> dict[str, Any]:
         """Read GeoJSON data from local file."""
+        assert self.file_path is not None
         try:
             # Ensure path is absolute or properly resolved
             resolved_path = Path(self.file_path).resolve()
@@ -81,6 +82,7 @@ class GeoJSONDataSource(DataSource):
 
     async def _download_from_url(self) -> dict[str, Any]:
         """Download GeoJSON data from URL."""
+        assert self.url is not None
         logger.info(f"Downloading GeoJSON from URL: {self.url}")
         async with aiohttp.ClientSession() as session:
             # First check the content length to decide if we need to stream
@@ -120,6 +122,7 @@ class GeoJSONDataSource(DataSource):
 
     async def _stream_download(self, session: aiohttp.ClientSession) -> dict[str, Any]:
         """Stream download large GeoJSON files to avoid memory issues."""
+        assert self.url is not None
         # Create a temporary file
         self._temp_file = NamedTemporaryFile(delete=False, suffix=".geojson")
         temp_path = self._temp_file.name

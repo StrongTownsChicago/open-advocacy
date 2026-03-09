@@ -3,11 +3,10 @@ import logging
 from datetime import datetime
 import os
 import sys
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
-from typing import Any, List, Tuple
+from typing import Any, Sequence, Tuple
 
 logging.basicConfig(
     level=logging.INFO,
@@ -57,7 +56,7 @@ async def init_db() -> Tuple[Any, Any]:
             logger.info("Created all tables")
 
         # Create session factory
-        async_session = sessionmaker(
+        async_session = async_sessionmaker(
             engine, class_=AsyncSession, expire_on_commit=False
         )
         logger.info("Session factory created")
@@ -70,7 +69,7 @@ async def init_db() -> Tuple[Any, Any]:
 
 async def create_and_retrieve_jurisdictions(
     session: AsyncSession,
-) -> List[Jurisdiction]:
+) -> Sequence[Jurisdiction]:
     """Create jurisdictions and verify they can be retrieved."""
     logger.info("=== TESTING JURISDICTIONS ===")
 
@@ -123,8 +122,8 @@ async def create_and_retrieve_jurisdictions(
 
 
 async def create_and_retrieve_projects(
-    session: AsyncSession, jurisdictions: List[Jurisdiction]
-) -> List[Project]:
+    session: AsyncSession, jurisdictions: Sequence[Jurisdiction]
+) -> Sequence[Project]:
     """Create projects with a direct jurisdiction reference and verify they can be retrieved."""
     logger.info("=== TESTING PROJECTS ===")
 
@@ -181,10 +180,10 @@ async def create_and_retrieve_projects(
 
         # Test project-jurisdiction relationship
         for project in retrieved_projects:
-            result = await session.execute(
+            jur_result = await session.execute(
                 select(Jurisdiction).where(Jurisdiction.id == project.jurisdiction_id)
             )
-            jurisdiction = result.scalar_one_or_none()
+            jurisdiction = jur_result.scalar_one_or_none()
 
             if jurisdiction:
                 logger.info(
@@ -207,8 +206,8 @@ async def create_and_retrieve_projects(
 
 
 async def create_and_retrieve_entities(
-    session: AsyncSession, jurisdictions: List[Jurisdiction]
-) -> List[Entity]:
+    session: AsyncSession, jurisdictions: Sequence[Jurisdiction]
+) -> Sequence[Entity]:
     """Create entities and verify they can be retrieved."""
     logger.info("=== TESTING ENTITIES ===")
 
@@ -264,10 +263,10 @@ async def create_and_retrieve_entities(
         entity1 = retrieved_entities[0]
 
         # Get jurisdiction
-        result = await session.execute(
+        ent_jur_result = await session.execute(
             select(Jurisdiction).where(Jurisdiction.id == entity1.jurisdiction_id)
         )
-        jurisdiction = result.scalar_one_or_none()
+        jurisdiction = ent_jur_result.scalar_one_or_none()
 
         if jurisdiction:
             logger.info(
@@ -288,8 +287,8 @@ async def create_and_retrieve_entities(
 
 
 async def create_and_retrieve_groups(
-    session: AsyncSession, projects: List[Project]
-) -> List[Group]:
+    session: AsyncSession, projects: Sequence[Project]
+) -> Sequence[Group]:
     """Create groups and verify they can be retrieved."""
     logger.info("=== TESTING GROUPS ===")
 
@@ -334,30 +333,30 @@ async def create_and_retrieve_groups(
         for g in retrieved_groups:
             logger.info(f"Group: id={g.id}, name={g.name}")
 
-        # Test relationship with project
+        # Test relationship with project - find projects belonging to the first group
         group1 = retrieved_groups[0]
 
-        # Get project
-        result = await session.execute(
-            select(Project).where(Project.id == group1.project_id)
+        # Get projects for this group
+        group_proj_result = await session.execute(
+            select(Project).where(Project.group_id == group1.id)
         )
-        project = result.scalar_one_or_none()
+        group_project = group_proj_result.scalar_one_or_none()
 
-        if project:
-            logger.info(f"Group '{group1.name}' belongs to project '{project.title}'")
+        if group_project:
+            logger.info(f"Group '{group1.name}' has project '{group_project.title}'")
         else:
             logger.warning(f"Could not find project for group '{group1.name}'")
 
-        # Test bidirectional relationship - get groups for a project
+        # Test bidirectional relationship - get projects for a group via project's group_id
         project1 = projects[0]
-        result = await session.execute(
-            select(Group).where(Group.project_id == project1.id)
+        proj_group_result = await session.execute(
+            select(Project).where(Project.group_id == project1.group_id)
         )
-        project_groups = result.scalars().all()
+        project_group_projects = proj_group_result.scalars().all()
 
-        logger.info(f"Project '{project1.title}' has {len(project_groups)} groups")
-        for g in project_groups:
-            logger.info(f"  - {g.name}")
+        logger.info(f"Project '{project1.title}' group has {len(project_group_projects)} projects")
+        for p in project_group_projects:
+            logger.info(f"  - {p.title}")
 
         return retrieved_groups
     except SQLAlchemyError as e:
@@ -371,8 +370,8 @@ async def create_and_retrieve_groups(
 
 
 async def create_and_retrieve_status_records(
-    session: AsyncSession, entities: List[Entity], projects: List[Project]
-) -> List[EntityStatusRecord]:
+    session: AsyncSession, entities: Sequence[Entity], projects: Sequence[Project]
+) -> Sequence[EntityStatusRecord]:
     """Create entity status records and verify they can be retrieved."""
     logger.info("=== TESTING ENTITY STATUS RECORDS ===")
 
@@ -429,42 +428,42 @@ async def create_and_retrieve_status_records(
         record1 = retrieved_records[0]
 
         # Get entity
-        result = await session.execute(
+        ent_result = await session.execute(
             select(Entity).where(Entity.id == record1.entity_id)
         )
-        entity = result.scalar_one_or_none()
+        record_entity = ent_result.scalar_one_or_none()
 
         # Get project
-        result = await session.execute(
+        proj_result = await session.execute(
             select(Project).where(Project.id == record1.project_id)
         )
-        project = result.scalar_one_or_none()
+        record_project = proj_result.scalar_one_or_none()
 
-        if entity and project:
+        if record_entity and record_project:
             logger.info(
-                f"Status record shows entity '{entity.name}' has status '{record1.status}' for project '{project.title}'"
+                f"Status record shows entity '{record_entity.name}' has status '{record1.status}' for project '{record_project.title}'"
             )
         else:
             logger.warning("Could not find entity or project for status record")
 
         # Test filtering by project
-        result = await session.execute(
+        filter_result = await session.execute(
             select(EntityStatusRecord).where(
                 EntityStatusRecord.project_id == projects[0].id
             )
         )
-        project_records = result.scalars().all()
+        project_records = filter_result.scalars().all()
 
         logger.info(
             f"Project '{projects[0].title}' has {len(project_records)} status records"
         )
         for sr in project_records:
             # Get entity name for better logging
-            entity_result = await session.execute(
+            sr_ent_result = await session.execute(
                 select(Entity).where(Entity.id == sr.entity_id)
             )
-            entity = entity_result.scalar_one_or_none()
-            entity_name = entity.name if entity else "Unknown"
+            sr_entity = sr_ent_result.scalar_one_or_none()
+            entity_name = sr_entity.name if sr_entity else "Unknown"
 
             logger.info(f"  - {entity_name}: {sr.status}")
 
@@ -480,7 +479,7 @@ async def create_and_retrieve_status_records(
 
 
 async def test_updates_and_deletes(
-    session: AsyncSession, entities: List[Entity], projects: List[Project]
+    session: AsyncSession, entities: Sequence[Entity], projects: Sequence[Project]
 ):
     """Test update and delete operations."""
     logger.info("=== TESTING UPDATES AND DELETES ===")
@@ -495,15 +494,15 @@ async def test_updates_and_deletes(
         original_name = entity_to_update.name
         new_name = f"{original_name} - UPDATED"
 
-        entity_to_update.name = new_name
+        setattr(entity_to_update, "name", new_name)
         await session.commit()
         logger.info(f"Updated entity name from '{original_name}' to '{new_name}'")
 
         # Verify update
-        result = await session.execute(
+        update_result = await session.execute(
             select(Entity).where(Entity.id == entity_to_update.id)
         )
-        updated_entity = result.scalar_one_or_none()
+        updated_entity = update_result.scalar_one_or_none()
 
         if updated_entity:
             logger.info(f"Retrieved updated entity: name='{updated_entity.name}'")
@@ -521,8 +520,8 @@ async def test_updates_and_deletes(
         logger.info(f"Deleted project: {project_title}")
 
         # Verify delete
-        result = await session.execute(select(Project).where(Project.id == project_id))
-        deleted_project = result.scalar_one_or_none()
+        delete_result = await session.execute(select(Project).where(Project.id == project_id))
+        deleted_project = delete_result.scalar_one_or_none()
 
         if deleted_project:
             logger.warning(f"Project was not deleted: {deleted_project.title}")
@@ -538,7 +537,7 @@ async def test_updates_and_deletes(
 
 
 async def test_filtering(
-    session: AsyncSession, jurisdictions: List[Jurisdiction], entities: List[Entity]
+    session: AsyncSession, jurisdictions: Sequence[Jurisdiction], entities: Sequence[Entity]
 ):
     """Test filtering operations."""
     logger.info("=== TESTING FILTERING ===")
@@ -552,10 +551,10 @@ async def test_filtering(
         if jurisdictions and len(jurisdictions) > 0:
             jurisdiction = jurisdictions[0]
 
-            result = await session.execute(
+            ent_by_jur = await session.execute(
                 select(Entity).where(Entity.jurisdiction_id == jurisdiction.id)
             )
-            filtered_entities = result.scalars().all()
+            filtered_entities = ent_by_jur.scalars().all()
 
             logger.info(
                 f"Filtered entities by jurisdiction '{jurisdiction.name}': found {len(filtered_entities)}"
@@ -567,25 +566,25 @@ async def test_filtering(
         if entities and len(entities) > 0:
             entity_type = entities[0].entity_type
 
-            result = await session.execute(
+            ent_by_type = await session.execute(
                 select(Entity).where(Entity.entity_type == entity_type)
             )
-            filtered_entities = result.scalars().all()
+            filtered_entities_by_type = ent_by_type.scalars().all()
 
             logger.info(
-                f"Filtered entities by type '{entity_type}': found {len(filtered_entities)}"
+                f"Filtered entities by type '{entity_type}': found {len(filtered_entities_by_type)}"
             )
-            for e in filtered_entities:
+            for e in filtered_entities_by_type:
                 logger.info(f"  - {e.name} (jurisdiction_id: {e.jurisdiction_id})")
 
         # Filter projects by jurisdiction (new test for direct relationship)
         if jurisdictions and len(jurisdictions) > 0:
             jurisdiction = jurisdictions[0]
 
-            result = await session.execute(
+            proj_by_jur = await session.execute(
                 select(Project).where(Project.jurisdiction_id == jurisdiction.id)
             )
-            filtered_projects = result.scalars().all()
+            filtered_projects = proj_by_jur.scalars().all()
 
             logger.info(
                 f"Filtered projects by jurisdiction '{jurisdiction.name}': found {len(filtered_projects)}"

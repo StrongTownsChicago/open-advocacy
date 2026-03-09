@@ -49,7 +49,7 @@ class PostgresGeoProvider(GeoProvider):
             await session.commit()
             return result.rowcount > 0
 
-    async def get_district_boundary(self, district_id: UUID) -> Dict[str, Any]:
+    async def get_district_boundary(self, district_id: UUID) -> Dict[str, Any] | None:
         """
         Get a boundary for a district
         """

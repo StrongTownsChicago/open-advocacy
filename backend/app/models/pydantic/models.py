@@ -140,6 +140,7 @@ class ProjectBase(BaseModel):
     jurisdiction_id: UUID | None = None
     group_id: UUID | None = None
     is_public: bool = True
+    created_by: str | None = None
 
 
 class Project(ProjectBase):

@@ -62,18 +62,18 @@ class ProjectService:
         self,
         skip: int = 0,
         limit: int = 100,
-        status: ProjectStatus = None,
-        group_id: UUID = None,
+        status: ProjectStatus | None = None,
+        group_id: UUID | None = None,
     ) -> list[Project]:
         """List projects with optional filtering and enriched data."""
-        filters = {}
-        in_filters = {}
+        filters: dict[str, object] = {}
+        in_filters: dict[str, list[object]] = {}
 
         if status:
             filters["status"] = status.value
         else:
             # Hide archived projects by default
-            non_archived_statuses = [
+            non_archived_statuses: list[object] = [
                 s.value for s in ProjectStatus if s != ProjectStatus.ARCHIVED
             ]
             in_filters["status"] = non_archived_statuses

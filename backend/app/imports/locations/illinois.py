@@ -25,9 +25,10 @@ class IllinoisLocationConfig(LocationConfig):
         house_geojson_path: str | None = None,
         senate_geojson_path: str | None = None,
     ):
-        self.openstates_api_key = openstates_api_key or settings.OPENSTATES_API_KEY
-        if not self.openstates_api_key:
+        resolved_key = openstates_api_key or settings.OPENSTATES_API_KEY
+        if not resolved_key:
             raise ValueError("OpenStates API key is required")
+        self.openstates_api_key: str = resolved_key
 
         # Configure file paths
         base_dir = Path(settings.DATA_DIR or "data")

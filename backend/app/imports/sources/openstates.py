@@ -8,7 +8,7 @@ from app.imports.base import DataSource
 logger = logging.getLogger(__name__)
 
 
-class OpenStatesDataSource(DataSource):
+class OpenStatesDataSource(DataSource[dict[str, list[dict[str, Any]]]]):
     """Base data source for OpenStates API data."""
 
     def __init__(
@@ -25,7 +25,7 @@ class OpenStatesDataSource(DataSource):
         self.geo_endpoint = f"{base_url}/people.geo"
 
         # Cache for fetched data
-        self._cached_data = None
+        self._cached_data: dict[str, list[dict[str, Any]]] | None = None
 
         # Default included fields
         self.include_fields = include_fields or [
@@ -58,7 +58,7 @@ class OpenStatesDataSource(DataSource):
             f"Fetching {self.state_code.upper()} legislators from OpenStates API..."
         )
 
-        legislators = {"house": [], "senate": []}
+        legislators: dict[str, list[dict[str, Any]]] = {"house": [], "senate": []}
 
         headers = {
             "X-API-Key": self.api_key,
@@ -70,7 +70,7 @@ class OpenStatesDataSource(DataSource):
                 # We'll need to paginate to get all results
                 url = self.people_endpoint
 
-                params = {
+                params: dict[str, Any] = {
                     "jurisdiction": self.jurisdiction_id,
                     "include": self.include_fields,
                     "per_page": 50,
@@ -154,7 +154,7 @@ class OpenStatesDataSource(DataSource):
                 # Use the people.geo endpoint
                 url = self.geo_endpoint
 
-                params = {
+                params: dict[str, Any] = {
                     "lat": latitude,
                     "lng": longitude,
                     "include": self.include_fields,
