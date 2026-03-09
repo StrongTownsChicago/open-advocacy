@@ -124,7 +124,9 @@ class SQLProvider(DatabaseProvider[T, UUID]):
             orm_models = result.scalars().all()
             return [self._to_pydantic(item) for item in orm_models]
 
-    async def filter_multiple(self, filters: dict[str, Any], in_filters: dict[str, List[Any]] | None = None) -> List[T]:
+    async def filter_multiple(
+        self, filters: dict[str, Any], in_filters: dict[str, List[Any]] | None = None
+    ) -> List[T]:
         """
         Filter items by multiple conditions including IN clauses.
 

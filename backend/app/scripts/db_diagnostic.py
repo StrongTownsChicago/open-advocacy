@@ -354,7 +354,9 @@ async def create_and_retrieve_groups(
         )
         project_group_projects = proj_group_result.scalars().all()
 
-        logger.info(f"Project '{project1.title}' group has {len(project_group_projects)} projects")
+        logger.info(
+            f"Project '{project1.title}' group has {len(project_group_projects)} projects"
+        )
         for p in project_group_projects:
             logger.info(f"  - {p.title}")
 
@@ -520,7 +522,9 @@ async def test_updates_and_deletes(
         logger.info(f"Deleted project: {project_title}")
 
         # Verify delete
-        delete_result = await session.execute(select(Project).where(Project.id == project_id))
+        delete_result = await session.execute(
+            select(Project).where(Project.id == project_id)
+        )
         deleted_project = delete_result.scalar_one_or_none()
 
         if deleted_project:
@@ -537,7 +541,9 @@ async def test_updates_and_deletes(
 
 
 async def test_filtering(
-    session: AsyncSession, jurisdictions: Sequence[Jurisdiction], entities: Sequence[Entity]
+    session: AsyncSession,
+    jurisdictions: Sequence[Jurisdiction],
+    entities: Sequence[Entity],
 ):
     """Test filtering operations."""
     logger.info("=== TESTING FILTERING ===")

@@ -7,7 +7,12 @@ from app.services.service_factory import (
     get_cached_group_service,
     get_cached_status_service,
 )
-from app.models.pydantic.models import ProjectBase, EntityStatusRecord, EntityStatus, ProjectStatus
+from app.models.pydantic.models import (
+    ProjectBase,
+    EntityStatusRecord,
+    EntityStatus,
+    ProjectStatus,
+)
 
 WARD_OPT_IN_INFO = {
     1: {

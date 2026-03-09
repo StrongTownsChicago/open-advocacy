@@ -13,7 +13,12 @@ class JurisdictionImporter(DataImporter):
         self.jurisdiction_service = jurisdiction_service
 
     async def import_data(
-        self, name: str = "", description: str = "", level: str = "", id: UUID | None = None, **kwargs: Any
+        self,
+        name: str = "",
+        description: str = "",
+        level: str = "",
+        id: UUID | None = None,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """Import a jurisdiction."""
         jurisdiction = JurisdictionBase(name=name, description=description, level=level)
