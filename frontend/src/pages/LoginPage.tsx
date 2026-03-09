@@ -22,12 +22,12 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
 
-  const { login, isAuthenticated, loading, error, clearError } = useAuth();
+  const { login, isAuthenticated, loading, error } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Get the redirect path from location state, or default to '/'
-  const from = (location.state as any)?.from?.pathname || '/';
+  const from = (location.state as { from?: { pathname?: string } })?.from?.pathname || '/';
 
   // If already authenticated, redirect
   useEffect(() => {

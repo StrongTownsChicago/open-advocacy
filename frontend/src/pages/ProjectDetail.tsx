@@ -23,7 +23,7 @@ import { entityService } from '../services/entities';
 import { projectService } from '../services/projects';
 import { statusService } from '../services/status';
 import { jurisdictionService } from '../services/jurisdictions';
-import { Project, Jurisdiction, Entity, EntityStatusRecord, UserRole } from '../types';
+import { Project, Entity, EntityStatusRecord, UserRole } from '../types';
 import StatusDistribution from '../components/Status/StatusDistribution';
 import EntityList from '../components/Entity/EntityList';
 import UserEntityProjectSection from '../components/Entity/UserEntityProjectSection';
@@ -71,14 +71,13 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
   const id = projectId || routeId;
   const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
-  const [jurisdictions, setJurisdictions] = useState<Jurisdiction[]>([]);
   const [entities, setEntities] = useState<Entity[]>([]);
   const [loadingEntities, setLoadingEntities] = useState(false);
   const [statusRecords, setStatusRecords] = useState<EntityStatusRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tabValue, setTabValue] = useState(0);
-  const [geojsonByDistrict, setGeojsonByDistrict] = useState<{ [districtId: string]: any }>({});
+  const [geojsonByDistrict, setGeojsonByDistrict] = useState<{ [districtId: string]: GeoJSON.GeoJsonObject }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,10 +90,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         // Fetch project
         const projectResponse = await projectService.getProject(id);
         setProject(projectResponse.data);
-
-        // Fetch jurisdictions
-        const jurisdictionsResponse = await jurisdictionService.getJurisdictions();
-        setJurisdictions(jurisdictionsResponse.data);
 
         // Fetch status records for this project
         const statusResponse = await statusService.getStatusRecords(id);
@@ -127,7 +122,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
     };
 
     fetchEntities();
-  }, [project?.jurisdiction_id]);
+  }, [project]);
 
   useEffect(() => {
     const fetchGeoJSON = async () => {
@@ -140,7 +135,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
       }
     };
     fetchGeoJSON();
-  }, [project?.jurisdiction_id]);
+  }, [project]);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -244,9 +239,11 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <Typography variant="body1" color="text.secondary" paragraph mt={2}>
             <ReactMarkdown
               components={{
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 a: ({ node, ...props }) => (
                   <Link {...props} target="_blank" rel="noopener noreferrer" color="primary" />
                 ),
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 p: ({ node, ...props }) => <span {...props} />,
               }}
             >

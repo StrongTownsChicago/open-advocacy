@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Typography,
   Paper,
   Box,
   Table,
@@ -55,7 +54,7 @@ const UserManagement: React.FC = () => {
     try {
       const data = await userService.getUsersInGroup(groupId);
       setUsers(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching users:', err);
       setError('Failed to load users. Please try again.');
     } finally {
@@ -73,7 +72,7 @@ const UserManagement: React.FC = () => {
       setUsers(prevUsers => prevUsers.map(u => (u.id === userId ? { ...u, role: newRole } : u)));
 
       setSuccess('User role updated successfully');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating role:', err);
       setError('Failed to update user role');
     }
@@ -119,7 +118,7 @@ const UserManagement: React.FC = () => {
 
       closePasswordDialog();
       setSuccess('Password updated successfully');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating password:', err);
       setPasswordError('Failed to update password');
     }

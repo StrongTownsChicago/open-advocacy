@@ -10,33 +10,173 @@ from app.services.service_factory import (
 from app.models.pydantic.models import ProjectBase, EntityStatusRecord, EntityStatus
 
 WARD_OPT_IN_INFO = {
-    1:  {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    3:  {"type": "not_eligible", "block_limits": False, "homeowner_req": False, "admin_adj": False, "notes": "not eligible (no SFH zoning to opt-in)"},
-    4:  {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    5:  {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    6:  {"type": "full", "notes": "Whole ward (including the part currently in the pilot)", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    12: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    14: {"type": "partial", "notes": "Partial. Only precincts 1, 4, 9, and 15", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    22: {"type": "full", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    25: {"type": "full", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    26: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    27: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    29: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    30: {"type": "partial", "notes": "Partial. Whole ward except for precincts 1, 4, 9, and 21.", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    31: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    32: {"type": "full", "block_limits": True, "homeowner_req": True, "admin_adj": True},
-    33: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    34: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    35: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    36: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    40: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    42: {"type": "not_eligible", "block_limits": False, "homeowner_req": False, "admin_adj": False, "notes": "not eligible (no SFH zoning to opt-in)"},
-    43: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    44: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    46: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    47: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    48: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
-    49: {"type": "full", "block_limits": False, "homeowner_req": False, "admin_adj": False},
+    1: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    3: {
+        "type": "not_eligible",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+        "notes": "not eligible (no SFH zoning to opt-in)",
+    },
+    4: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    5: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    6: {
+        "type": "full",
+        "notes": "Whole ward (including the part currently in the pilot)",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    12: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    14: {
+        "type": "partial",
+        "notes": "Partial. Only precincts 1, 4, 9, and 15",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    22: {
+        "type": "full",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    25: {
+        "type": "full",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    26: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    27: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    29: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    30: {
+        "type": "partial",
+        "notes": "Partial. Whole ward except for precincts 1, 4, 9, and 21.",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    31: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    32: {
+        "type": "full",
+        "block_limits": True,
+        "homeowner_req": True,
+        "admin_adj": True,
+    },
+    33: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    34: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    35: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    36: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    40: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    42: {
+        "type": "not_eligible",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+        "notes": "not eligible (no SFH zoning to opt-in)",
+    },
+    43: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    44: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    46: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    47: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    48: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
+    49: {
+        "type": "full",
+        "block_limits": False,
+        "homeowner_req": False,
+        "admin_adj": False,
+    },
 }
 
 PROJECT_TITLE = "ADU Opt-In Dashboard"
@@ -50,6 +190,7 @@ PROJECT_DESCRIPTION = (
 )
 PROJECT_LINK = "https://www.strongtownschicago.org/milestones/adu-legalization-win"
 
+
 def format_restriction_notes(info):
     restrictions = []
     if info["block_limits"]:
@@ -59,6 +200,7 @@ def format_restriction_notes(info):
     if info["admin_adj"]:
         restrictions.append("Administrative adjustment applies")
     return "; ".join(restrictions)
+
 
 async def import_adu_project_data():
     logging.basicConfig(level=logging.INFO)
@@ -138,9 +280,12 @@ async def import_adu_project_data():
             updated_by="admin",
         )
         await status_service.create_status_record(status_record)
-        logger.info(f"Set status for {entity.name} (Ward {ward_number}): {status} | {notes}")
+        logger.info(
+            f"Set status for {entity.name} (Ward {ward_number}): {status} | {notes}"
+        )
 
     logger.info("ADU Opt-In project import completed.")
+
 
 if __name__ == "__main__":
     asyncio.run(import_adu_project_data())

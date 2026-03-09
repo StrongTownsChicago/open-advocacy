@@ -32,7 +32,7 @@ const AduOptInDashboard: React.FC = () => {
         } else {
           setError('ADU Opt-In project not found');
         }
-      } catch (err) {
+      } catch {
         setError('Failed to load ADU Opt-In project');
       } finally {
         setLoading(false);

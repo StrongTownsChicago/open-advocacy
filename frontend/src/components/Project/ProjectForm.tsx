@@ -43,9 +43,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSubmit, onCancel }
   const [jurisdictionError, setJurisdictionError] = useState('');
 
   const [jurisdictions, setJurisdictions] = useState<Jurisdiction[]>([]);
-  const [groups, setGroups] = useState<any[]>([]);
+  const [groups, setGroups] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {

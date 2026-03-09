@@ -4,7 +4,7 @@ import { ThemeProvider } from './theme/ThemeProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserRepresentativesProvider } from './contexts/UserRepresentativesContext';
 
-import Header from './components/common/Header';
+
 import HomePage from './pages/HomePage';
 import ProjectDetail from './pages/ProjectDetail';
 import ProjectFormPage from './pages/ProjectFormPage';

@@ -151,10 +151,12 @@ const RegisterPage: React.FC = () => {
       } else {
         setServerError('Registration failed. Please try again.');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error);
       const errorMessage =
-        error.response?.data?.detail || 'An unexpected error occurred. Please try again later.';
+        (error instanceof Error && 'response' in error
+          ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail
+          : undefined) || 'An unexpected error occurred. Please try again later.';
       setServerError(errorMessage);
     } finally {
       setLoading(false);

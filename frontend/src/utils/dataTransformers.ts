@@ -1,5 +1,6 @@
 import { Project, Entity, EntityStatus, ProjectStatus, Group } from '../types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformProjectFromApi = (project: any): Project => {
   return {
     id: project.id,
@@ -28,6 +29,7 @@ export const transformProjectFromApi = (project: any): Project => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformGroupFromApi = (group: any): Group => {
   return {
     id: group.id,
@@ -37,6 +39,7 @@ export const transformGroupFromApi = (group: any): Group => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformEntityFromApi = (entity: any): Entity => {
   return {
     id: entity.id,

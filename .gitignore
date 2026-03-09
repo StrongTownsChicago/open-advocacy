@@ -7,3 +7,11 @@
 **/.ruff_cache
 **.log
 **.db
+/misc
+/node_modules
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
+.mypy_cache
+.coverage

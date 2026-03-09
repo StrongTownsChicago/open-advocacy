@@ -76,6 +76,7 @@ export const UserRepresentativesProvider: React.FC<UserRepresentativesProviderPr
 };
 
 // Custom hook for accessing the context
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUserRepresentatives = () => {
   const context = useContext(UserRepresentativesContext);
   if (context === undefined) {

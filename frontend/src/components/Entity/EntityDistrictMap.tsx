@@ -7,7 +7,7 @@ import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '@/utils
 interface EntityDistrictMapProps {
   entities: Entity[];
   statusRecords: EntityStatusRecord[];
-  geojsonByDistrict: { [districtName: string]: any };
+  geojsonByDistrict: { [districtName: string]: GeoJSON.GeoJsonObject };
   getStatusLabel?: (status: string) => string;
   centerPoint?: [number, number];
 }
@@ -34,7 +34,8 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
     }
   });
 
-  function onEachFeature(feature: any, layer: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function onEachFeature(feature: GeoJSON.Feature, layer: any) {
     const wardNumber = feature.properties?.ward;
     const districtName = wardNumber ? `Ward ${wardNumber}` : undefined;
     const entity = districtName ? entityByDistrict[districtName] : undefined;

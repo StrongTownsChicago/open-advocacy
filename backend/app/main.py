@@ -97,7 +97,7 @@ async def startup_event():
     logger.info(
         f"Starting application with {settings.DATABASE_PROVIDER} database provider"
     )
-    
+
     try:
         initialized = await initialize_application()
         if initialized:

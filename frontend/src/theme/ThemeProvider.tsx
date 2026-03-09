@@ -13,6 +13,7 @@ const ThemeContext = createContext<ThemeContextProps>({
   setTheme: () => {},
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => useContext(ThemeContext);
 
 interface ThemeProviderProps {

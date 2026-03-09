@@ -23,6 +23,7 @@ async def list_projects(
         skip=skip, limit=limit, status=status, group_id=group_id
     )
 
+
 @router.get("/by-name/{name}", response_model=Project)
 async def get_project_by_name(
     name: str,

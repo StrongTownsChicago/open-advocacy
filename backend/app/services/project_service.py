@@ -50,7 +50,7 @@ class ProjectService:
         )
 
         return project
-    
+
     async def get_project_by_name(self, name: str) -> Project | None:
         """Get a project by its title/name."""
         projects = await self.projects_provider.filter(title=name)

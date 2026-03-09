@@ -24,10 +24,13 @@ const authService = {
         return { success: true };
       }
       return { success: false, error: 'Invalid login response' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
       // Return the error message from the server if available
-      const errorMessage = error.response?.data?.detail || 'Invalid email or password';
+      const errorMessage =
+        (error instanceof Error && 'response' in error
+          ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail
+          : undefined) || 'Invalid email or password';
 
       return {
         success: false,

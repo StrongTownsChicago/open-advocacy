@@ -42,7 +42,7 @@ const ProjectList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const filters: any = {};
+      const filters: Record<string, string> = {};
 
       // Only add status filter if it's not "all"
       if (status && status !== 'all') {

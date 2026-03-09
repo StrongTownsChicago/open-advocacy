@@ -33,6 +33,7 @@ const AuthContext = createContext<AuthContextType>({
   redirectToLogin: () => {},
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 interface AuthProviderProps {
