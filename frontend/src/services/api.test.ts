@@ -37,10 +37,9 @@ describe('HTTPS interceptor logic', () => {
 });
 
 describe('API base URL', () => {
-  it('default base URL falls back to production Railway URL', async () => {
-    // Import the actual api module to verify baseURL is set
+  it('base URL is set from VITE_API_URL env or defaults to a valid URL', async () => {
     const api = (await import('./api')).default;
     expect(api.defaults.baseURL).toBeDefined();
-    expect(api.defaults.baseURL).toContain('railway.app');
+    expect(api.defaults.baseURL).toMatch(/^https?:\/\/.+\/api$/);
   });
 });

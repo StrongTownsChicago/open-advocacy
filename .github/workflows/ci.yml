@@ -27,7 +27,7 @@ jobs:
           key: poetry-${{ runner.os }}-${{ hashFiles('backend/poetry.lock') }}
           restore-keys: poetry-${{ runner.os }}-
       - name: Install dependencies
-        run: poetry install --with dev
+        run: poetry install --with dev --no-root
       - name: Run tests
         run: poetry run pytest tests/ -v --cov=app --cov-report=term-missing
         env:
