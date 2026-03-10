@@ -82,7 +82,9 @@ On first startup, `app/main.py` calls `scripts/initialize_app.py:initialize_appl
 2. Imports Chicago alderperson + ward data
 3. Seeds the ADU Opt-In project
 
-A lock file at `/tmp/open_advocacy_db_initialized` prevents re-running on subsequent restarts. Delete this file to force re-initialization (e.g., after a schema change in dev).
+Initialization is guarded by a database-state check: `scripts/init_db.py:tables_exist()` queries whether the `groups` table already exists using SQLAlchemy's `inspect` API (works for both SQLite and PostgreSQL). If the table exists, initialization is skipped entirely and no data is modified. This replaces a previous `/tmp` file-based lock that was ephemeral and caused data loss on Railway redeployments.
+
+To force a clean reset in development, run `python -m scripts.init_db --drop` (drops and recreates all tables) then restart the app. For PostgreSQL, you can also run `DROP SCHEMA public CASCADE; CREATE SCHEMA public;` then restart.
 
 ### Frontend Structure
 

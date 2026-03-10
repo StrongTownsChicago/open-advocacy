@@ -1,12 +1,33 @@
 import asyncio
 import logging
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy import inspect as sa_inspect
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 from sqlalchemy import text
 
 from app.core.config import settings
 from app.models.orm.models import Base
 
 logger = logging.getLogger("db-init")
+
+
+async def tables_exist(engine: AsyncEngine) -> bool:
+    """Return True if the 'groups' table already exists in the database.
+
+    Uses SQLAlchemy's inspect API so the check works identically for both
+    SQLite and PostgreSQL without requiring provider-specific SQL.
+    """
+
+    def _has_groups_table(conn) -> bool:
+        inspector = sa_inspect(conn)
+        return inspector.has_table("groups")
+
+    async with engine.connect() as conn:
+        return await conn.run_sync(_has_groups_table)
 
 
 async def init_db(create_tables: bool = True, drop_existing: bool = False):

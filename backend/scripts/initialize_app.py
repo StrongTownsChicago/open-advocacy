@@ -4,21 +4,18 @@ Handles database setup, admin user creation, and data imports.
 """
 
 import logging
-import time
-import os
 
-from scripts.init_db import init_db
+from scripts.init_db import init_db, tables_exist
 from scripts.import_data import import_data
 from scripts.import_example_project_data import import_projects
 from scripts.import_adu_project_data import import_adu_project_data
+from app.db.session import get_engine
 from app.services.service_factory import (
     get_cached_jurisdiction_service,
     get_cached_project_service,
 )
 
 logger = logging.getLogger("open-advocacy")
-
-DB_INIT_LOCK_FILE = "/tmp/open_advocacy_db_initialized"
 
 
 async def import_chicago_data():
@@ -84,45 +81,36 @@ async def import_example_projects():
 async def initialize_application():
     """
     Initialize the application: database, admin user, and data imports.
-    Returns True if initialization was performed, False if skipped.
+
+    Checks whether the database is already initialized by querying whether
+    the 'groups' table exists. If it does, initialization is skipped so that
+    persisted data is never wiped on a redeploy. Returns True if
+    initialization was performed, False if skipped.
     """
     logger.info("Starting application initialization check...")
 
-    # Check file-based lock as a backup (for distributed environments)
-    if os.path.exists(DB_INIT_LOCK_FILE):
-        logger.info("Database initialization lock file exists, skipping initialization")
+    engine = get_engine()
+    if await tables_exist(engine):
+        logger.info("Database tables already exist, skipping initialization")
         return False
 
-    try:
-        # Create lock file early to prevent race conditions
-        try:
-            with open(DB_INIT_LOCK_FILE, "w") as f:
-                f.write(
-                    f"Database initialization started at {time.strftime('%Y-%m-%d %H:%M:%S')}"
-                )
-        except Exception as e:
-            logger.error(f"Failed to write lock file: {e}")
+    logger.info("Initializing database and creating initial admin user...")
 
-        logger.info("Initializing database and creating initial admin user...")
+    # Step 1: Create database tables
+    logger.info("Creating database tables...")
+    await init_db(create_tables=True)
 
-        # Step 1: Create database tables
-        logger.info("Creating database tables...")
-        await init_db(create_tables=True, drop_existing=False)
+    # Step 2: Import Chicago data
+    await import_chicago_data()
 
-        # Step 2: Import Chicago data
-        await import_chicago_data()
+    # Step 3: Import ADU Opt-In project data
+    await import_adu_opt_in_project()
 
-        # Step 3: Import ADU Opt-In project data
-        await import_adu_opt_in_project()
+    # # Step 4: Import Illinois data
+    # await import_illinois_data()
 
-        # # Step 4: Import Illinois data
-        # await import_illinois_data()
+    # # Step 5: Import example projects
+    # await import_example_projects()
 
-        # # Step 5: Import example projects
-        # await import_example_projects()
-
-        logger.info("Database initialization completed successfully")
-        return True
-
-    except Exception as e:
-        logger.error(f"Database initialization failed: {str(e)}")
+    logger.info("Database initialization completed successfully")
+    return True
