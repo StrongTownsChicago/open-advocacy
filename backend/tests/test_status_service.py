@@ -118,3 +118,40 @@ class TestCreateStatusRecordUpsert:
         # Verify no duplicate was created - still only one record
         all_records = await self.status_records_provider.list()
         assert len(all_records) == 1
+
+    async def test_updates_only_matching_record(self):
+        """With multiple records, only the one matching entity+project should be updated."""
+        project = make_project()
+        self.projects_provider.seed(project)
+        entity_a = make_entity(name="Entity A")
+        entity_b = make_entity(name="Entity B")
+        self.entities_provider.seed(entity_a)
+        self.entities_provider.seed(entity_b)
+
+        # Create records for both entities
+        record_a = make_status_record(
+            entity_id=entity_a.id,
+            project_id=project.id,
+            status=EntityStatus.NEUTRAL,
+        )
+        record_b = make_status_record(
+            entity_id=entity_b.id,
+            project_id=project.id,
+            status=EntityStatus.NEUTRAL,
+        )
+        await self.service.create_status_record(record_a)
+        await self.service.create_status_record(record_b)
+
+        # Update only entity_a's record
+        updated = make_status_record(
+            entity_id=entity_a.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+        )
+        result = await self.service.create_status_record(updated)
+
+        assert result.status == EntityStatus.SOLID_APPROVAL
+
+        # Should still have exactly 2 records
+        all_records = await self.status_records_provider.list()
+        assert len(all_records) == 2

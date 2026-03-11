@@ -146,6 +146,12 @@ npm test                                  # Unit tests — all must pass
 
 Run backend and frontend checks independently. Fix any failures before moving on. Do not suppress errors with ignore comments — fix the actual types.
 
+### Testing Guidelines
+
+- No sleeps, waits, or fake timers in unit tests — keep tests fast and deterministic
+- Focus on high-value tests that verify real business logic, not language behavior or mocks
+- Avoid testing trivial code (simple getters, pass-throughs, `if x is None: raise`)
+
 ### Adding a New Import Location
 
 1. Create `backend/app/imports/locations/<location>.py` with location config and import steps

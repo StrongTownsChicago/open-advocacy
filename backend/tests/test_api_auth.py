@@ -142,3 +142,161 @@ class TestAuthEndpoints:
             )
         assert response.status_code == 403
         assert "Cannot create user in another group" in response.json()["detail"]
+
+
+class TestAdminRoleUpdatePermissions:
+    """Tests for the complex permission logic in admin/users role update endpoint."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from app.core.auth import get_group_admin_user
+
+        self.service, self.super_admin, self.group = _build_user_service()
+        app.dependency_overrides[get_user_service] = lambda: self.service
+        self._get_group_admin_user = get_group_admin_user
+        yield
+        app.dependency_overrides.clear()
+
+    def _setup_user_override(self, user):
+        """Override get_group_admin_user to return the given user."""
+
+        async def mock_get_admin():
+            return user
+
+        app.dependency_overrides[self._get_group_admin_user] = mock_get_admin
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_super_admin_cannot_change_other_super_admin_role(self):
+        """A super admin cannot change another super admin's role."""
+        other_super = make_user(
+            email="other_super@test.com",
+            name="Other Super",
+            group_id=self.group.id,
+            role=UserRole.SUPER_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(other_super)
+        self._setup_user_override(self.super_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{other_super.id}/role",
+                json={"role": "editor"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+        assert "another super admin" in response.json()["detail"]
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_cannot_elevate_to_super_admin(self):
+        """A group admin cannot elevate a user to super_admin."""
+        group_admin = make_user(
+            email="gadmin@test.com",
+            name="Group Admin",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+
+        target_user = make_user(
+            email="target@test.com",
+            name="Target",
+            group_id=self.group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(target_user)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{target_user.id}/role",
+                json={"role": "super_admin"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+        assert "cannot manage super admins" in response.json()["detail"].lower()
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_cannot_change_own_role(self):
+        """A group admin cannot change their own role."""
+        group_admin = make_user(
+            email="gadmin2@test.com",
+            name="Group Admin 2",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{group_admin.id}/role",
+                json={"role": "editor"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+        assert "Cannot change your own role" in response.json()["detail"]
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_cannot_modify_other_group_user(self):
+        """A group admin can only modify users in their own group."""
+        other_group = make_group(name="Other Group")
+        self.service.groups_provider.seed(other_group)
+
+        group_admin = make_user(
+            email="gadmin3@test.com",
+            name="Group Admin 3",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+
+        other_user = make_user(
+            email="other@test.com",
+            name="Other User",
+            group_id=other_group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(other_user)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{other_user.id}/role",
+                json={"role": "viewer"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+        assert "your own group" in response.json()["detail"]
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_super_admin_can_change_non_super_admin_role(self):
+        """A super admin can change any non-super-admin user's role."""
+        target_user = make_user(
+            email="target2@test.com",
+            name="Target 2",
+            group_id=self.group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(target_user)
+        self._setup_user_override(self.super_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{target_user.id}/role",
+                json={"role": "group_admin"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 200
+        assert response.json()["role"] == "group_admin"

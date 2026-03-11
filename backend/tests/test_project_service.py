@@ -170,6 +170,56 @@ class TestCalculateStatusDistributionWithUnknowns:
         assert result.leaning_disapproval == 1
         assert result.neutral == 1
 
+    def test_more_records_than_entities(self):
+        """When status records exceed total entity count (data inconsistency), counts still work."""
+        project_id = uuid4()
+        records = [
+            make_status_record(
+                entity_id=uuid4(),
+                project_id=project_id,
+                status=EntityStatus.SOLID_APPROVAL,
+            ),
+            make_status_record(
+                entity_id=uuid4(),
+                project_id=project_id,
+                status=EntityStatus.NEUTRAL,
+            ),
+            make_status_record(
+                entity_id=uuid4(),
+                project_id=project_id,
+                status=EntityStatus.LEANING_DISAPPROVAL,
+            ),
+        ]
+        # Only 2 entities but 3 records — unknown goes negative
+        result = self.service.calculate_status_distribution_with_unknowns(records, 2)
+        assert result.total == 2
+        assert result.solid_approval == 1
+        assert result.neutral == 1
+        assert result.leaning_disapproval == 1
+        assert result.unknown == -1  # Indicates data inconsistency
+
+    def test_multiple_unknown_status_records(self):
+        """Multiple UNKNOWN records should each be counted correctly (net zero per record)."""
+        project_id = uuid4()
+        records = [
+            make_status_record(
+                entity_id=uuid4(), project_id=project_id, status=EntityStatus.UNKNOWN
+            ),
+            make_status_record(
+                entity_id=uuid4(), project_id=project_id, status=EntityStatus.UNKNOWN
+            ),
+            make_status_record(
+                entity_id=uuid4(),
+                project_id=project_id,
+                status=EntityStatus.SOLID_APPROVAL,
+            ),
+        ]
+        result = self.service.calculate_status_distribution_with_unknowns(records, 5)
+        assert result.total == 5
+        # 2 UNKNOWN records (decrement then re-increment = net zero each) + 1 SOLID_APPROVAL
+        assert result.unknown == 4  # 5 - 1 (solid_approval) = 4
+        assert result.solid_approval == 1
+
 
 class TestCreateProject:
     """Tests for project creation validation."""

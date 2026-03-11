@@ -157,3 +157,74 @@ describe('transformGroupFromApi', () => {
     expect(result.description).toBe('');
   });
 });
+
+describe('transformProjectFromApi — edge cases', () => {
+  it('handles null status_distribution', () => {
+    const apiProject = {
+      id: 'proj-null',
+      title: 'Null Distribution',
+      status: 'active',
+      active: true,
+      jurisdiction_id: 'jur-1',
+      group_id: 'grp-1',
+      created_at: '2024-01-01',
+      updated_at: '2024-01-01',
+      status_distribution: null,
+    };
+
+    const result = transformProjectFromApi(apiProject);
+    expect(result.status_distribution).toEqual({
+      solid_approval: 0,
+      leaning_approval: 0,
+      neutral: 0,
+      leaning_disapproval: 0,
+      solid_disapproval: 0,
+      unknown: 0,
+      total: 0,
+    });
+  });
+
+  it('preserves jurisdiction_name when present', () => {
+    const apiProject = {
+      id: 'proj-jur',
+      title: 'With Jurisdiction',
+      status: 'active',
+      active: true,
+      jurisdiction_id: 'jur-1',
+      jurisdiction_name: 'City of Chicago',
+      group_id: 'grp-1',
+      created_at: '2024-01-01',
+      updated_at: '2024-01-01',
+    };
+
+    const result = transformProjectFromApi(apiProject);
+    expect(result.jurisdiction_name).toBe('City of Chicago');
+  });
+});
+
+describe('transformEntityFromApi — edge cases', () => {
+  it('handles entity with all null optional fields', () => {
+    const apiEntity = {
+      id: 'ent-null',
+      name: 'Null Fields Entity',
+      entity_type: 'alderman',
+      jurisdiction_id: 'jur-1',
+      title: null,
+      email: null,
+      phone: null,
+      website: null,
+      address: null,
+      district_name: null,
+      image_url: null,
+    };
+
+    const result = transformEntityFromApi(apiEntity);
+    expect(result.title).toBe('');
+    expect(result.email).toBe('');
+    expect(result.phone).toBe('');
+    expect(result.website).toBe('');
+    expect(result.address).toBe('');
+    expect(result.district_name).toBe('');
+    expect(result.image_url).toBe('');
+  });
+});

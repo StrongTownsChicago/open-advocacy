@@ -160,3 +160,53 @@ class TestLookupEntitiesByAddress:
         assert result[0].name == "Ald. Smith"
         assert result[0].district_name == "Ward 5"
         mock_geo.districts_containing_point.assert_called_once_with(41.8781, -87.6298)
+
+    async def test_no_districts_found_returns_empty(self):
+        """When no districts contain the geocoded point, should return empty list."""
+        mock_geo = AsyncMock()
+        mock_geo.districts_containing_point = AsyncMock(return_value=[])
+
+        service = EntityService(
+            entities_provider=MockDatabaseProvider(),
+            jurisdictions_provider=MockDatabaseProvider(),
+            districts_provider=MockDatabaseProvider(),
+            geo_provider=mock_geo,
+        )
+
+        with patch.object(
+            service.geocoding_service,
+            "geocode_address",
+            new_callable=AsyncMock,
+            return_value=(41.8781, -87.6298),
+        ):
+            request = AddressLookupRequest(address="123 Main St, Chicago, IL")
+            result = await service.lookup_entities_by_address(request)
+
+        assert result == []
+
+    async def test_districts_found_but_no_entities(self):
+        """When districts are found but no entities exist in them, returns empty list."""
+        district = make_district(name="Ward 99")
+        districts_provider = MockDatabaseProvider()
+        districts_provider.seed(district)
+
+        mock_geo = AsyncMock()
+        mock_geo.districts_containing_point = AsyncMock(return_value=[district.id])
+
+        service = EntityService(
+            entities_provider=MockDatabaseProvider(),  # empty — no entities
+            jurisdictions_provider=MockDatabaseProvider(),
+            districts_provider=districts_provider,
+            geo_provider=mock_geo,
+        )
+
+        with patch.object(
+            service.geocoding_service,
+            "geocode_address",
+            new_callable=AsyncMock,
+            return_value=(41.8781, -87.6298),
+        ):
+            request = AddressLookupRequest(address="123 Main St, Chicago, IL")
+            result = await service.lookup_entities_by_address(request)
+
+        assert result == []
