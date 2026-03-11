@@ -17,10 +17,17 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
   },
   server: {
+    host: true,
+    allowedHosts: true,
     port: 3000,
+  },
+  preview: {
+    host: true,
+    allowedHosts: true,
+    port: 8080,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: process.env.BACKEND_URL || 'http://localhost:8000',
         changeOrigin: true,
       },
     },
