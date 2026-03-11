@@ -129,6 +129,11 @@ class Group(GroupBase):
         from_attributes = True
 
 
+class DashboardConfig(BaseModel):
+    representative_title: str | None = None
+    status_labels: dict[str, str] | None = None
+
+
 class ProjectBase(BaseModel):
     title: str
     description: str | None = None
@@ -141,6 +146,8 @@ class ProjectBase(BaseModel):
     group_id: UUID | None = None
     is_public: bool = True
     created_by: str | None = None
+    slug: str | None = None
+    dashboard_config: DashboardConfig | None = None
 
 
 class Project(ProjectBase):

@@ -36,6 +36,18 @@ async def get_project_by_name(
     return project
 
 
+@router.get("/slug/{slug}", response_model=Project)
+async def get_project_by_slug(
+    slug: str,
+    project_service: ProjectService = Depends(get_project_service),
+):
+    """Get a project by its slug."""
+    project = await project_service.get_project_by_slug(slug)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
+
+
 @router.post("/", response_model=Project, status_code=status.HTTP_201_CREATED)
 async def create_project(
     project: ProjectBase,

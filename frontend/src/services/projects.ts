@@ -34,6 +34,10 @@ export const projectService = {
     return api.get<Project>(`/projects/by-name/${encodeURIComponent(name)}`);
   },
 
+  async getProjectBySlug(slug: string): Promise<{ data: Project }> {
+    return api.get<Project>(`/projects/slug/${encodeURIComponent(slug)}`);
+  },
+
   async getProject(id: string): Promise<{ data: Project }> {
     return api.get<Project>(`/projects/${id}`);
   },

@@ -79,8 +79,8 @@ API Routes (app/api/routes/) → Service Layer (app/services/) → DB Providers 
 
 On first startup, `app/main.py` calls `scripts/initialize_app.py:initialize_application()`, which:
 1. Creates DB tables
-2. Imports Chicago alderperson + ward data
-3. Seeds the ADU Opt-In project
+2. Seeds location data based on `SEED_LOCATIONS` env var (e.g. `chicago`, `illinois`)
+3. Seeds project data based on `SEED_PROJECTS` env var (e.g. `adu`, `example`)
 
 Initialization is guarded by a database-state check: `scripts/init_db.py:tables_exist()` queries whether the `groups` table already exists using SQLAlchemy's `inspect` API (works for both SQLite and PostgreSQL). If the table exists, initialization is skipped entirely and no data is modified. This replaces a previous `/tmp` file-based lock that was ephemeral and caused data loss on Railway redeployments.
 
@@ -88,9 +88,10 @@ To force a clean reset in development, run `python -m scripts.init_db --drop` (d
 
 ### Frontend Structure
 
-- **`src/services/api.ts`** — Axios client; base URL from `VITE_API_URL` or falls back to the hardcoded production Railway URL; forces HTTPS on all requests
+- **`src/services/api.ts`** — Axios client; base URL from `VITE_API_URL` or falls back to `/api` (relative); forces HTTPS on all requests
+- **`src/services/imports.ts`** — API service for data import operations (admin only)
 - **`src/contexts/`** — `AuthContext` (JWT auth state), `UserRepresentativesContext` (user's reps)
-- **`src/pages/`** — Route-level components; `admin/` for admin pages, `CustomProjects/` for location-specific projects (e.g. ADU tracker)
+- **`src/pages/`** — Route-level components; `admin/` for admin pages (AdminDashboard, UserManagement, DataImportPage, RegisterPage); `ProjectDashboard` for generic slug-based dashboards
 - **`src/components/`** — Shared UI components organized by domain (`Entity/`, `Project/`, `Status/`, `auth/`, `common/`)
 - **`src/utils/config.ts`** — App name/description branding from `VITE_APPLICATION_NAME` / `VITE_APPLICATION_DESCRIPTION`
 
@@ -99,7 +100,7 @@ To force a clean reset in development, run `python -m scripts.init_db --drop` (d
 Core entities with UUID primary keys:
 
 - **Group** — Organizes users and projects; each project and user belongs to a group
-- **Project** — Advocacy initiatives with `status` + `preferred_status` (EntityStatus enum), linked to a `Jurisdiction` and `Group`
+- **Project** — Advocacy initiatives with `status` + `preferred_status` (EntityStatus enum), linked to a `Jurisdiction` and `Group`; optional `slug` (unique URL key) and `dashboard_config` (JSON with `representative_title` and `status_labels` for dashboard views)
 - **Entity** — Representatives/officials with contact info and `entity_type`
 - **EntityStatusRecord** — Links entities to projects with position data (EntityStatus: `solid_approval`, `leaning_approval`, `neutral`, `leaning_disapproval`, `solid_disapproval`, `unknown`)
 - **Jurisdiction** / **District** — Legislative bodies and geographic areas (GeoJSON boundaries)
@@ -119,8 +120,10 @@ Key variables (set in `.env` for local dev, Railway for production):
 - `GEOCODING_SERVICE` — Optional geocoding provider (`google`, `mapbox`, etc.)
 - `GEOCODING_API_KEY` — API key for geocoding provider
 - `DATA_DIR` — Override the data directory path
-- `VITE_API_URL` — (Frontend) Override API base URL; without this, production Railway URL is used as fallback
-- `VITE_APPLICATION_NAME` — (Frontend) App display name (default: `Strong Towns Chicago Advocacy Tracker`)
+- `SEED_LOCATIONS` — Comma-separated location keys to seed on cold start (e.g. `chicago`, `chicago,illinois`; default: empty)
+- `SEED_PROJECTS` — Comma-separated project keys to seed on cold start (e.g. `adu`, `adu,example`; default: empty)
+- `VITE_API_URL` — (Frontend) Override API base URL; without this, falls back to `/api` (relative)
+- `VITE_APPLICATION_NAME` — (Frontend) App display name (default: `Open Advocacy`)
 - `VITE_APPLICATION_DESCRIPTION` — (Frontend) App tagline
 
 ## After Making Changes

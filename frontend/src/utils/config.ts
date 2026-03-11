@@ -1,8 +1,8 @@
 export const appConfig = {
-  name: import.meta.env.VITE_APPLICATION_NAME || 'Strong Towns Chicago Advocacy Tracker',
+  name: import.meta.env.VITE_APPLICATION_NAME || 'Open Advocacy',
   description:
     import.meta.env.VITE_APPLICATION_DESCRIPTION ||
-    'Connecting citizens with their representatives and tracking advocacy projects',
+    'Track legislative advocacy projects and representatives',
 } as const;
 
 export type AppConfig = typeof appConfig;

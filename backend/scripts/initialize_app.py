@@ -9,6 +9,7 @@ from scripts.init_db import init_db, tables_exist
 from scripts.import_data import import_data
 from scripts.import_example_project_data import import_projects
 from scripts.import_adu_project_data import import_adu_project_data
+from app.core.config import settings
 from app.db.session import get_engine
 from app.services.service_factory import (
     get_cached_jurisdiction_service,
@@ -100,17 +101,21 @@ async def initialize_application():
     logger.info("Creating database tables...")
     await init_db(create_tables=True)
 
-    # Step 2: Import Chicago data
-    await import_chicago_data()
+    # Step 2: Seed locations based on configuration
+    seed_locations = [
+        s.strip() for s in settings.SEED_LOCATIONS.split(",") if s.strip()
+    ]
+    if "chicago" in seed_locations:
+        await import_chicago_data()
+    if "illinois" in seed_locations:
+        await import_illinois_data()
 
-    # Step 3: Import ADU Opt-In project data
-    await import_adu_opt_in_project()
-
-    # # Step 4: Import Illinois data
-    # await import_illinois_data()
-
-    # # Step 5: Import example projects
-    # await import_example_projects()
+    # Step 3: Seed projects based on configuration
+    seed_projects = [s.strip() for s in settings.SEED_PROJECTS.split(",") if s.strip()]
+    if "adu" in seed_projects:
+        await import_adu_opt_in_project()
+    if "example" in seed_projects:
+        await import_example_projects()
 
     logger.info("Database initialization completed successfully")
     return True

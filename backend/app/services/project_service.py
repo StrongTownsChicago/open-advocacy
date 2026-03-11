@@ -58,6 +58,13 @@ class ProjectService:
             return await self.get_project_with_details(projects[0].id)
         return None
 
+    async def get_project_by_slug(self, slug: str) -> Project | None:
+        """Get a project by its slug."""
+        projects = await self.projects_provider.filter(slug=slug)
+        if projects:
+            return await self.get_project_with_details(projects[0].id)
+        return None
+
     async def list_projects(
         self,
         skip: int = 0,

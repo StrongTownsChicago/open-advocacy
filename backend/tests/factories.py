@@ -4,6 +4,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from app.models.pydantic.models import (
+    DashboardConfig,
     Entity,
     EntityStatus,
     EntityStatusRecord,
@@ -54,6 +55,8 @@ def make_project(
     jurisdiction_id: UUID | None = None,
     group_id: UUID | None = None,
     preferred_status: EntityStatus = EntityStatus.SOLID_APPROVAL,
+    slug: str | None = None,
+    dashboard_config: DashboardConfig | None = None,
 ) -> Project:
     return Project(
         id=id or uuid4(),
@@ -66,6 +69,8 @@ def make_project(
         group_id=group_id or uuid4(),
         created_at=datetime.now(),
         updated_at=datetime.now(),
+        slug=slug,
+        dashboard_config=dashboard_config,
     )
 
 

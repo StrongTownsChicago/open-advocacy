@@ -114,7 +114,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return user;
     } catch (err: unknown) {
       const errorMessage =
-        (err instanceof Error && 'response' in err && (err as { response?: { data?: { detail?: string } } }).response?.data?.detail) || 'Registration failed. Please try again later.';
+        (err instanceof Error &&
+          'response' in err &&
+          (err as { response?: { data?: { detail?: string } } }).response?.data?.detail) ||
+        'Registration failed. Please try again later.';
       setError(errorMessage);
       return null;
     } finally {

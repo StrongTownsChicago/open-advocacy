@@ -1,9 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserRepresentativesProvider } from './contexts/UserRepresentativesContext';
-
 
 import HomePage from './pages/HomePage';
 import ProjectDetail from './pages/ProjectDetail';
@@ -13,13 +12,13 @@ import RepresentativeLookup from './pages/RepresentativeLookup';
 import EntityDetail from './pages/EntityDetail';
 import LoginPage from './pages/LoginPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
-
-// Custom Project Pages
-import AduOptInDashboard from './pages/CustomProjects/AduOptInDashboard';
+import ProjectDashboard from './pages/ProjectDashboard';
 
 // Admin Pages
 import UserManagement from './pages/admin/UserManagementPage';
 import RegisterPage from './pages/admin/RegisterPage';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import DataImportPage from './pages/admin/DataImportPage';
 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -40,7 +39,11 @@ const App: React.FC = () => {
                 <Route path="/projects/:id" element={<ProjectDetail />} />
                 <Route path="/representatives" element={<RepresentativeLookup />} />
                 <Route path="/representatives/:id" element={<EntityDetail />} />
-                <Route path="/adu-opt-in-dashboard" element={<AduOptInDashboard />} />
+                <Route path="/dashboard/:slug" element={<ProjectDashboard />} />
+                <Route
+                  path="/adu-opt-in-dashboard"
+                  element={<Navigate to="/dashboard/adu-opt-in-dashboard" replace />}
+                />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
@@ -74,7 +77,25 @@ const App: React.FC = () => {
                   path="/admin"
                   element={
                     <ProtectedRoute requiredRoles={['super_admin', 'group_admin']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute requiredRoles={['super_admin', 'group_admin']}>
                       <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin/imports"
+                  element={
+                    <ProtectedRoute requiredRoles={['super_admin']}>
+                      <DataImportPage />
                     </ProtectedRoute>
                   }
                 />

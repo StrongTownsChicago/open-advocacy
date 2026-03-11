@@ -90,3 +90,19 @@ describe('projectService.getProjectByName', () => {
     expect(api.get).toHaveBeenCalledWith('/projects/by-name/ADU%20Opt-In%20Project');
   });
 });
+
+describe('projectService.getProjectBySlug', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls correct endpoint with slug', async () => {
+    await projectService.getProjectBySlug('my-slug');
+    expect(api.get).toHaveBeenCalledWith('/projects/slug/my-slug');
+  });
+
+  it('URL-encodes the slug', async () => {
+    await projectService.getProjectBySlug('my slug/with special');
+    expect(api.get).toHaveBeenCalledWith('/projects/slug/my%20slug%2Fwith%20special');
+  });
+});

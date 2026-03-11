@@ -37,9 +37,9 @@ describe('HTTPS interceptor logic', () => {
 });
 
 describe('API base URL', () => {
-  it('base URL is set from VITE_API_URL env or defaults to a valid URL', async () => {
+  it('base URL is set from VITE_API_URL env or defaults to /api', async () => {
     const api = (await import('./api')).default;
     expect(api.defaults.baseURL).toBeDefined();
-    expect(api.defaults.baseURL).toMatch(/^https?:\/\/.+\/api$/);
+    expect(api.defaults.baseURL).toMatch(/\/api/);
   });
 });

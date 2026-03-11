@@ -8,6 +8,7 @@ from app.services.service_factory import (
     get_cached_status_service,
 )
 from app.models.pydantic.models import (
+    DashboardConfig,
     ProjectBase,
     EntityStatusRecord,
     EntityStatus,
@@ -238,6 +239,18 @@ async def import_adu_project_data():
             jurisdiction_id=jurisdiction.id,
             group_id=group.id,
             created_by="admin",
+            slug="adu-opt-in-dashboard",
+            dashboard_config=DashboardConfig(
+                representative_title="Alderperson",
+                status_labels={
+                    "solid_approval": "Fully Opted In",
+                    "leaning_approval": "Partially Opted In",
+                    "neutral": "Not Eligible",
+                    "leaning_disapproval": "Not Opted In",
+                    "solid_disapproval": "Strongly Opposed",
+                    "unknown": "Unknown",
+                },
+            ),
         )
     )
     logger.info(f"Created project: {project.title}")

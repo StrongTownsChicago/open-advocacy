@@ -61,6 +61,11 @@ export interface StatusDistribution {
   total: number;
 }
 
+export interface DashboardConfig {
+  representative_title?: string;
+  status_labels?: Record<string, string>;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -77,6 +82,8 @@ export interface Project {
   updated_at: string;
   group_id: string;
   status_distribution?: StatusDistribution;
+  slug?: string;
+  dashboard_config?: DashboardConfig;
 }
 
 export interface ProjectCreateData {

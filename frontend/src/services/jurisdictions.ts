@@ -16,7 +16,9 @@ export const jurisdictionService = {
     return api.get<Jurisdiction>(`/jurisdictions/${id}`);
   },
 
-  async getDistrictGeoJSON(jurisdictionId: string): Promise<{ [districtId: string]: GeoJSON.GeoJsonObject }> {
+  async getDistrictGeoJSON(
+    jurisdictionId: string
+  ): Promise<{ [districtId: string]: GeoJSON.GeoJsonObject }> {
     const res = await api.get(`/jurisdictions/${jurisdictionId}/geojson`);
     return res.data;
   },

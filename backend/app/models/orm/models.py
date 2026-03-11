@@ -56,6 +56,8 @@ class Project(Base):
     )
     group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=True)
     is_public = Column(Boolean, default=True)
+    slug = Column(String(255), nullable=True, unique=True, index=True)
+    dashboard_config = Column(JSON, nullable=True)
 
     # Relationships
     status_records = relationship("EntityStatusRecord", back_populates="project")

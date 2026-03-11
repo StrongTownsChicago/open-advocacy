@@ -36,6 +36,9 @@ class Settings(BaseSettings):
 
     AUTH_SECRET_KEY: str | None = None
 
+    SEED_LOCATIONS: str = ""  # Comma-separated, e.g. "chicago" or "chicago,illinois"
+    SEED_PROJECTS: str = ""  # Comma-separated, e.g. "adu" or "adu,example"
+
     class Config:
         env_file = os.path.join(BASE_DIR, ".env")
         env_file_encoding = "utf-8"

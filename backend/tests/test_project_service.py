@@ -315,3 +315,45 @@ class TestListProjects:
         titles = [p.title for p in results]
         assert "Active" not in titles
         assert "Archived" in titles
+
+
+class TestGetProjectBySlug:
+    """Tests for slug-based project lookup."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.projects_provider = MockDatabaseProvider()
+        self.jurisdictions_provider = MockDatabaseProvider()
+        self.service = ProjectService(
+            projects_provider=self.projects_provider,
+            status_records_provider=MockDatabaseProvider(),
+            entities_provider=MockDatabaseProvider(),
+            jurisdictions_provider=self.jurisdictions_provider,
+            groups_provider=MockDatabaseProvider(),
+        )
+
+    async def test_get_project_by_slug_returns_project_when_found(self):
+        """Slug-based lookup returns the matching project."""
+        project = make_project(slug="my-slug")
+        self.projects_provider.seed(project)
+
+        result = await self.service.get_project_by_slug("my-slug")
+        assert result is not None
+        assert result.id == project.id
+
+    async def test_get_project_by_slug_returns_none_when_not_found(self):
+        """Slug-based lookup returns None for absent slug."""
+        result = await self.service.get_project_by_slug("nonexistent-slug")
+        assert result is None
+
+    async def test_get_project_by_slug_returns_enriched_project(self):
+        """Returned project has jurisdiction_name populated."""
+        jurisdiction = make_jurisdiction(name="Test City Council")
+        self.jurisdictions_provider.seed(jurisdiction)
+
+        project = make_project(slug="enriched-slug", jurisdiction_id=jurisdiction.id)
+        self.projects_provider.seed(project)
+
+        result = await self.service.get_project_by_slug("enriched-slug")
+        assert result is not None
+        assert result.jurisdiction_name == "Test City Council"

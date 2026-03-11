@@ -23,6 +23,12 @@ interface Group {
   description?: string;
 }
 
+const ROLE_DESCRIPTIONS: Record<string, string> = {
+  editor: 'Can update project statuses and entity information',
+  group_admin: 'Can manage users and projects within their group',
+  super_admin: 'Full system access across all groups',
+};
+
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -321,9 +327,12 @@ const RegisterPage: React.FC = () => {
                 value={role}
                 onChange={e => setRole(e.target.value)}
                 error={!!formErrors.role}
-                helperText={formErrors.role || 'Select the role for this user'}
+                helperText={
+                  formErrors.role || ROLE_DESCRIPTIONS[role] || 'Select the role for this user'
+                }
                 disabled={loading}
               >
+                {hasRole('super_admin') && <MenuItem value="super_admin">Super Admin</MenuItem>}
                 <MenuItem value="group_admin">Group Admin</MenuItem>
                 <MenuItem value="editor">Editor</MenuItem>
               </TextField>

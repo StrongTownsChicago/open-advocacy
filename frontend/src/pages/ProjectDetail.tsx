@@ -77,7 +77,9 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tabValue, setTabValue] = useState(0);
-  const [geojsonByDistrict, setGeojsonByDistrict] = useState<{ [districtId: string]: GeoJSON.GeoJsonObject }>({});
+  const [geojsonByDistrict, setGeojsonByDistrict] = useState<{
+    [districtId: string]: GeoJSON.GeoJsonObject;
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
