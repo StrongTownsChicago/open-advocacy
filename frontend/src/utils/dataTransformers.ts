@@ -1,5 +1,18 @@
 import { Project, Entity, EntityStatus, ProjectStatus, Group } from '../types';
 
+export function formatMetricValue(value: unknown, format: string): string {
+  if (value === null || value === undefined) return '\u2014';
+  const num = Number(value);
+  switch (format) {
+    case 'percentage':
+      return isNaN(num) ? '\u2014' : `${num.toFixed(1)}%`;
+    case 'number':
+      return isNaN(num) ? '\u2014' : num.toLocaleString();
+    default:
+      return String(value);
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformProjectFromApi = (project: any): Project => {
   return {

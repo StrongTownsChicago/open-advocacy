@@ -47,6 +47,7 @@ export interface EntityStatusRecord {
   project_id: string;
   status: EntityStatus;
   notes?: string;
+  record_metadata?: Record<string, unknown>;
   updated_at: string;
   updated_by: string;
 }
@@ -61,9 +62,18 @@ export interface StatusDistribution {
   total: number;
 }
 
+export interface MetricDisplayConfig {
+  key: string;
+  label: string;
+  format?: string;
+  show_in_table?: boolean;
+  show_in_tooltip?: boolean;
+}
+
 export interface DashboardConfig {
   representative_title?: string;
   status_labels?: Record<string, string>;
+  metrics?: MetricDisplayConfig[];
 }
 
 export interface Project {

@@ -35,9 +35,10 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import PublicIcon from '@mui/icons-material/Public';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-import { Entity, Project, EntityStatus, EntityStatusRecord, UserRole } from '../../types';
+import { Entity, Project, EntityStatus, EntityStatusRecord, MetricDisplayConfig, UserRole } from '../../types';
 import { statusService } from '../../services/status';
 import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '../../utils/statusColors';
+import { formatMetricValue } from '../../utils/dataTransformers';
 import { useAuth } from '../../contexts/AuthContext';
 import ConditionalUI from '../auth/ConditionalUI';
 
@@ -57,12 +58,14 @@ const EntityRow = ({
   statusRecord,
   onStatusUpdated,
   getStatusLabel = getStatusLabelDefault,
+  tableMetrics = [],
 }: {
   entity: Entity;
   project: Project;
   statusRecord?: EntityStatusRecord;
   onStatusUpdated: () => void;
   getStatusLabel?: (status: EntityStatus) => string;
+  tableMetrics?: MetricDisplayConfig[];
 }) => {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<EntityStatus>(statusRecord?.status || EntityStatus.UNKNOWN);
@@ -215,10 +218,18 @@ const EntityRow = ({
               : statusRecord.notes
             : ''}
         </TableCell>
+        {tableMetrics.map(metric => (
+          <TableCell key={metric.key} align="right">
+            {formatMetricValue(
+              statusRecord?.record_metadata?.[metric.key],
+              metric.format ?? 'text'
+            )}
+          </TableCell>
+        ))}
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6 + tableMetrics.length}>
           <Collapse in={open} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
             <Box sx={{ margin: 2, width: '100%' }}>
               <Grid container spacing={2} sx={{ width: '100%' }}>
@@ -445,6 +456,11 @@ const EntityList: React.FC<EntityListProps> = ({
   onStatusUpdated,
   getStatusLabel = getStatusLabelDefault,
 }) => {
+  const tableMetrics = useMemo(
+    () => project.dashboard_config?.metrics?.filter(m => m.show_in_table !== false) ?? [],
+    [project.dashboard_config?.metrics]
+  );
+
   // State for filtering and sorting
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Entity>('name');
@@ -627,12 +643,17 @@ const EntityList: React.FC<EntityListProps> = ({
                 </TableCell>
                 <TableCell align="right">Status</TableCell>
                 <TableCell align="center">Notes</TableCell>
+                {tableMetrics.map(metric => (
+                  <TableCell key={metric.key} align="right">
+                    {metric.label}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredEntities.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
+                  <TableCell colSpan={6 + tableMetrics.length} align="center" sx={{ py: 3 }}>
                     <Typography variant="body1" color="text.secondary">
                       No entities found matching your criteria
                     </Typography>
@@ -649,6 +670,7 @@ const EntityList: React.FC<EntityListProps> = ({
                     )}
                     onStatusUpdated={onStatusUpdated}
                     getStatusLabel={getStatusLabel}
+                    tableMetrics={tableMetrics}
                   />
                 ))
               )}

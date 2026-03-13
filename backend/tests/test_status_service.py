@@ -155,3 +155,37 @@ class TestCreateStatusRecordUpsert:
         # Should still have exactly 2 records
         all_records = await self.status_records_provider.list()
         assert len(all_records) == 2
+
+    async def test_create_preserves_metadata(self):
+        """Metadata dict should be stored and retrievable after create."""
+        project = make_project()
+        self.projects_provider.seed(project)
+        entity = make_entity()
+        self.entities_provider.seed(entity)
+
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+            record_metadata={"rs_zoned_pct": 45.2},
+        )
+        result = await self.service.create_status_record(record)
+
+        assert result.record_metadata is not None
+        assert result.record_metadata["rs_zoned_pct"] == 45.2
+
+    async def test_create_with_none_metadata(self):
+        """Creating a record without record_metadata should result in None."""
+        project = make_project()
+        self.projects_provider.seed(project)
+        entity = make_entity()
+        self.entities_provider.seed(entity)
+
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.NEUTRAL,
+        )
+        result = await self.service.create_status_record(record)
+
+        assert result.record_metadata is None

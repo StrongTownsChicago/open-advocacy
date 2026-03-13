@@ -3,6 +3,7 @@ import {
   transformProjectFromApi,
   transformEntityFromApi,
   transformGroupFromApi,
+  formatMetricValue,
 } from './dataTransformers';
 import { EntityStatus, ProjectStatus } from '../types';
 
@@ -199,6 +200,40 @@ describe('transformProjectFromApi — edge cases', () => {
 
     const result = transformProjectFromApi(apiProject);
     expect(result.jurisdiction_name).toBe('City of Chicago');
+  });
+});
+
+describe('formatMetricValue', () => {
+  it('returns em-dash for null', () => {
+    expect(formatMetricValue(null, 'percentage')).toBe('\u2014');
+  });
+
+  it('returns em-dash for undefined', () => {
+    expect(formatMetricValue(undefined, 'text')).toBe('\u2014');
+  });
+
+  it('formats percentage with one decimal place', () => {
+    expect(formatMetricValue(33.0, 'percentage')).toBe('33.0%');
+    expect(formatMetricValue(99.95, 'percentage')).toBe('100.0%');
+  });
+
+  it('formats number with locale separators', () => {
+    expect(formatMetricValue(1234, 'number')).toBe('1,234');
+    expect(formatMetricValue(0, 'number')).toBe('0');
+  });
+
+  it('formats text as string', () => {
+    expect(formatMetricValue('hello', 'text')).toBe('hello');
+    expect(formatMetricValue(42, 'text')).toBe('42');
+  });
+
+  it('uses text format as default for unknown format strings', () => {
+    expect(formatMetricValue(42, 'unknown_format')).toBe('42');
+  });
+
+  it('returns em-dash for NaN input with number format', () => {
+    expect(formatMetricValue('not-a-number', 'number')).toBe('\u2014');
+    expect(formatMetricValue('not-a-number', 'percentage')).toBe('\u2014');
   });
 });
 

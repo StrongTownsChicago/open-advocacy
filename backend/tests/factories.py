@@ -95,6 +95,8 @@ def make_status_record(
     entity_id: UUID | None = None,
     project_id: UUID | None = None,
     status: EntityStatus = EntityStatus.UNKNOWN,
+    notes: str | None = None,
+    record_metadata: dict | None = None,
     updated_by: str = "test_user",
 ) -> EntityStatusRecord:
     return EntityStatusRecord(
@@ -102,6 +104,8 @@ def make_status_record(
         entity_id=entity_id or uuid4(),
         project_id=project_id or uuid4(),
         status=status,
+        notes=notes,
+        record_metadata=record_metadata,
         updated_by=updated_by,
         updated_at=datetime.now(),
     )

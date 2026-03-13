@@ -268,6 +268,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               statusRecords={statusRecords}
               geojsonByDistrict={geojsonByDistrict}
               getStatusLabel={getStatusLabel}
+              dashboardConfig={project.dashboard_config}
             />
           </Box>
         )}

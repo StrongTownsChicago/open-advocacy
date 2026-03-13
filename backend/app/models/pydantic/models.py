@@ -98,6 +98,7 @@ class EntityStatusRecord(BaseModel):
     project_id: UUID
     status: EntityStatus = EntityStatus.UNKNOWN
     notes: str | None = None
+    record_metadata: dict[str, Any] | None = None
     updated_at: datetime = Field(default_factory=datetime.now)
     updated_by: str
 
@@ -129,9 +130,18 @@ class Group(GroupBase):
         from_attributes = True
 
 
+class MetricDisplayConfig(BaseModel):
+    key: str
+    label: str
+    format: str = "text"
+    show_in_table: bool = True
+    show_in_tooltip: bool = True
+
+
 class DashboardConfig(BaseModel):
     representative_title: str | None = None
     status_labels: dict[str, str] | None = None
+    metrics: list[MetricDisplayConfig] | None = None
 
 
 class ProjectBase(BaseModel):

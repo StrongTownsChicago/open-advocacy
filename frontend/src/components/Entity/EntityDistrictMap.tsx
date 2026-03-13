@@ -1,8 +1,9 @@
 import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Entity, EntityStatus, EntityStatusRecord } from '../../types';
+import { Entity, EntityStatus, EntityStatusRecord, DashboardConfig } from '../../types';
 import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '@/utils/statusColors';
+import { formatMetricValue } from '@/utils/dataTransformers';
 
 interface EntityDistrictMapProps {
   entities: Entity[];
@@ -10,6 +11,7 @@ interface EntityDistrictMapProps {
   geojsonByDistrict: { [districtName: string]: GeoJSON.GeoJsonObject };
   getStatusLabel?: (status: string) => string;
   centerPoint?: [number, number];
+  dashboardConfig?: DashboardConfig;
 }
 
 const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
@@ -18,6 +20,7 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
   geojsonByDistrict,
   getStatusLabel = getStatusLabelDefault,
   centerPoint = [41.8781, -87.6298],
+  dashboardConfig,
 }) => {
   const statusMap = statusRecords.reduce(
     (acc, record) => {
@@ -26,6 +29,16 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
     },
     {} as Record<string, EntityStatus>
   );
+
+  const recordMap = statusRecords.reduce(
+    (acc, record) => {
+      acc[record.entity_id] = record;
+      return acc;
+    },
+    {} as Record<string, EntityStatusRecord>
+  );
+
+  const tooltipMetrics = dashboardConfig?.metrics?.filter(m => m.show_in_tooltip !== false) ?? [];
 
   const entityByDistrict: Record<string, Entity | undefined> = {};
   entities.forEach(entity => {
@@ -44,6 +57,11 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
     let tooltipContent = `<strong>${districtName || 'Unknown Ward'}</strong>`;
     if (entity) {
       tooltipContent += `<br/>${entity.name} (${entity.title || ''})<br/>Status: ${getStatusLabel(status)}`;
+      const record = recordMap[entity.id];
+      for (const metric of tooltipMetrics) {
+        const value = record?.record_metadata?.[metric.key];
+        tooltipContent += `<br/>${metric.label}: ${formatMetricValue(value, metric.format ?? 'text')}`;
+      }
     }
     layer.bindTooltip(tooltipContent, { sticky: true });
   }

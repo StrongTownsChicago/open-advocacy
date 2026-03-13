@@ -129,6 +129,7 @@ class EntityStatusRecord(Base):
     project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"), nullable=False)
     status = Column(String(50), nullable=False, default="unknown")
     notes = Column(Text, nullable=True)
+    record_metadata = Column("record_metadata", JSON, nullable=True)
     updated_at = Column(DateTime(timezone=True), default=datetime.utcnow)
     updated_by = Column(String(255), nullable=False)
 

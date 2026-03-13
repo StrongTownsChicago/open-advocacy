@@ -9,6 +9,7 @@ from app.services.service_factory import (
 )
 from app.models.pydantic.models import (
     DashboardConfig,
+    MetricDisplayConfig,
     ProjectBase,
     EntityStatusRecord,
     EntityStatus,
@@ -185,6 +186,61 @@ WARD_OPT_IN_INFO = {
     },
 }
 
+# Placeholder RS-zoned land percentages by ward number.
+# These are approximate values; replace with real data when available.
+WARD_RS_ZONED_PCT: dict[int, float] = {
+    1: 15.2,
+    2: 12.8,
+    3: 0.0,
+    4: 22.1,
+    5: 18.7,
+    6: 35.4,
+    7: 28.3,
+    8: 31.6,
+    9: 42.0,
+    10: 55.3,
+    11: 48.7,
+    12: 20.5,
+    13: 62.1,
+    14: 45.8,
+    15: 38.9,
+    16: 41.2,
+    17: 36.7,
+    18: 52.4,
+    19: 68.3,
+    20: 33.0,
+    21: 57.8,
+    22: 44.1,
+    23: 71.2,
+    24: 29.6,
+    25: 25.3,
+    26: 17.9,
+    27: 14.3,
+    28: 23.8,
+    29: 30.2,
+    30: 39.5,
+    31: 34.1,
+    32: 11.7,
+    33: 46.3,
+    34: 53.9,
+    35: 27.4,
+    36: 19.8,
+    37: 50.6,
+    38: 64.7,
+    39: 58.2,
+    40: 43.5,
+    41: 72.8,
+    42: 0.0,
+    43: 61.4,
+    44: 8.9,
+    45: 56.1,
+    46: 6.3,
+    47: 37.2,
+    48: 21.6,
+    49: 47.5,
+    50: 66.0,
+}
+
 PROJECT_TITLE = "ADU Opt-In Dashboard"
 PROJECT_DESCRIPTION = (
     "The City Council’s September 2025 ADU ordinance re-legalized accessory dwelling units (coach houses, basement apartments, granny flats), "
@@ -250,6 +306,15 @@ async def import_adu_project_data():
                     "solid_disapproval": "Strongly Opposed",
                     "unknown": "Unknown",
                 },
+                metrics=[
+                    MetricDisplayConfig(
+                        key="rs_zoned_pct",
+                        label="RS-Zoned Land",
+                        format="percentage",
+                        show_in_table=True,
+                        show_in_tooltip=True,
+                    )
+                ],
             ),
         )
     )
@@ -290,11 +355,16 @@ async def import_adu_project_data():
         else:
             status = EntityStatus.LEANING_DISAPPROVAL
 
+        record_metadata: dict[str, float] | None = None
+        if ward_number is not None and ward_number in WARD_RS_ZONED_PCT:
+            record_metadata = {"rs_zoned_pct": WARD_RS_ZONED_PCT[ward_number]}
+
         status_record = EntityStatusRecord(
             entity_id=entity.id,
             project_id=project.id,
             status=status,
             notes=notes,
+            record_metadata=record_metadata,
             updated_by="admin",
         )
         await status_service.create_status_record(status_record)
