@@ -39,6 +39,8 @@ class Settings(BaseSettings):
     SEED_LOCATIONS: str = ""  # Comma-separated, e.g. "chicago" or "chicago,illinois"
     SEED_PROJECTS: str = ""  # Comma-separated, e.g. "adu" or "adu,example"
 
+    CHICAGO_CITYSCAPE_API_KEY: str | None = None
+
     class Config:
         env_file = os.path.join(BASE_DIR, ".env")
         env_file_encoding = "utf-8"
