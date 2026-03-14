@@ -9,6 +9,85 @@ from tests.factories import make_entity, make_project, make_status_record
 from tests.mock_provider import MockDatabaseProvider
 
 
+class TestListStatusRecords:
+    """Tests for filtering logic in list_status_records."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from app.services.status_service import StatusService
+
+        self.status_records_provider = MockDatabaseProvider()
+        self.projects_provider = MockDatabaseProvider()
+        self.entities_provider = MockDatabaseProvider()
+        self.service = StatusService(
+            status_records_provider=self.status_records_provider,
+            projects_provider=self.projects_provider,
+            entities_provider=self.entities_provider,
+        )
+
+    async def test_list_no_filter_returns_all(self):
+        """No filter returns all records."""
+        r1 = make_status_record()
+        r2 = make_status_record()
+        r3 = make_status_record()
+        self.status_records_provider.seed(r1)
+        self.status_records_provider.seed(r2)
+        self.status_records_provider.seed(r3)
+
+        result = await self.service.list_status_records()
+
+        assert len(result) == 3
+
+    async def test_list_filters_by_project_id(self):
+        """3 records (2 for project A, 1 for project B); filtering by project A returns exactly 2."""
+        project_a_id = uuid4()
+        project_b_id = uuid4()
+        r1 = make_status_record(project_id=project_a_id)
+        r2 = make_status_record(project_id=project_a_id)
+        r3 = make_status_record(project_id=project_b_id)
+        self.status_records_provider.seed(r1)
+        self.status_records_provider.seed(r2)
+        self.status_records_provider.seed(r3)
+
+        result = await self.service.list_status_records(project_id=project_a_id)
+
+        assert len(result) == 2
+        assert all(r.project_id == project_a_id for r in result)
+
+    async def test_list_filters_by_entity_id(self):
+        """3 records; filtering by entity ID returns only that entity's records."""
+        entity_id = uuid4()
+        r1 = make_status_record(entity_id=entity_id)
+        r2 = make_status_record(entity_id=uuid4())
+        r3 = make_status_record(entity_id=uuid4())
+        self.status_records_provider.seed(r1)
+        self.status_records_provider.seed(r2)
+        self.status_records_provider.seed(r3)
+
+        result = await self.service.list_status_records(entity_id=entity_id)
+
+        assert len(result) == 1
+        assert result[0].entity_id == entity_id
+
+    async def test_list_filters_by_both(self):
+        """Combined project+entity filter returns the single exact match."""
+        project_id = uuid4()
+        entity_id = uuid4()
+        match = make_status_record(project_id=project_id, entity_id=entity_id)
+        other_project = make_status_record(project_id=uuid4(), entity_id=entity_id)
+        other_entity = make_status_record(project_id=project_id, entity_id=uuid4())
+        self.status_records_provider.seed(match)
+        self.status_records_provider.seed(other_project)
+        self.status_records_provider.seed(other_entity)
+
+        result = await self.service.list_status_records(
+            project_id=project_id, entity_id=entity_id
+        )
+
+        assert len(result) == 1
+        assert result[0].id == match.id
+
+
 class TestCreateStatusRecordValidation:
     """Tests for validation in create_status_record."""
 

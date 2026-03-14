@@ -317,6 +317,58 @@ class TestListProjects:
         assert "Archived" in titles
 
 
+class TestEnrichProjectsWithJurisdictionName:
+    """Tests for enrich_projects_with_jurisdiction_name enrichment logic."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.projects_provider = MockDatabaseProvider()
+        self.jurisdictions_provider = MockDatabaseProvider()
+        self.service = ProjectService(
+            projects_provider=self.projects_provider,
+            status_records_provider=MockDatabaseProvider(),
+            entities_provider=MockDatabaseProvider(),
+            jurisdictions_provider=self.jurisdictions_provider,
+            groups_provider=MockDatabaseProvider(),
+        )
+
+    async def test_enrich_sets_jurisdiction_name_for_all(self):
+        """3 projects each with a jurisdiction; all get jurisdiction_name set correctly."""
+        j1 = make_jurisdiction(name="City Council")
+        j2 = make_jurisdiction(name="State Senate")
+        j3 = make_jurisdiction(name="County Board")
+        self.jurisdictions_provider.seed(j1)
+        self.jurisdictions_provider.seed(j2)
+        self.jurisdictions_provider.seed(j3)
+
+        p1 = make_project(jurisdiction_id=j1.id)
+        p2 = make_project(jurisdiction_id=j2.id)
+        p3 = make_project(jurisdiction_id=j3.id)
+
+        result = await self.service.enrich_projects_with_jurisdiction_name([p1, p2, p3])
+
+        names_by_id = {p.id: p.jurisdiction_name for p in result}
+        assert names_by_id[p1.id] == "City Council"
+        assert names_by_id[p2.id] == "State Senate"
+        assert names_by_id[p3.id] == "County Board"
+
+    async def test_enrich_skips_project_with_no_jurisdiction_id(self):
+        """Project with jurisdiction_id=None is included in result without error."""
+        p = make_project()
+        p.jurisdiction_id = None
+
+        result = await self.service.enrich_projects_with_jurisdiction_name([p])
+
+        assert len(result) == 1
+        assert result[0].jurisdiction_name is None
+
+    async def test_enrich_empty_list(self):
+        """enrich_projects_with_jurisdiction_name([]) returns [] without error."""
+        result = await self.service.enrich_projects_with_jurisdiction_name([])
+
+        assert result == []
+
+
 class TestGetProjectBySlug:
     """Tests for slug-based project lookup."""
 

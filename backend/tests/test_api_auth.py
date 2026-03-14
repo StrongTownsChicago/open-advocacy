@@ -1,6 +1,7 @@
 """Tests for auth API route integration (login, register, permissions)."""
 
 from unittest.mock import patch
+from uuid import uuid4
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -300,3 +301,177 @@ class TestAdminRoleUpdatePermissions:
             )
         assert response.status_code == 200
         assert response.json()["role"] == "group_admin"
+
+
+class TestAdminPasswordEndpoint:
+    """Tests for the PATCH /api/users/{user_id}/password permission logic."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from app.core.auth import get_group_admin_user
+
+        self.service, self.super_admin, self.group = _build_user_service()
+        app.dependency_overrides[get_user_service] = lambda: self.service
+        self._get_group_admin_user = get_group_admin_user
+        yield
+        app.dependency_overrides.clear()
+
+    def _setup_user_override(self, user):
+        async def mock_get_admin():
+            return user
+
+        app.dependency_overrides[self._get_group_admin_user] = mock_get_admin
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_update_password_requires_auth(self):
+        """PATCH without token → 401."""
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{uuid4()}/password",
+                json={"password": "newpass"},
+            )
+        assert response.status_code == 401
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_super_admin_updates_editor_password(self):
+        """Super admin can update an editor's password → 200."""
+        editor = make_user(
+            email="editor@test.com",
+            name="Editor",
+            group_id=self.group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(editor)
+        self._setup_user_override(self.super_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{editor.id}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 200
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_super_admin_cannot_update_other_super_admin(self):
+        """Super admin cannot update another super admin's password → 403."""
+        other_super = make_user(
+            email="other_super@test.com",
+            name="Other Super",
+            group_id=self.group.id,
+            role=UserRole.SUPER_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(other_super)
+        self._setup_user_override(self.super_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{other_super.id}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_updates_user_in_own_group(self):
+        """Group admin can update a user's password in their own group → 200."""
+        group_admin = make_user(
+            email="gadmin@test.com",
+            name="Group Admin",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        editor = make_user(
+            email="editor2@test.com",
+            name="Editor 2",
+            group_id=self.group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+        self.service.users_provider.seed(editor)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{editor.id}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 200
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_cannot_update_other_group(self):
+        """Group admin cannot update a user in a different group → 403."""
+        other_group = make_group(name="Other Group")
+        self.service.groups_provider.seed(other_group)
+
+        group_admin = make_user(
+            email="gadmin2@test.com",
+            name="Group Admin 2",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        other_user = make_user(
+            email="other@test.com",
+            name="Other User",
+            group_id=other_group.id,
+            role=UserRole.EDITOR,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+        self.service.users_provider.seed(other_user)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{other_user.id}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_group_admin_cannot_update_super_admin(self):
+        """Group admin cannot update a super admin's password → 403."""
+        group_admin = make_user(
+            email="gadmin3@test.com",
+            name="Group Admin 3",
+            group_id=self.group.id,
+            role=UserRole.GROUP_ADMIN,
+            hashed_password=get_password_hash("pass"),
+        )
+        self.service.users_provider.seed(group_admin)
+        self._setup_user_override(group_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{self.super_admin.id}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 403
+
+    @patch("app.core.auth.SECRET_KEY", TEST_SECRET_KEY)
+    async def test_update_password_user_not_found(self):
+        """Super admin with random UUID → 404."""
+        self._setup_user_override(self.super_admin)
+
+        transport = ASGITransport(app=app)
+        async with AsyncClient(transport=transport, base_url="http://test") as client:
+            response = await client.patch(
+                f"/api/users/{uuid4()}/password",
+                json={"password": "newpassword"},
+                headers={"Authorization": "Bearer fake"},
+            )
+        assert response.status_code == 404

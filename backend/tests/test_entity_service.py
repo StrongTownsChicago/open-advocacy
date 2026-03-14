@@ -40,6 +40,39 @@ class TestListEntities:
         assert len(result) == 1
         assert result[0].district_name == "Ward 1"
 
+    async def test_enriches_multiple_entities_district_names(self):
+        """3 entities in 3 districts; each entity's district_name matches its district."""
+        jurisdiction = make_jurisdiction()
+        self.jurisdictions_provider.seed(jurisdiction)
+
+        district_a = make_district(name="Ward 1", jurisdiction_id=jurisdiction.id)
+        district_b = make_district(name="Ward 2", jurisdiction_id=jurisdiction.id)
+        district_c = make_district(name="Ward 3", jurisdiction_id=jurisdiction.id)
+        self.districts_provider.seed(district_a)
+        self.districts_provider.seed(district_b)
+        self.districts_provider.seed(district_c)
+
+        entity_a = make_entity(
+            name="Ald. A", jurisdiction_id=jurisdiction.id, district_id=district_a.id
+        )
+        entity_b = make_entity(
+            name="Ald. B", jurisdiction_id=jurisdiction.id, district_id=district_b.id
+        )
+        entity_c = make_entity(
+            name="Ald. C", jurisdiction_id=jurisdiction.id, district_id=district_c.id
+        )
+        self.entities_provider.seed(entity_a)
+        self.entities_provider.seed(entity_b)
+        self.entities_provider.seed(entity_c)
+
+        result = await self.service.list_entities(jurisdiction.id)
+
+        assert len(result) == 3
+        names_by_id = {e.id: e.district_name for e in result}
+        assert names_by_id[entity_a.id] == "Ward 1"
+        assert names_by_id[entity_b.id] == "Ward 2"
+        assert names_by_id[entity_c.id] == "Ward 3"
+
     async def test_handles_missing_district_gracefully(self):
         """Entities with a district_id that has no matching district should not crash."""
         jurisdiction = make_jurisdiction()
