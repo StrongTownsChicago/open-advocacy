@@ -5,6 +5,10 @@ Run with:
 
 Requires Chicago City Council jurisdiction and alderperson entities to be
 already imported (run import_data chicago first).
+
+Two groups are seeded:
+  - Strong Towns Chicago: ADU, Parking, Single Stair, CHA Housing
+  - Abundant Housing Illinois: all of the above + HED Bond, NWPO, Green Social Housing
 """
 
 import asyncio
@@ -31,15 +35,17 @@ from app.services.service_factory import (
     get_cached_status_service,
 )
 
-SCORECARD_PROJECTS: list[dict[str, Any]] = [
+# All project definitions. Use "base_slug" — each group may prefix it.
+ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
     {
-        "slug": "single-stair-ordinance",
+        "base_slug": "single-stair-ordinance",
         "title": "Single Stair Ordinance — Cosponsors",
         "description": (
-            "The Single Stair Ordinance would allow multi-unit residential buildings "
-            "up to 6 stories to be built with a single staircase, enabling more efficient "
-            "floor plans and more housing. This tracks which alderpersons have cosponsored "
-            "the ordinance."
+            "Introduced by Ald. Matt Martin (47), this ordinance would allow new residential "
+            "buildings up to 6 stories to use a single exit stairwell (paired with a "
+            "fire-rated elevator), reducing construction costs and enabling more efficient "
+            "floor plans for small-to-mid-rise apartments. Currently in committee. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=9F0FF51D-7036-F011-8C4D-001DD8309E73"
         ),
         "matter_guid": "9F0FF51D-7036-F011-8C4D-001DD8309E73",
         "import_type": "sponsorship",
@@ -50,12 +56,16 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "cha-housing-ordinance",
+        "base_slug": "cha-housing-ordinance",
         "title": "CHA Housing Ordinance — Cosponsors",
         "description": (
-            "The CHA Housing Ordinance would expand affordable housing options by allowing "
-            "Chicago Housing Authority units in more areas of the city. This tracks which "
-            "alderpersons have cosponsored the ordinance."
+            "Introduced by Ald. Matt Martin (47), this ordinance would prohibit the "
+            "Department of Housing from holding affordable housing to higher design and "
+            "construction standards than market-rate buildings — specifically eliminating "
+            "the Architectural Technical Standards Manual (ATSM) applied to LIHTC-funded "
+            "projects. It also sets a 10-day deadline for change order approvals during "
+            "construction. Currently in committee. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=7F84A4EE-7136-F011-8C4D-001DD8309E73"
         ),
         "matter_guid": "7F84A4EE-7136-F011-8C4D-001DD8309E73",
         "import_type": "sponsorship",
@@ -66,12 +76,13 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "adu-citywide-vote",
+        "base_slug": "adu-citywide-vote",
         "title": "ADU Citywide Expansion — Vote",
         "description": (
-            "The ADU Citywide Expansion ordinance re-legalized accessory dwelling units "
-            "(coach houses, basement apartments, granny flats) across Chicago. "
-            "This tracks how each alderperson voted on final passage."
+            "Passed September 2025, this ordinance re-legalized accessory dwelling units "
+            "(coach houses, basement apartments, granny flats) citywide — though each "
+            "alderperson must separately opt their ward in. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=54028B60-C4FC-EE11-A1FE-001DD804AF4C"
         ),
         "matter_guid": "54028B60-C4FC-EE11-A1FE-001DD804AF4C",
         "import_type": "vote",
@@ -84,12 +95,13 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "adu-citywide-sponsorship",
+        "base_slug": "adu-citywide-sponsorship",
         "title": "ADU Citywide Expansion — Cosponsors",
         "description": (
-            "The ADU Citywide Expansion ordinance re-legalized accessory dwelling units "
-            "(coach houses, basement apartments, granny flats) across Chicago. "
-            "This tracks which alderpersons cosponsored the ordinance."
+            "Passed September 2025, this ordinance re-legalized accessory dwelling units "
+            "(coach houses, basement apartments, granny flats) citywide — though each "
+            "alderperson must separately opt their ward in. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=54028B60-C4FC-EE11-A1FE-001DD804AF4C"
         ),
         "matter_guid": "54028B60-C4FC-EE11-A1FE-001DD804AF4C",
         "import_type": "sponsorship",
@@ -100,12 +112,15 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "no-parking-minimums-vote",
+        "base_slug": "no-parking-minimums-vote",
         "title": "No Parking Minimums — Vote",
         "description": (
-            "The No Parking Minimums ordinance eliminated mandatory parking minimums "
-            "for new developments near transit, reducing construction costs and enabling "
-            "more housing. This tracks how each alderperson voted on final passage."
+            "Sponsored by Ald. La Spata (1) and passed unanimously in July 2025, this "
+            "ordinance allows developers to eliminate off-street parking requirements for "
+            "new construction within Transit-Served Locations — defined as within half a "
+            "mile of a CTA/Metra rail station or a quarter mile of major CTA bus corridors "
+            "(covering roughly three-quarters of the city). "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=06383958-E5EE-EF11-BE20-001DD83045C9"
         ),
         "matter_guid": "06383958-E5EE-EF11-BE20-001DD83045C9",
         "import_type": "vote",
@@ -118,12 +133,15 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "no-parking-minimums-sponsorship",
+        "base_slug": "no-parking-minimums-sponsorship",
         "title": "No Parking Minimums — Cosponsors",
         "description": (
-            "The No Parking Minimums ordinance eliminated mandatory parking minimums "
-            "for new developments near transit, reducing construction costs and enabling "
-            "more housing. This tracks which alderpersons cosponsored the ordinance."
+            "Sponsored by Ald. La Spata (1) and passed unanimously in July 2025, this "
+            "ordinance allows developers to eliminate off-street parking requirements for "
+            "new construction within Transit-Served Locations — defined as within half a "
+            "mile of a CTA/Metra rail station or a quarter mile of major CTA bus corridors "
+            "(covering roughly three-quarters of the city). "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=06383958-E5EE-EF11-BE20-001DD83045C9"
         ),
         "matter_guid": "06383958-E5EE-EF11-BE20-001DD83045C9",
         "import_type": "sponsorship",
@@ -134,12 +152,15 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "hed-bond-vote",
+        "base_slug": "hed-bond-vote",
         "title": "HED Bond — Vote",
         "description": (
-            "The Housing and Economic Development Bond provided funding for affordable "
-            "housing and neighborhood development. This tracks how each alderperson "
-            "voted on final passage."
+            "Sponsored by Mayor Brandon Johnson and passed 35-13 in April 2024, this "
+            "ordinance authorized $1.25 billion in bonds over five years for affordable "
+            "housing construction and neighborhood economic development, prioritizing "
+            "historically underinvested South and West Side communities. A $135 million "
+            "portion seeded the Green Social Housing revolving loan fund. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=7A924B08-39D0-EE11-9078-001DD806E058"
         ),
         "matter_guid": "7A924B08-39D0-EE11-9078-001DD806E058",
         "import_type": "vote",
@@ -152,12 +173,15 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
-        "slug": "hed-bond-sponsorship",
+        "base_slug": "hed-bond-sponsorship",
         "title": "HED Bond — Cosponsors",
         "description": (
-            "The Housing and Economic Development Bond provided funding for affordable "
-            "housing and neighborhood development. This tracks which alderpersons "
-            "cosponsored the bond ordinance."
+            "Sponsored by Mayor Brandon Johnson and passed 35-13 in April 2024, this "
+            "ordinance authorized $1.25 billion in bonds over five years for affordable "
+            "housing construction and neighborhood economic development, prioritizing "
+            "historically underinvested South and West Side communities. A $135 million "
+            "portion seeded the Green Social Housing revolving loan fund. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=7A924B08-39D0-EE11-9078-001DD806E058"
         ),
         "matter_guid": "7A924B08-39D0-EE11-9078-001DD806E058",
         "import_type": "sponsorship",
@@ -166,6 +190,97 @@ SCORECARD_PROJECTS: list[dict[str, Any]] = [
             "solid_approval": "Cosponsored",
             "unknown": "Not a Cosponsor",
         },
+    },
+    {
+        "base_slug": "nwpo-vote",
+        "title": "Northwest Side Preservation Ordinance — Vote",
+        "description": (
+            "Led by Ald. Ramirez-Rosa (35) and passed 41-3 in September 2024, this "
+            "ordinance raised demolition surcharges to $20,000/unit in neighborhoods "
+            "around the 606 trail corridor and established a Tenant Opportunity to "
+            "Purchase program giving tenants first refusal when their building is listed "
+            "for sale. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=C3F5E354-5F44-EF11-8409-001DD8306DF0"
+        ),
+        "matter_guid": "C3F5E354-5F44-EF11-8409-001DD8306DF0",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": {
+            "solid_approval": "Voted Yes",
+            "solid_disapproval": "Voted No",
+            "neutral": "Abstained",
+            "unknown": "Absent/Not Voting",
+        },
+    },
+    {
+        "base_slug": "gsh-vote",
+        "title": "Green Social Housing — Vote",
+        "description": (
+            "Sponsored by Mayor Johnson and passed 33-13 in May 2025, this ordinance "
+            "created the Residential Investment Corporation (RIC) — a public entity that "
+            "develops permanently affordable, mixed-income housing by retaining ownership "
+            "stakes in joint ventures with private developers. Funded by a $135 million "
+            "revolving loan fund from the 2024 HED Bond. Chicago is the first major U.S. "
+            "city to adopt this model. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=76EEBA20-D3EE-EF11-BE20-001DD83045C9"
+        ),
+        "matter_guid": "76EEBA20-D3EE-EF11-BE20-001DD83045C9",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": {
+            "solid_approval": "Voted Yes",
+            "solid_disapproval": "Voted No",
+            "neutral": "Abstained",
+            "unknown": "Absent/Not Voting",
+        },
+    },
+    {
+        "base_slug": "gsh-sponsorship",
+        "title": "Green Social Housing — Cosponsors",
+        "description": (
+            "Sponsored by Mayor Johnson and passed 33-13 in May 2025, this ordinance "
+            "created the Residential Investment Corporation (RIC) — a public entity that "
+            "develops permanently affordable, mixed-income housing by retaining ownership "
+            "stakes in joint ventures with private developers. Funded by a $135 million "
+            "revolving loan fund from the 2024 HED Bond. Chicago is the first major U.S. "
+            "city to adopt this model. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=76EEBA20-D3EE-EF11-BE20-001DD83045C9"
+        ),
+        "matter_guid": "76EEBA20-D3EE-EF11-BE20-001DD83045C9",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": {
+            "solid_approval": "Cosponsored",
+            "unknown": "Not a Cosponsor",
+        },
+    },
+]
+
+# Strong Towns Chicago: ADU, Parking, Single Stair, CHA Housing (no HED, NWPO, GSH)
+STC_BASE_SLUGS = {
+    "single-stair-ordinance",
+    "cha-housing-ordinance",
+    "adu-citywide-vote",
+    "adu-citywide-sponsorship",
+    "no-parking-minimums-vote",
+    "no-parking-minimums-sponsorship",
+}
+
+# Abundant Housing Illinois: all projects
+AHIL_BASE_SLUGS = {p["base_slug"] for p in ALL_SCORECARD_PROJECTS}
+
+GROUP_CONFIG: list[dict[str, Any]] = [
+    {
+        "name": "Strong Towns Chicago",
+        "description": "Empowers neighborhoods to incrementally build a more financially resilient city.",
+        "base_slugs": STC_BASE_SLUGS,
+        "slug_prefix": "",
+    },
+    {
+        "name": "Abundant Housing Illinois",
+        "description": "Advocates for more homes in more places across Illinois.",
+        "base_slugs": AHIL_BASE_SLUGS,
+        "slug_prefix": "ahil-",
     },
 ]
 
@@ -188,130 +303,138 @@ async def import_scorecard_projects() -> None:
         )
         return
 
-    group = await group_service.find_or_create_by_name(
-        "Strong Towns Chicago",
-        "Empowers neighborhoods to incrementally build a more financially resilient city.",
-    )
-    logger.info("Using group: %s (%s)", group.name, group.id)
-
     entities = await entity_service.list_entities(jurisdiction_id=jurisdiction.id)
     logger.info("Found %d alderpersons.", len(entities))
 
     client = ELMSClient()
-    projects_created = 0
-    projects_found = 0
+    total_created = 0
+    total_found = 0
 
-    for project_def in SCORECARD_PROJECTS:
-        slug = str(project_def["slug"])
-        logger.info("Processing project: %s", slug)
+    for group_cfg in GROUP_CONFIG:
+        group = await group_service.find_or_create_by_name(
+            str(group_cfg["name"]),
+            str(group_cfg["description"]),
+        )
+        logger.info("Processing group: %s (%s)", group.name, group.id)
 
-        # Idempotency: check for existing project by slug
-        existing_project = await project_service.get_project_by_slug(slug)
-        if existing_project:
-            project = existing_project
-            projects_found += 1
-            logger.info("Project already exists: %s (%s)", slug, project.id)
-        else:
-            project = await project_service.create_project(
-                ProjectBase(
-                    title=str(project_def["title"]),
-                    description=str(project_def["description"]),
-                    status=ProjectStatus.ACTIVE,
-                    active=True,
-                    preferred_status=project_def["preferred_status"],
-                    jurisdiction_id=jurisdiction.id,
-                    group_id=group.id,
-                    created_by="admin",
-                    slug=slug,
-                    dashboard_config=DashboardConfig(
-                        representative_title="Alderperson",
-                        status_labels=project_def["status_labels"],
-                    ),
+        slug_prefix = str(group_cfg["slug_prefix"])
+        base_slugs: set[str] = group_cfg["base_slugs"]  # type: ignore[assignment]
+        group_projects = [
+            p for p in ALL_SCORECARD_PROJECTS if p["base_slug"] in base_slugs
+        ]
+
+        for project_def in group_projects:
+            base_slug = str(project_def["base_slug"])
+            slug = slug_prefix + base_slug
+            logger.info("Processing project: %s (group: %s)", slug, group.name)
+
+            # Idempotency: check for existing project by slug
+            existing_project = await project_service.get_project_by_slug(slug)
+            if existing_project:
+                project = existing_project
+                total_found += 1
+                logger.info("Project already exists: %s (%s)", slug, project.id)
+            else:
+                project = await project_service.create_project(
+                    ProjectBase(
+                        title=str(project_def["title"]),
+                        description=str(project_def["description"]),
+                        status=ProjectStatus.ACTIVE,
+                        active=True,
+                        preferred_status=project_def["preferred_status"],
+                        jurisdiction_id=jurisdiction.id,
+                        group_id=group.id,
+                        created_by="admin",
+                        slug=slug,
+                        dashboard_config=DashboardConfig(
+                            representative_title="Alderperson",
+                            status_labels=project_def["status_labels"],
+                        ),
+                    )
                 )
-            )
-            projects_created += 1
-            logger.info("Created project: %s (%s)", slug, project.id)
+                total_created += 1
+                logger.info("Created project: %s (%s)", slug, project.id)
 
-        # Fetch ELMS data for this project (single API call returns full matter)
-        matter_guid = str(project_def["matter_guid"])
-        import_type = str(project_def["import_type"])
+            # Fetch ELMS data for this project
+            matter_guid = str(project_def["matter_guid"])
+            import_type = str(project_def["import_type"])
 
-        matter = await client.get_matter(matter_guid)
-        if matter is None:
-            logger.warning(
-                "Matter GUID %s not found in ELMS; skipping status import for %s",
-                matter_guid,
-                slug,
-            )
-            continue
-
-        if import_type == "vote":
-            votes = client.extract_votes(matter)
-            if votes is None:
+            matter = await client.get_matter(matter_guid)
+            if matter is None:
                 logger.warning(
-                    "No final passage vote found for matter %s (%s); skipping",
+                    "Matter GUID %s not found in ELMS; skipping status import for %s",
                     matter_guid,
                     slug,
                 )
                 continue
-            elms_lookup: dict[str, EntityStatus] = {
-                normalize_name(str(v["voterName"])): vote_value_to_entity_status(
-                    str(v.get("vote", ""))
-                )
-                for v in votes
-                if v.get("voterName")
-            }
-        else:
-            # sponsorship
-            sponsors = client.extract_sponsors(matter)
-            elms_lookup: dict[str, EntityStatus] = {  # type: ignore[no-redef]
-                normalize_name(str(s["sponsorName"])): EntityStatus.SOLID_APPROVAL
-                for s in sponsors
-                if s.get("sponsorName")
-            }
 
-        matched = 0
-        unmatched = 0
-        for entity in entities:
-            normalized_entity_name = normalize_name(entity.name)
-            entity_status = elms_lookup.get(
-                normalized_entity_name, EntityStatus.UNKNOWN
-            )
-
-            if (
-                entity_status == EntityStatus.UNKNOWN
-                and normalized_entity_name not in elms_lookup
-            ):
-                unmatched += 1
-                if unmatched <= 5:
+            if import_type == "vote":
+                votes = client.extract_votes(matter)
+                if votes is None:
                     logger.warning(
-                        "Entity '%s' (normalized: '%s') not found in ELMS data for %s",
-                        entity.name,
-                        normalized_entity_name,
+                        "No final passage vote found for matter %s (%s); skipping",
+                        matter_guid,
                         slug,
                     )
+                    continue
+                elms_lookup: dict[str, EntityStatus] = {
+                    normalize_name(str(v["voterName"])): vote_value_to_entity_status(
+                        str(v.get("vote", ""))
+                    )
+                    for v in votes
+                    if v.get("voterName")
+                }
             else:
-                matched += 1
+                # sponsorship
+                sponsors = client.extract_sponsors(matter)
+                elms_lookup = {  # type: ignore[assignment]
+                    normalize_name(str(s["sponsorName"])): EntityStatus.SOLID_APPROVAL
+                    for s in sponsors
+                    if s.get("sponsorName")
+                }
 
-            status_record = EntityStatusRecord(
-                entity_id=entity.id,
-                project_id=project.id,
-                status=entity_status,
-                updated_by="admin",
+            matched = 0
+            unmatched = 0
+            for entity in entities:
+                normalized_entity_name = normalize_name(entity.name)
+                entity_status = elms_lookup.get(
+                    normalized_entity_name, EntityStatus.UNKNOWN
+                )
+
+                if (
+                    entity_status == EntityStatus.UNKNOWN
+                    and normalized_entity_name not in elms_lookup
+                ):
+                    unmatched += 1
+                    if unmatched <= 5:
+                        logger.warning(
+                            "Entity '%s' (normalized: '%s') not found in ELMS data for %s",
+                            entity.name,
+                            normalized_entity_name,
+                            slug,
+                        )
+                else:
+                    matched += 1
+
+                status_record = EntityStatusRecord(
+                    entity_id=entity.id,
+                    project_id=project.id,
+                    status=entity_status,
+                    updated_by="admin",
+                )
+                await status_service.create_status_record(status_record)
+
+            logger.info(
+                "Project %s: %d entities matched, %d unmatched (set to UNKNOWN)",
+                slug,
+                matched,
+                unmatched,
             )
-            await status_service.create_status_record(status_record)
-
-        logger.info(
-            "Project %s: %d entities matched, %d unmatched (set to UNKNOWN)",
-            slug,
-            matched,
-            unmatched,
-        )
 
     logger.info(
         "Scorecard import complete. Projects created: %d, already existed: %d.",
-        projects_created,
-        projects_found,
+        total_created,
+        total_found,
     )
 
 

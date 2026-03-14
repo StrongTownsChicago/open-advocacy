@@ -24,4 +24,4 @@ async def get_scorecard(
     group = await group_service.find_by_slug(group_slug)
     if group is None:
         raise HTTPException(status_code=404, detail=f"Group '{group_slug}' not found")
-    return await scorecard_service.get_scorecard(group.id)
+    return await scorecard_service.get_scorecard(group.id, group.name)

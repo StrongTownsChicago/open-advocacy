@@ -52,7 +52,7 @@ class TestGetScorecardReturnsCorrectProjectCount:
         p3 = make_project(group_id=other_group_id, jurisdiction_id=jurisdiction_id)
 
         service = _build_scorecard_service(projects_data=[p1, p2, p3])
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         assert len(result.projects) == 2
         project_ids = {str(sp.id) for sp in result.projects}
@@ -95,7 +95,7 @@ class TestGetScorecardAlignmentScore:
             entities_data=[entity],
             status_records_data=[sr1, sr2],
         )
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         assert len(result.entities) == 1
         row = result.entities[0]
@@ -122,7 +122,7 @@ class TestGetScorecardEntityWithNoStatusRecord:
             entities_data=[entity],
             status_records_data=[],  # No records
         )
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         assert len(result.entities) == 1
         row = result.entities[0]
@@ -158,7 +158,7 @@ class TestGetScorecardStatusLabelResolution:
             entities_data=[entity],
             status_records_data=[sr],
         )
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         row = result.entities[0]
         assert row.statuses[str(project.id)].label == "Voted Yes"
@@ -187,7 +187,7 @@ class TestGetScorecardStatusLabelResolution:
             entities_data=[entity],
             status_records_data=[sr],
         )
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         row = result.entities[0]
         assert row.statuses[str(project.id)].label == "Solid Approval"
@@ -199,7 +199,7 @@ class TestGetScorecardReturnsEmptyWhenNoProjects:
         """Empty projects list should return an empty ScorecardResponse without error."""
         group_id = uuid4()
         service = _build_scorecard_service()
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         assert result.projects == []
         assert result.entities == []
@@ -229,7 +229,7 @@ class TestGetScorecardEntityRowsContainAllProjects:
             entities_data=[e1, e2],
             status_records_data=[sr],
         )
-        result = await service.get_scorecard(group_id)
+        result = await service.get_scorecard(group_id, "Test Group")
 
         assert len(result.entities) == 2
         for row in result.entities:

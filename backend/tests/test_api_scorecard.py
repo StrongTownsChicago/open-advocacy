@@ -36,8 +36,12 @@ class TestScorecardEndpoint:
     @pytest.fixture(autouse=True)
     def setup(self):
         group = Group(id=uuid4(), name="Test Group")
-        app.dependency_overrides[get_scorecard_service] = lambda: _build_empty_scorecard_service()
-        app.dependency_overrides[get_group_service] = lambda: _build_group_service_returning(group)
+        app.dependency_overrides[get_scorecard_service] = lambda: (
+            _build_empty_scorecard_service()
+        )
+        app.dependency_overrides[get_group_service] = lambda: (
+            _build_group_service_returning(group)
+        )
         yield
         app.dependency_overrides.clear()
 
@@ -52,7 +56,9 @@ class TestScorecardEndpoint:
     @pytest.mark.asyncio
     async def test_unknown_group_slug_returns_404(self):
         """GET /api/scorecard/{slug} returns 404 when no group matches the slug."""
-        app.dependency_overrides[get_group_service] = lambda: _build_group_service_returning(None)
+        app.dependency_overrides[get_group_service] = lambda: (
+            _build_group_service_returning(None)
+        )
         transport = ASGITransport(app=app)
         async with AsyncClient(transport=transport, base_url="http://test") as client:
             response = await client.get("/api/scorecard/no-such-group")

@@ -171,6 +171,7 @@ export interface ScorecardProject {
   id: string;
   title: string;
   slug?: string;
+  description?: string;
   preferred_status: EntityStatus;
   status_labels?: Record<string, string>;
 }
@@ -188,6 +189,7 @@ export interface ScorecardEntityRow {
 }
 
 export interface ScorecardResponse {
+  group_name: string;
   projects: ScorecardProject[];
   entities: ScorecardEntityRow[];
 }

@@ -27,11 +27,6 @@ import { getStatusColor } from '../utils/statusColors';
 type SortField = 'name' | 'ward' | 'score';
 type SortDirection = 'asc' | 'desc';
 
-const abbreviateTitle = (title: string, maxLength: number = 20): string => {
-  if (title.length <= maxLength) return title;
-  return title.slice(0, maxLength - 1) + '…';
-};
-
 const Scorecard: React.FC = () => {
   const [data, setData] = useState<ScorecardResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -135,7 +130,7 @@ const Scorecard: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom fontWeight={700}>
-        Alderperson Scorecard
+        {data.group_name} — Alderperson Scorecard
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Tracks positions across {data.projects.length} issues.
@@ -190,9 +185,29 @@ const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirecti
             </TableSortLabel>
           </TableCell>
           {data.projects.map(project => (
-            <TableCell key={project.id} align="center" sx={{ fontWeight: 700, minWidth: 110 }}>
-              <Tooltip title={project.title} arrow>
-                <span>{abbreviateTitle(project.title)}</span>
+            <TableCell
+              key={project.id}
+              align="center"
+              sx={{ fontWeight: 700, minWidth: 110, whiteSpace: 'normal', lineHeight: 1.3 }}
+            >
+              <Tooltip
+                title={
+                  project.description ? (
+                    <Box>
+                      <Typography variant="body2" fontWeight={700}>
+                        {project.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        {project.description}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    ''
+                  )
+                }
+                arrow
+              >
+                <span>{project.title}</span>
               </Tooltip>
             </TableCell>
           ))}

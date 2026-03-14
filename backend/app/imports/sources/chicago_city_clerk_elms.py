@@ -55,7 +55,7 @@ def normalize_name(name: str) -> str:
     # Remove honorific prefixes
     for prefix in ("ald ", "alderperson ", "alderwoman ", "alderman "):
         if name.startswith(prefix):
-            name = name[len(prefix):]
+            name = name[len(prefix) :]
             break
 
     # Strip middle initials (single-character tokens), e.g. "nicole t lee" → "nicole lee"
@@ -131,7 +131,8 @@ class ELMSClient:
 
         # Prefer a City Council floor vote over a committee vote
         council_actions = [
-            a for a in voted_actions
+            a
+            for a in voted_actions
             if "council" in (a.get("actionByName") or "").lower()
         ]
         target_actions = council_actions if council_actions else voted_actions

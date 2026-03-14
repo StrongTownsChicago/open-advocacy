@@ -46,7 +46,7 @@ class ScorecardService:
         self.status_records_provider = status_records_provider
         self.districts_provider = districts_provider
 
-    async def get_scorecard(self, group_id: UUID) -> ScorecardResponse:
+    async def get_scorecard(self, group_id: UUID, group_name: str) -> ScorecardResponse:
         """Build a full scorecard for all active projects in a group.
 
         Fetches projects, entities, and status records in three queries (no N+1).
@@ -58,7 +58,7 @@ class ScorecardService:
             in_filters=None,
         )
         if not projects:
-            return ScorecardResponse(projects=[], entities=[])
+            return ScorecardResponse(group_name=group_name, projects=[], entities=[])
 
         # Build ScorecardProject list
         scorecard_projects = [
@@ -66,6 +66,7 @@ class ScorecardService:
                 id=p.id,
                 title=p.title,
                 slug=p.slug,
+                description=p.description,
                 preferred_status=p.preferred_status,
                 status_labels=(
                     p.dashboard_config.status_labels
@@ -82,7 +83,7 @@ class ScorecardService:
         # 3. Fetch all entities for that jurisdiction
         entities = await self.entities_provider.filter(jurisdiction_id=jurisdiction_id)
         if not entities:
-            return ScorecardResponse(projects=scorecard_projects, entities=[])
+            return ScorecardResponse(group_name=group_name, projects=scorecard_projects, entities=[])
 
         # Enrich entities with district names
         entities = await self._enrich_with_district_names(entities)
@@ -127,7 +128,7 @@ class ScorecardService:
                 )
             )
 
-        return ScorecardResponse(projects=scorecard_projects, entities=entity_rows)
+        return ScorecardResponse(group_name=group_name, projects=scorecard_projects, entities=entity_rows)
 
     async def _enrich_with_district_names(self, entities: list) -> list:
         """Batch-fetch district names and attach them to entities."""

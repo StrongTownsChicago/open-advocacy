@@ -116,6 +116,7 @@ def _make_response_ctx(json_data: object, status: int = 200) -> tuple:
     mock_response.raise_for_status = MagicMock()
     if status >= 400 and status != 404:
         import aiohttp
+
         mock_response.raise_for_status.side_effect = aiohttp.ClientResponseError(
             request_info=MagicMock(), history=(), status=status
         )
@@ -137,8 +138,16 @@ def _make_session_ctx(response_ctx) -> AsyncMock:
 _SAMPLE_MATTER = {
     "matterId": "54028B60-C4FC-EE11-A1FE-001DD804AF4C",
     "sponsors": [
-        {"sponsorName": "Lawson, Bennett R.", "sponsorType": "Sponsor", "personId": "aaa"},
-        {"sponsorName": "La Spata, Daniel", "sponsorType": "CoSponsor", "personId": "bbb"},
+        {
+            "sponsorName": "Lawson, Bennett R.",
+            "sponsorType": "Sponsor",
+            "personId": "aaa",
+        },
+        {
+            "sponsorName": "La Spata, Daniel",
+            "sponsorType": "CoSponsor",
+            "personId": "bbb",
+        },
     ],
     "actions": [
         {
@@ -171,7 +180,10 @@ class TestGetMatter:
         response_ctx, _ = _make_response_ctx(_SAMPLE_MATTER)
         session_ctx = _make_session_ctx(response_ctx)
 
-        with patch("app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession", return_value=session_ctx):
+        with patch(
+            "app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession",
+            return_value=session_ctx,
+        ):
             client = ELMSClient()
             result = await client.get_matter("54028B60-C4FC-EE11-A1FE-001DD804AF4C")
 
@@ -183,7 +195,10 @@ class TestGetMatter:
         response_ctx, _ = _make_response_ctx({}, status=404)
         session_ctx = _make_session_ctx(response_ctx)
 
-        with patch("app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession", return_value=session_ctx):
+        with patch(
+            "app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession",
+            return_value=session_ctx,
+        ):
             client = ELMSClient()
             result = await client.get_matter("nonexistent-guid")
 
@@ -192,10 +207,14 @@ class TestGetMatter:
     @pytest.mark.asyncio
     async def test_raises_on_server_error(self):
         import aiohttp
+
         response_ctx, _ = _make_response_ctx({}, status=500)
         session_ctx = _make_session_ctx(response_ctx)
 
-        with patch("app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession", return_value=session_ctx):
+        with patch(
+            "app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession",
+            return_value=session_ctx,
+        ):
             client = ELMSClient()
             with pytest.raises(aiohttp.ClientResponseError):
                 await client.get_matter("some-guid")
@@ -209,7 +228,10 @@ class TestGetMatter:
         session_ctx.__aenter__ = AsyncMock(return_value=session_mock)
         session_ctx.__aexit__ = AsyncMock(return_value=False)
 
-        with patch("app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession", return_value=session_ctx):
+        with patch(
+            "app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession",
+            return_value=session_ctx,
+        ):
             client = ELMSClient(base_url="https://test.example.com")
             await client.get_matter("MY-GUID")
 
@@ -223,7 +245,10 @@ class TestGetMatter:
         response_ctx, mock_response = _make_response_ctx(_SAMPLE_MATTER)
         session_ctx = _make_session_ctx(response_ctx)
 
-        with patch("app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession", return_value=session_ctx):
+        with patch(
+            "app.imports.sources.chicago_city_clerk_elms.aiohttp.ClientSession",
+            return_value=session_ctx,
+        ):
             client = ELMSClient()
             await client.get_matter("some-guid")
 
@@ -247,21 +272,27 @@ class TestExtractVotes:
         assert result[0]["voterName"] == "Smith, Jane A."
 
     def test_returns_none_when_no_votes(self):
-        matter = {**_SAMPLE_MATTER, "actions": [
-            {"actionName": "Referred", "actionByName": "City Council", "votes": []}
-        ]}
+        matter = {
+            **_SAMPLE_MATTER,
+            "actions": [
+                {"actionName": "Referred", "actionByName": "City Council", "votes": []}
+            ],
+        }
         client = ELMSClient()
         assert client.extract_votes(matter) is None
 
     def test_falls_back_to_committee_vote_if_no_council_vote(self):
         """If no City Council vote, falls back to any action with votes."""
-        matter = {**_SAMPLE_MATTER, "actions": [
-            {
-                "actionName": "Passed",
-                "actionByName": "Some Committee",
-                "votes": [{"voterName": "A", "vote": "Yea", "personId": "x"}],
-            }
-        ]}
+        matter = {
+            **_SAMPLE_MATTER,
+            "actions": [
+                {
+                    "actionName": "Passed",
+                    "actionByName": "Some Committee",
+                    "votes": [{"voterName": "A", "vote": "Yea", "personId": "x"}],
+                }
+            ],
+        }
         client = ELMSClient()
         result = client.extract_votes(matter)
         assert result is not None
@@ -269,18 +300,21 @@ class TestExtractVotes:
 
     def test_takes_last_council_vote_when_multiple(self):
         """When multiple council roll-calls exist, takes the last (final passage)."""
-        matter = {**_SAMPLE_MATTER, "actions": [
-            {
-                "actionName": "Failed",
-                "actionByName": "City Council",
-                "votes": [{"voterName": "A", "vote": "Nay", "personId": "x"}],
-            },
-            {
-                "actionName": "Passed",
-                "actionByName": "City Council",
-                "votes": [{"voterName": "A", "vote": "Yea", "personId": "x"}],
-            },
-        ]}
+        matter = {
+            **_SAMPLE_MATTER,
+            "actions": [
+                {
+                    "actionName": "Failed",
+                    "actionByName": "City Council",
+                    "votes": [{"voterName": "A", "vote": "Nay", "personId": "x"}],
+                },
+                {
+                    "actionName": "Passed",
+                    "actionByName": "City Council",
+                    "votes": [{"voterName": "A", "vote": "Yea", "personId": "x"}],
+                },
+            ],
+        }
         client = ELMSClient()
         result = client.extract_votes(matter)
         assert result is not None

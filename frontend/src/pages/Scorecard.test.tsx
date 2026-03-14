@@ -15,6 +15,7 @@ import Scorecard from './Scorecard';
 import { scorecardService } from '../services/scorecard';
 
 const mockScorecardResponse: ScorecardResponse = {
+  group_name: 'Test Group',
   projects: [
     {
       id: 'project-1',

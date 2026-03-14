@@ -181,6 +181,7 @@ class ScorecardProject(BaseModel):
     id: UUID
     title: str
     slug: str | None = None
+    description: str | None = None
     preferred_status: EntityStatus
     status_labels: dict[str, str] | None = None
 
@@ -198,6 +199,7 @@ class ScorecardEntityRow(BaseModel):
 
 
 class ScorecardResponse(BaseModel):
+    group_name: str
     projects: list[ScorecardProject]
     entities: list[ScorecardEntityRow]
 
