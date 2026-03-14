@@ -11,6 +11,7 @@ import {
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { useTheme as useCustomTheme } from '../../theme/ThemeProvider';
 import { lightTheme, darkTheme } from '../../theme/themes';
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
           <Box
             sx={{
               display: 'flex',
+              flex: { sm: 1 },
               width: { xs: '100%', sm: 'auto' },
               justifyContent: { xs: 'space-between', sm: 'flex-start' },
               alignItems: 'center',
@@ -81,6 +83,7 @@ const Header: React.FC = () => {
                   letterSpacing: '0.3px',
                   fontSize: { xs: '0.9rem', sm: '1rem' },
                   transition: 'opacity 0.2s ease',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {appConfig.name}
@@ -94,7 +97,6 @@ const Header: React.FC = () => {
 
           <Box
             sx={{
-              flexGrow: 1,
               display: { xs: 'none', sm: 'flex' },
               justifyContent: 'center',
             }}
@@ -141,7 +143,23 @@ const Header: React.FC = () => {
             })}
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: { sm: 1 }, justifyContent: { sm: 'flex-end' } }}>
+            <IconButton
+              component="a"
+              href="https://github.com/StrongTownsChicago/open-advocacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: 'rgba(255,255,255,0.8)',
+                width: 36,
+                height: 36,
+                '&:hover': { color: '#FFFFFF', backgroundColor: 'rgba(255,255,255,0.1)' },
+              }}
+              aria-label="View source on GitHub"
+            >
+              <GitHubIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+
             <IconButton
               onClick={toggleTheme}
               sx={{
