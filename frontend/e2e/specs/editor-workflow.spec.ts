@@ -25,6 +25,32 @@ test.describe('Editor workflow', () => {
     await expect(editorPage.getByText(/required/i).first()).toBeVisible();
   });
 
+  test('editor can update a representative status', async ({ editorPage }) => {
+    // Navigate to the first available project that has entities
+    await editorPage.goto('/projects');
+    await editorPage.waitForLoadState('networkidle');
+
+    const firstViewDetails = editorPage.getByRole('link', { name: /view details/i }).first();
+    await expect(firstViewDetails).toBeVisible({ timeout: 10000 });
+    await firstViewDetails.click();
+    await editorPage.waitForLoadState('networkidle');
+
+    // Expand the first entity row
+    const firstRow = editorPage.locator('tbody tr').first();
+    await expect(firstRow).toBeVisible({ timeout: 10000 });
+    await firstRow.click();
+
+    // The Update/Save button appears in the expanded panel for authenticated editors
+    const saveButton = editorPage.getByRole('button', { name: /^(update|save)$/i }).first();
+    await expect(saveButton).toBeVisible({ timeout: 5000 });
+
+    // Submit — preserves current status, just verifies the round-trip completes without error
+    await saveButton.click();
+
+    // No error message should appear
+    await expect(editorPage.getByText('Failed to update status')).not.toBeVisible();
+  });
+
   test('successful project create navigates to project detail', async ({ editorPage }) => {
     await editorPage.goto('/projects/create');
     await editorPage.waitForLoadState('networkidle');

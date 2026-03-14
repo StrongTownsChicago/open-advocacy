@@ -152,6 +152,8 @@ npm test                                  # Unit tests — all must pass
 npm run test:e2e                          # Playwright E2E tests — all must pass or be expected skips
 ```
 
+> **Note:** `npm test` runs unit tests only (Vitest). It does NOT run Playwright E2E tests. E2E tests must be run separately with `npm run test:e2e` and require the full stack (`docker-compose up`).
+
 Run backend and frontend checks independently. Fix any failures before moving on. Do not suppress errors with ignore comments — fix the actual types.
 
 ### E2E Test Notes
