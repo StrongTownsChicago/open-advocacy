@@ -99,8 +99,8 @@ const Header: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            {(['/', '/projects', '/representatives'] as const).map((path, i) => {
-              const labels = ['Home', 'Projects', 'Find Representatives'];
+            {(['/', '/projects', '/representatives', '/scorecard'] as const).map((path, i) => {
+              const labels = ['Home', 'Projects', 'Find Representatives', 'Scorecard'];
               return (
                 <Button
                   key={path}

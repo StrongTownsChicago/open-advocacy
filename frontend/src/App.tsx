@@ -13,6 +13,7 @@ import EntityDetail from './pages/EntityDetail';
 import LoginPage from './pages/LoginPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProjectDashboard from './pages/ProjectDashboard';
+import Scorecard from './pages/Scorecard';
 
 // Admin Pages
 import UserManagement from './pages/admin/UserManagementPage';
@@ -40,6 +41,7 @@ const App: React.FC = () => {
                 <Route path="/representatives" element={<RepresentativeLookup />} />
                 <Route path="/representatives/:id" element={<EntityDetail />} />
                 <Route path="/dashboard/:slug" element={<ProjectDashboard />} />
+                <Route path="/scorecard/:groupSlug" element={<Scorecard />} />
                 <Route
                   path="/adu-opt-in-dashboard"
                   element={<Navigate to="/dashboard/adu-opt-in-dashboard" replace />}

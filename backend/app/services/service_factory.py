@@ -17,6 +17,7 @@ from app.services.status_service import StatusService
 from app.services.district_service import DistrictService
 from app.services.group_service import GroupService
 from app.services.user_service import UserService
+from app.services.scorecard_service import ScorecardService
 from app.geo.provider_factory import get_geo_provider
 
 
@@ -104,6 +105,22 @@ def create_user_service(
     )
 
 
+def create_scorecard_service(
+    projects_provider=None,
+    entities_provider=None,
+    status_records_provider=None,
+    districts_provider=None,
+) -> ScorecardService:
+    """Create a ScorecardService instance."""
+    return ScorecardService(
+        projects_provider=projects_provider or get_projects_provider(),
+        entities_provider=entities_provider or get_entities_provider(),
+        status_records_provider=status_records_provider
+        or get_status_records_provider(),
+        districts_provider=districts_provider or get_districts_provider(),
+    )
+
+
 # FastAPI dependency functions that can be used with Depends()
 def get_project_service(
     projects_provider=Depends(get_projects_provider),
@@ -182,6 +199,21 @@ def get_user_service(
     return UserService(
         users_provider=users_provider,
         groups_provider=groups_provider,
+    )
+
+
+def get_scorecard_service(
+    projects_provider=Depends(get_projects_provider),
+    entities_provider=Depends(get_entities_provider),
+    status_records_provider=Depends(get_status_records_provider),
+    districts_provider=Depends(get_districts_provider),
+) -> ScorecardService:
+    """Get a ScorecardService instance with dependencies injected."""
+    return ScorecardService(
+        projects_provider=projects_provider,
+        entities_provider=entities_provider,
+        status_records_provider=status_records_provider,
+        districts_provider=districts_provider,
     )
 
 

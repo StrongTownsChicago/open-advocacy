@@ -13,5 +13,8 @@
 /playwright-report
 /blob-report
 /playwright/.cache
+/frontend/e2e/.auth/
+/frontend/playwright-report/
+/frontend/test-results/
 .mypy_cache
 .coverage

@@ -1,7 +1,15 @@
+import re
 from uuid import UUID
 
 from app.models.pydantic.models import Group, GroupBase
 from app.db.base import DatabaseProvider
+
+
+def _name_to_slug(name: str) -> str:
+    """Convert a group name to a URL slug, e.g. 'Strong Towns Chicago' → 'strong-towns-chicago'."""
+    slug = name.lower()
+    slug = re.sub(r"[^a-z0-9]+", "-", slug)
+    return slug.strip("-")
 
 
 class GroupService:
@@ -38,6 +46,14 @@ class GroupService:
             return False
 
         return await self.groups_provider.delete(group_id)
+
+    async def find_by_slug(self, slug: str) -> Group | None:
+        """Find a group by its name-derived slug, e.g. 'strong-towns-chicago'."""
+        groups = await self.groups_provider.list()
+        for group in groups:
+            if _name_to_slug(group.name) == slug:
+                return group
+        return None
 
     async def find_or_create_by_name(self, name: str, description: str) -> Group:
         """Find a group by name or create it if it doesn't exist."""

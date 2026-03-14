@@ -23,6 +23,7 @@ python -m scripts.add_super_admin         # Create super admin user
 python -m scripts.initialize_app          # Full initialization (DB + Chicago import + ADU project seed)
 python -m scripts.import_adu_project_data # Seed ADU opt-in project data
 python -m scripts.import_example_project_data # Seed example projects
+python -m scripts.import_scorecard_projects   # Seed scorecard projects from City Clerk data
 python -m scripts.fetch_ward_zoning_data      # Fetch ward zoning data from Cityscape API
 
 # Code quality
@@ -93,8 +94,9 @@ To force a clean reset in development, run `python -m scripts.init_db --drop` (d
 
 - **`src/services/api.ts`** — Axios client; base URL from `VITE_API_URL` or falls back to `/api` (relative); forces HTTPS on all requests
 - **`src/services/imports.ts`** — API service for data import operations (admin only)
+- **`src/services/scorecard.ts`** — API service for the scorecard endpoint
 - **`src/contexts/`** — `AuthContext` (JWT auth state), `UserRepresentativesContext` (user's reps)
-- **`src/pages/`** — Route-level components; `admin/` for admin pages (AdminDashboard, UserManagement, DataImportPage, RegisterPage); `ProjectDashboard` for generic slug-based dashboards
+- **`src/pages/`** — Route-level components; `admin/` for admin pages (AdminDashboard, UserManagement, DataImportPage, RegisterPage); `ProjectDashboard` for generic slug-based dashboards; `Scorecard` for the multi-issue alderperson scorecard at `/scorecard`
 - **`src/components/`** — Shared UI components organized by domain (`Entity/`, `Project/`, `Status/`, `auth/`, `common/`)
 - **`src/utils/config.ts`** — App name/description branding from `VITE_APPLICATION_NAME` / `VITE_APPLICATION_DESCRIPTION`
 

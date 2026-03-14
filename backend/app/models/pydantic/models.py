@@ -177,6 +177,31 @@ class AddressLookupRequest(BaseModel):
     address: str
 
 
+class ScorecardProject(BaseModel):
+    id: UUID
+    title: str
+    slug: str | None = None
+    preferred_status: EntityStatus
+    status_labels: dict[str, str] | None = None
+
+
+class ScorecardEntityStatus(BaseModel):
+    status: EntityStatus
+    label: str
+
+
+class ScorecardEntityRow(BaseModel):
+    entity: "Entity"
+    statuses: dict[str, ScorecardEntityStatus]  # keyed by project_id as str
+    aligned_count: int
+    total_scoreable: int
+
+
+class ScorecardResponse(BaseModel):
+    projects: list[ScorecardProject]
+    entities: list[ScorecardEntityRow]
+
+
 class UserBase(BaseModel):
     email: str
     name: str

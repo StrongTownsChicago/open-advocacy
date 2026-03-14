@@ -2,7 +2,15 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import projects, groups, entities, status, jurisdictions, auth
+from app.api.routes import (
+    projects,
+    groups,
+    entities,
+    status,
+    jurisdictions,
+    auth,
+    scorecard,
+)
 from app.api.routes.admin import users, imports
 
 import logging
@@ -113,6 +121,7 @@ app.include_router(
     tags=["imports"],
 )
 app.include_router(auth.router, prefix="/api")
+app.include_router(scorecard.router, prefix="/api/scorecard", tags=["scorecard"])
 
 
 if __name__ == "__main__":

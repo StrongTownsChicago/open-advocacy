@@ -167,6 +167,31 @@ export interface PasswordChangeData {
   new_password: string;
 }
 
+export interface ScorecardProject {
+  id: string;
+  title: string;
+  slug?: string;
+  preferred_status: EntityStatus;
+  status_labels?: Record<string, string>;
+}
+
+export interface ScorecardEntityStatus {
+  status: EntityStatus;
+  label: string;
+}
+
+export interface ScorecardEntityRow {
+  entity: Entity;
+  statuses: Record<string, ScorecardEntityStatus>; // keyed by project_id
+  aligned_count: number;
+  total_scoreable: number;
+}
+
+export interface ScorecardResponse {
+  projects: ScorecardProject[];
+  entities: ScorecardEntityRow[];
+}
+
 export interface UserRoleChangeData {
   user_id: string;
   new_role: string;

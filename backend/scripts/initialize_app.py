@@ -9,6 +9,7 @@ from scripts.init_db import init_db, tables_exist
 from scripts.import_data import import_data
 from scripts.import_example_project_data import import_projects
 from scripts.import_adu_project_data import import_adu_project_data
+from scripts.import_scorecard_projects import import_scorecard_projects
 from app.core.config import settings
 from app.db.session import get_engine
 from app.services.service_factory import (
@@ -116,6 +117,8 @@ async def initialize_application():
         await import_adu_opt_in_project()
     if "example" in seed_projects:
         await import_example_projects()
+    if "scorecard" in seed_projects:
+        await import_scorecard_projects()
 
     logger.info("Database initialization completed successfully")
     return True
