@@ -149,9 +149,18 @@ poetry run pytest                         # Unit tests — all must pass
 npm run lint                              # ESLint — no warnings allowed
 npm run type-check                        # TypeScript strict mode — no `@ts-ignore`
 npm test                                  # Unit tests — all must pass
+npm run test:e2e                          # Playwright E2E tests — all must pass or be expected skips
 ```
 
 Run backend and frontend checks independently. Fix any failures before moving on. Do not suppress errors with ignore comments — fix the actual types.
+
+### E2E Test Notes
+
+- Playwright tests require the full stack to be running (`docker-compose up`)
+- Tests in `frontend/e2e/specs/` cover auth, projects, representatives, dashboard, editor workflow, and admin
+- Auth-dependent tests (admin, editor workflow) are skipped when those users don't exist — this is expected and not a failure
+- Geo tests (representative lookup) run by default via Nominatim; set `PLAYWRIGHT_SKIP_GEO_TESTS=true` to skip them
+- If tests fail, run `npm run test:e2e:report` to open the HTML report with screenshots
 
 ### Testing Guidelines
 
