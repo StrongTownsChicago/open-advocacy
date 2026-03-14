@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getStatusColor, getStatusLabel } from './statusColors';
+import { getStatusColor, getStatusLabel, makeStatusLabelFn } from './statusColors';
 import { EntityStatus } from '../types';
 
 describe('getStatusColor', () => {
@@ -43,5 +43,44 @@ describe('getStatusLabel', () => {
 
   it('returns "Unknown" for unrecognized status values', () => {
     expect(getStatusLabel('not_a_real_status' as EntityStatus)).toBe('Unknown');
+  });
+});
+
+describe('makeStatusLabelFn', () => {
+  it('returns default labels when no custom labels provided', () => {
+    const fn = makeStatusLabelFn();
+    expect(fn(EntityStatus.SOLID_APPROVAL)).toBe('Solid Approval');
+    expect(fn(EntityStatus.LEANING_DISAPPROVAL)).toBe('Leaning Disapproval');
+  });
+
+  it('uses custom label when provided for a status', () => {
+    const fn = makeStatusLabelFn({ solid_approval: 'Fully Opted In' });
+    expect(fn(EntityStatus.SOLID_APPROVAL)).toBe('Fully Opted In');
+  });
+
+  it('falls back to default for statuses not in the custom map', () => {
+    const fn = makeStatusLabelFn({ solid_approval: 'Fully Opted In' });
+    expect(fn(EntityStatus.LEANING_APPROVAL)).toBe('Leaning Approval');
+    expect(fn(EntityStatus.NEUTRAL)).toBe('Neutral');
+  });
+
+  it('supports a full custom label map', () => {
+    const customLabels = {
+      solid_approval: 'Fully Opted In',
+      leaning_approval: 'Partially Opted In',
+      neutral: 'Not Eligible',
+      leaning_disapproval: 'Not Opted In',
+      solid_disapproval: 'Strongly Opposed',
+      unknown: 'Unknown',
+    };
+    const fn = makeStatusLabelFn(customLabels);
+    expect(fn(EntityStatus.SOLID_APPROVAL)).toBe('Fully Opted In');
+    expect(fn(EntityStatus.LEANING_DISAPPROVAL)).toBe('Not Opted In');
+    expect(fn(EntityStatus.NEUTRAL)).toBe('Not Eligible');
+  });
+
+  it('falls back to default when custom label is an empty string', () => {
+    const fn = makeStatusLabelFn({ solid_approval: '' });
+    expect(fn(EntityStatus.SOLID_APPROVAL)).toBe('Solid Approval');
   });
 });
