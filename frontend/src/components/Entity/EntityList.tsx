@@ -198,29 +198,29 @@ const EntityRow = ({
         <TableCell>{entity.district_name || entity.entity_type}</TableCell>
 
         <TableCell align="right">
-          <Chip
-            label={getStatusLabel(statusRecord?.status ?? EntityStatus.UNKNOWN)}
-            size="small"
-            sx={{
-              bgcolor: getStatusColor(statusRecord?.status ?? EntityStatus.UNKNOWN),
-              color: '#fff',
-              fontWeight: 500,
-            }}
-          />
-        </TableCell>
-        <TableCell
-          sx={{
-            maxWidth: 220,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {statusRecord?.notes
-            ? statusRecord.notes.length > 175
-              ? statusRecord.notes.slice(0, 175) + '...'
-              : statusRecord.notes
-            : ''}
+          <Tooltip
+            title={statusRecord?.notes ?? ''}
+            arrow
+            disableHoverListener={!statusRecord?.notes}
+            disableFocusListener={!statusRecord?.notes}
+            disableTouchListener={!statusRecord?.notes}
+          >
+            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+              <Chip
+                label={getStatusLabel(statusRecord?.status ?? EntityStatus.UNKNOWN)}
+                size="small"
+                sx={{
+                  bgcolor: getStatusColor(statusRecord?.status ?? EntityStatus.UNKNOWN),
+                  color: '#fff',
+                  fontWeight: 500,
+                  cursor: statusRecord?.notes ? 'help' : 'default',
+                }}
+              />
+              {statusRecord?.notes && (
+                <InfoOutlinedIcon sx={{ fontSize: 14, color: 'text.disabled', pointerEvents: 'none' }} />
+              )}
+            </Box>
+          </Tooltip>
         </TableCell>
         {tableMetrics.map(metric => {
           const rawValue = statusRecord?.record_metadata?.[metric.key];
@@ -663,7 +663,6 @@ const EntityList: React.FC<EntityListProps> = ({
                     Status
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="center">Notes</TableCell>
                 {tableMetrics.map(metric => (
                   <TableCell key={metric.key} align="right">
                     <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
