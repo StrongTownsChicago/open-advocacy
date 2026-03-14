@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Box,
   Card,
@@ -7,6 +8,7 @@ import {
   Chip,
   CircularProgress,
   Container,
+  Link as MuiLink,
   Table,
   TableBody,
   TableCell,
@@ -220,6 +222,15 @@ const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirecti
                   onClick={() => onSort(project.id)}
                 >
                   {project.title}
+                  <MuiLink
+                      component={RouterLink}
+                      to={`/projects/${project.id}`}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      sx={{ ml: 0.5, lineHeight: 0, color: 'inherit', '&:hover': { color: 'primary.main' } }}
+                      title="View project"
+                    >
+                      <OpenInNewIcon sx={{ fontSize: '0.75rem', verticalAlign: 'middle', opacity: 0.6 }} />
+                    </MuiLink>
                 </TableSortLabel>
               </Tooltip>
             </TableCell>
@@ -240,12 +251,15 @@ const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirecti
           <TableRow key={row.entity.id} hover>
             <TableCell>{row.entity.district_name ?? '—'}</TableCell>
             <TableCell>
-              <RouterLink
+              <MuiLink
+                component={RouterLink}
                 to={`/representatives/${row.entity.id}`}
-                style={{ color: 'inherit', textDecoration: 'none', fontWeight: 500 }}
+                underline="hover"
+                fontWeight={500}
+                sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}
               >
                 {row.entity.name}
-              </RouterLink>
+              </MuiLink>
             </TableCell>
             {data.projects.map(project => {
               const statusEntry = row.statuses[project.id];
@@ -288,17 +302,15 @@ const MobileCardList: React.FC<MobileCardListProps> = ({ rows, data }) => (
       <Card key={row.entity.id} variant="outlined">
         <CardContent>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <RouterLink
+            <MuiLink
+              component={RouterLink}
               to={`/representatives/${row.entity.id}`}
-              style={{
-                fontWeight: 700,
-                fontSize: '1rem',
-                textDecoration: 'none',
-                color: 'inherit',
-              }}
+              fontWeight={700}
+              fontSize="1rem"
+              underline="hover"
             >
               {row.entity.name}
-            </RouterLink>
+            </MuiLink>
             <Typography variant="body2" color="text.secondary">
               {row.entity.district_name ?? ''}
             </Typography>
@@ -315,9 +327,15 @@ const MobileCardList: React.FC<MobileCardListProps> = ({ rows, data }) => (
                   key={project.id}
                   sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                 >
-                  <Typography variant="caption" sx={{ flex: 1, mr: 1 }}>
+                  <MuiLink
+                    component={RouterLink}
+                    to={`/projects/${project.id}`}
+                    variant="caption"
+                    underline="hover"
+                    sx={{ flex: 1, mr: 1 }}
+                  >
                     {project.title}
-                  </Typography>
+                  </MuiLink>
                   <Chip
                     label={statusEntry.label}
                     size="small"
