@@ -12,13 +12,13 @@ export const lightTheme: ThemeConfig = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#1B5E38',    // Deep civic forest green
+      main: '#1B5E38', // Deep civic forest green
       light: '#2E7D52',
       dark: '#0D3D21',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#D97706',    // Warm amber — action, urgency, Chicago energy
+      main: '#D97706', // Warm amber — action, urgency, Chicago energy
       light: '#F59E0B',
       dark: '#B45309',
       contrastText: '#FFFFFF',
@@ -28,7 +28,7 @@ export const lightTheme: ThemeConfig = {
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#1A1917',   // Warm near-black
+      primary: '#1A1917', // Warm near-black
       secondary: '#6B6560', // Warm medium gray
     },
     divider: '#E5E3DF',
@@ -57,20 +57,20 @@ export const darkTheme: ThemeConfig = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#4ADE80',    // Bright civic green for dark mode
-      light: '#86EFAC',
-      dark: '#22C55E',
-      contrastText: '#052E16',
+      main: '#3D7A5C', // Deep forest green
+      light: '#5A9E7D',
+      dark: '#285C43',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#F59E0B',    // Warm amber
-      light: '#FCD34D',
-      dark: '#D97706',
-      contrastText: '#1C0A00',
+      main: '#D4915A', // Muted amber-terracotta
+      light: '#E8B48A',
+      dark: '#B8733C',
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#0F1613',  // Very dark green-tinted background
-      paper: '#182119',    // Dark green-tinted paper
+      default: '#0F1613', // Very dark green-tinted background
+      paper: '#182119', // Dark green-tinted paper
     },
     text: {
       primary: '#F0EDE8',
@@ -78,14 +78,14 @@ export const darkTheme: ThemeConfig = {
     },
     divider: '#2A3328',
     success: {
-      main: '#4ADE80',
-      light: '#86EFAC',
-      dark: '#22C55E',
+      main: '#4E9E72',
+      light: '#72B893',
+      dark: '#357A56',
     },
     warning: {
-      main: '#F59E0B',
-      light: '#FCD34D',
-      dark: '#D97706',
+      main: '#D4915A',
+      light: '#E8B48A',
+      dark: '#B8733C',
     },
   },
   borderRadius: 10,
