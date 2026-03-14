@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserRepresentativesProvider } from './contexts/UserRepresentativesContext';
+import Header from './components/common/Header';
 
 import HomePage from './pages/HomePage';
 import ProjectDetail from './pages/ProjectDetail';
@@ -23,14 +24,23 @@ import DataImportPage from './pages/admin/DataImportPage';
 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
+const DASHBOARD_PATH_PREFIXES = ['/dashboard/', '/scorecard/'];
+
+const ConditionalHeader: React.FC = () => {
+  const location = useLocation();
+  const isDashboard = DASHBOARD_PATH_PREFIXES.some(prefix =>
+    location.pathname.startsWith(prefix)
+  );
+  return isDashboard ? null : <Header />;
+};
+
 const App: React.FC = () => {
   return (
     <Router>
       <ThemeProvider>
         <AuthProvider>
           <UserRepresentativesProvider>
-            {/* TODO: Conditionally display header depending on state */}
-            {/* <Header /> */}
+            <ConditionalHeader />
             <main>
               <Routes>
                 <Route path="/" element={<HomePage />} />
