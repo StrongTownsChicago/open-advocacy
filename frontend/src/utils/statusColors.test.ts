@@ -24,7 +24,7 @@ describe('getStatusColor', () => {
 
   it('returns grey for UNKNOWN status (default case)', () => {
     const color = getStatusColor(EntityStatus.UNKNOWN);
-    expect(color).toBe('#9e9e9e');
+    expect(color).toBe('#94a3b8');
   });
 });
 
