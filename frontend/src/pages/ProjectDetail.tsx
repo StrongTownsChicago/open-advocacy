@@ -8,13 +8,9 @@ import {
   Button,
   Chip,
   Divider,
-  Card,
-  CardContent,
   Link,
   CircularProgress,
   Paper,
-  Tabs,
-  Tab,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinkIcon from '@mui/icons-material/Link';
@@ -32,27 +28,6 @@ import ConditionalUI from '../components/auth/ConditionalUI';
 import EntityDistrictMap from '../components/Entity/EntityDistrictMap';
 import { transformEntityFromApi } from '../utils/dataTransformers';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-};
 
 interface ProjectDetailProps {
   projectId?: string;
@@ -76,7 +51,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
   const [statusRecords, setStatusRecords] = useState<EntityStatusRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tabValue, setTabValue] = useState(0);
   const [geojsonByDistrict, setGeojsonByDistrict] = useState<{
     [districtId: string]: GeoJSON.GeoJsonObject;
   }>({});
@@ -138,10 +112,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
     };
     fetchGeoJSON();
   }, [project]);
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   const refreshStatusRecords = async () => {
     if (!id) return;
@@ -292,56 +262,25 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
 
         <Divider sx={{ my: 4 }} />
 
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={tabValue} onChange={handleTabChange} aria-label="project tabs">
-              <Tab label="Representatives" id="tab-0" />
-              <Tab label="Preferred Response" id="tab-1" />
-            </Tabs>
+        {loadingEntities ? (
+          <Box display="flex" justifyContent="center" py={4}>
+            <CircularProgress />
           </Box>
-
-          <TabPanel value={tabValue} index={0}>
-            {loadingEntities ? (
-              <Box display="flex" justifyContent="center" py={4}>
-                <CircularProgress />
-              </Box>
-            ) : entities.length === 0 ? (
-              <Paper sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="h6" color="text.secondary">
-                  No representatives found for the selected jurisdiction
-                </Typography>
-              </Paper>
-            ) : (
-              <EntityList
-                entities={entities}
-                project={project}
-                statusRecords={statusRecords}
-                onStatusUpdated={refreshStatusRecords}
-                getStatusLabel={getStatusLabel}
-              />
-            )}
-          </TabPanel>
-
-          <TabPanel value={tabValue} index={1}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Preferred Response Template
-                </Typography>
-
-                {project.template_response ? (
-                  <Typography variant="body1" whiteSpace="pre-wrap">
-                    {project.template_response}
-                  </Typography>
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No template response has been provided for this project
-                  </Typography>
-                )}
-              </CardContent>
-            </Card>
-          </TabPanel>
-        </Box>
+        ) : entities.length === 0 ? (
+          <Paper sx={{ p: 4, textAlign: 'center' }}>
+            <Typography variant="h6" color="text.secondary">
+              No representatives found for the selected jurisdiction
+            </Typography>
+          </Paper>
+        ) : (
+          <EntityList
+            entities={entities}
+            project={project}
+            statusRecords={statusRecords}
+            onStatusUpdated={refreshStatusRecords}
+            getStatusLabel={getStatusLabel}
+          />
+        )}
       </Box>
     </Container>
   );
