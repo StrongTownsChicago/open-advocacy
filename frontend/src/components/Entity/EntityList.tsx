@@ -27,7 +27,9 @@ import {
   SelectChangeEvent,
   Link,
   LinearProgress,
+  Tooltip,
 } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -664,13 +666,20 @@ const EntityList: React.FC<EntityListProps> = ({
                 <TableCell align="center">Notes</TableCell>
                 {tableMetrics.map(metric => (
                   <TableCell key={metric.key} align="right">
-                    <TableSortLabel
-                      active={orderBy === metric.key}
-                      direction={orderBy === metric.key ? order : 'asc'}
-                      onClick={() => handleRequestSort(metric.key)}
-                    >
-                      {metric.label}
-                    </TableSortLabel>
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+                      <TableSortLabel
+                        active={orderBy === metric.key}
+                        direction={orderBy === metric.key ? order : 'asc'}
+                        onClick={() => handleRequestSort(metric.key)}
+                      >
+                        {metric.label}
+                      </TableSortLabel>
+                      {metric.description && (
+                        <Tooltip title={metric.description} arrow>
+                          <InfoOutlinedIcon sx={{ fontSize: 14, color: 'text.secondary', cursor: 'help' }} />
+                        </Tooltip>
+                      )}
+                    </Box>
                   </TableCell>
                 ))}
               </TableRow>

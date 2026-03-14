@@ -133,6 +133,7 @@ class Group(GroupBase):
 class MetricDisplayConfig(BaseModel):
     key: str
     label: str
+    description: str | None = None
     format: str = "text"
     show_in_table: bool = True
     show_in_tooltip: bool = True

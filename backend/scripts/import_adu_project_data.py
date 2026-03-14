@@ -256,6 +256,7 @@ async def import_adu_project_data():
                     MetricDisplayConfig(
                         key="rs_zoned_pct",
                         label="RS-Zoned Land",
+                        description="Percentage of land in this ward zoned RS (Residential Single-Unit). RS zoning restricts land to single-family homes and affects how many properties are eligible for ADU construction. Data sourced from the Chicago Cityscape Zoning Explorer API.",
                         format="percentage",
                         show_in_table=True,
                         show_in_tooltip=True,

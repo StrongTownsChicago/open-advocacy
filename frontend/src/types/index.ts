@@ -65,6 +65,7 @@ export interface StatusDistribution {
 export interface MetricDisplayConfig {
   key: string;
   label: string;
+  description?: string;
   format?: string;
   show_in_table?: boolean;
   show_in_tooltip?: boolean;
