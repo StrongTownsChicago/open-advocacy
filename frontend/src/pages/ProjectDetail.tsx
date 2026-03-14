@@ -11,6 +11,7 @@ import {
   Link,
   CircularProgress,
   Paper,
+  useTheme,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinkIcon from '@mui/icons-material/Link';
@@ -39,6 +40,8 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
   const { id: routeId } = useParams<{ id: string }>();
   const id = projectId || routeId;
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
 
   const {
     project,
@@ -55,7 +58,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box display="flex" justifyContent="center" py={8}>
-          <CircularProgress />
+          <CircularProgress color="primary" />
         </Box>
       </Container>
     );
@@ -73,42 +76,73 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 } }}>
       <Box mb={4}>
         {!isDashboard && (
           <Button
             startIcon={<ArrowBackIcon />}
             onClick={() => navigate('/projects')}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}
           >
             Back to Projects
           </Button>
         )}
 
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+        {/* Header row */}
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Box>
             {!isDashboard && (
-              <Typography variant="h4" component="h1" fontWeight="700" color="text.primary">
+              <Typography
+                variant="h4"
+                component="h1"
+                sx={{
+                  fontFamily: '"Fraunces", Georgia, serif',
+                  fontWeight: 700,
+                  color: 'text.primary',
+                  mb: 0.5,
+                }}
+              >
                 {project.title}
               </Typography>
             )}
 
-            <Box display="flex" alignItems="center" gap={1} my={1}>
+            <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
               <Chip
                 label={project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                color={project.status === 'active' ? 'success' : 'default'}
                 size="small"
+                sx={{
+                  backgroundColor:
+                    project.status === 'active'
+                      ? theme.palette.primary.main
+                      : isLight
+                        ? 'rgba(0,0,0,0.08)'
+                        : 'rgba(255,255,255,0.12)',
+                  color: project.status === 'active' ? '#fff' : 'text.secondary',
+                  fontWeight: 700,
+                  fontSize: '0.7rem',
+                  letterSpacing: '0.04em',
+                  borderRadius: '5px',
+                  height: 22,
+                }}
               />
 
               {project.link && (
                 <Link href={project.link} target="_blank" rel="noopener noreferrer">
                   <Chip
-                    icon={<LinkIcon />}
+                    icon={<LinkIcon sx={{ fontSize: '14px !important' }} />}
                     label="Project Link"
-                    color="primary"
                     variant="outlined"
                     size="small"
                     clickable
+                    sx={{
+                      borderColor: theme.palette.primary.main,
+                      color: theme.palette.primary.main,
+                      fontWeight: 600,
+                      fontSize: '0.7rem',
+                      borderRadius: '5px',
+                      height: 22,
+                      borderWidth: '1.5px',
+                    }}
                   />
                 </Link>
               )}
@@ -123,14 +157,24 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               variant="outlined"
               startIcon={<EditIcon />}
               onClick={() => navigate(`/projects/${id}/edit`)}
+              size="small"
+              sx={{ ml: 2, flexShrink: 0 }}
             >
               Edit Project
             </Button>
           </ConditionalUI>
         </Box>
 
-        {!isDashboard && (
-          <Typography variant="body1" color="text.secondary" paragraph mt={2}>
+        {!isDashboard && project.description && (
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{
+              mb: 3,
+              lineHeight: 1.7,
+              fontSize: '0.95rem',
+            }}
+          >
             <ReactMarkdown
               components={{
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -146,14 +190,26 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           </Typography>
         )}
 
+        {/* Your representative section */}
         <UserEntityProjectSection
           project={project}
           statusRecords={statusRecords}
           representativeTitle={representativeTitle}
         />
 
+        {/* Map section */}
         {Object.keys(geojsonByDistrict).length > 0 && entities.length > 0 && (
-          <Box mt={3}>
+          <Box
+            sx={{
+              mb: 3,
+              borderRadius: 2,
+              overflow: 'hidden',
+              border: `1px solid ${isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)'}`,
+              boxShadow: isLight
+                ? '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.03)'
+                : '0 1px 3px rgba(0,0,0,0.4)',
+            }}
+          >
             <EntityDistrictMap
               entities={entities}
               statusRecords={statusRecords}
@@ -163,8 +219,17 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           </Box>
         )}
 
-        <Box mt={3}>
-          {project.status_distribution ? (
+        {/* Status distribution section */}
+        {project.status_distribution ? (
+          <Box
+            sx={{
+              p: 3,
+              mb: 3,
+              borderRadius: 2,
+              backgroundColor: isLight ? '#FFFFFF' : theme.palette.background.paper,
+              border: `1px solid ${isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)'}`,
+            }}
+          >
             <StatusDistribution
               distribution={project.status_distribution}
               size="large"
@@ -173,33 +238,36 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               showLabels
               statusLabels={project.dashboard_config?.status_labels}
             />
-          ) : (
-            <Typography variant="body2" color="text.secondary">
-              No status data available yet
-            </Typography>
-          )}
-        </Box>
+          </Box>
+        ) : (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            No status data available yet
+          </Typography>
+        )}
 
         <Divider sx={{ my: 4 }} />
 
-        {loadingEntities ? (
-          <Box display="flex" justifyContent="center" py={4}>
-            <CircularProgress />
-          </Box>
-        ) : entities.length === 0 ? (
-          <Paper sx={{ p: 4, textAlign: 'center' }}>
-            <Typography variant="h6" color="text.secondary">
-              No representatives found for the selected jurisdiction
-            </Typography>
-          </Paper>
-        ) : (
-          <EntityList
-            entities={entities}
-            project={project}
-            statusRecords={statusRecords}
-            onStatusUpdated={refreshStatusRecords}
-          />
-        )}
+        {/* Representatives table section */}
+        <Box>
+          {loadingEntities ? (
+            <Box display="flex" justifyContent="center" py={4}>
+              <CircularProgress color="primary" />
+            </Box>
+          ) : entities.length === 0 ? (
+            <Paper sx={{ p: 4, textAlign: 'center' }}>
+              <Typography variant="h6" color="text.secondary">
+                No representatives found for the selected jurisdiction
+              </Typography>
+            </Paper>
+          ) : (
+            <EntityList
+              entities={entities}
+              project={project}
+              statusRecords={statusRecords}
+              onStatusUpdated={refreshStatusRecords}
+            />
+          )}
+        </Box>
       </Box>
     </Container>
   );

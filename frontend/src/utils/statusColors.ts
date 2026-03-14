@@ -3,17 +3,17 @@ import { EntityStatus } from '../types';
 export const getStatusColor = (status: EntityStatus): string => {
   switch (status) {
     case EntityStatus.SOLID_APPROVAL:
-      return '#2e7d32'; // Dark green
+      return '#166534'; // Deep green — committed action
     case EntityStatus.LEANING_APPROVAL:
-      return '#66bb6a'; // Light green
+      return '#22c55e'; // Bright medium green — clearly positive but incomplete, high contrast vs deep green
     case EntityStatus.NEUTRAL:
-      return '#bbb8b8ff'; // Grey
+      return '#64748b'; // Cool blue-gray — outside the system, not applicable
     case EntityStatus.LEANING_DISAPPROVAL:
-      return '#ffb74d'; // Orange
+      return '#f97316'; // Orange — action needed, persuadable
     case EntityStatus.SOLID_DISAPPROVAL:
-      return '#c62828'; // Dark red
+      return '#dc2626'; // Red — active opposition
     default:
-      return '#9e9e9e'; // Grey
+      return '#94a3b8'; // Light blue-gray — no data, clearly distinct from neutral
   }
 };
 

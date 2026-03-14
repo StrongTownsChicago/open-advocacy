@@ -12,28 +12,44 @@ export const lightTheme: ThemeConfig = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#1976d2', // Vibrant blue
-      light: '#42a5f5',
-      dark: '#1565c0',
-      contrastText: '#ffffff',
+      main: '#1B5E38',    // Deep civic forest green
+      light: '#2E7D52',
+      dark: '#0D3D21',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#26a69a', // Teal-like
-      light: '#4db6ac',
-      dark: '#00897b',
-      contrastText: '#ffffff',
+      main: '#D97706',    // Warm amber — action, urgency, Chicago energy
+      light: '#F59E0B',
+      dark: '#B45309',
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#f5f7fa',
-      paper: '#ffffff',
+      default: '#F9F8F5', // Warm off-white — slightly papery, not clinical
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#2c3e50',
-      secondary: '#546e7a',
+      primary: '#1A1917',   // Warm near-black
+      secondary: '#6B6560', // Warm medium gray
+    },
+    divider: '#E5E3DF',
+    success: {
+      main: '#166534',
+      light: '#22C55E',
+      dark: '#14532D',
+    },
+    warning: {
+      main: '#D97706',
+      light: '#F59E0B',
+      dark: '#B45309',
+    },
+    error: {
+      main: '#DC2626',
+      light: '#F87171',
+      dark: '#991B1B',
     },
   },
-  borderRadius: 8,
-  fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+  borderRadius: 10,
+  fontFamily: '"Plus Jakarta Sans", "Helvetica Neue", "Arial", sans-serif',
 };
 
 export const darkTheme: ThemeConfig = {
@@ -41,29 +57,39 @@ export const darkTheme: ThemeConfig = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#42a5f5', // Lighter blue for dark mode
-      light: '#64b5f6',
-      dark: '#1e88e5',
-      contrastText: '#ffffff',
+      main: '#4ADE80',    // Bright civic green for dark mode
+      light: '#86EFAC',
+      dark: '#22C55E',
+      contrastText: '#052E16',
     },
     secondary: {
-      main: '#4db6ac', // Lighter teal for dark mode
-      light: '#80cbc4',
-      dark: '#26a69a',
-      contrastText: '#ffffff',
+      main: '#F59E0B',    // Warm amber
+      light: '#FCD34D',
+      dark: '#D97706',
+      contrastText: '#1C0A00',
     },
     background: {
-      default: '#121212',
-      paper: '#1e1e1e',
+      default: '#0F1613',  // Very dark green-tinted background
+      paper: '#182119',    // Dark green-tinted paper
     },
     text: {
-      primary: '#f5f5f5',
-      secondary: '#b0bec5',
+      primary: '#F0EDE8',
+      secondary: '#A3A09A',
+    },
+    divider: '#2A3328',
+    success: {
+      main: '#4ADE80',
+      light: '#86EFAC',
+      dark: '#22C55E',
+    },
+    warning: {
+      main: '#F59E0B',
+      light: '#FCD34D',
+      dark: '#D97706',
     },
   },
-  borderRadius: 8,
-  fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+  borderRadius: 10,
+  fontFamily: '"Plus Jakarta Sans", "Helvetica Neue", "Arial", sans-serif',
 };
 
-// Add more themes as needed
 export const availableThemes = [lightTheme, darkTheme];

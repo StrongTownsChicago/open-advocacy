@@ -6,7 +6,6 @@ import {
   Button,
   Box,
   Container,
-  useTheme,
   IconButton,
 } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -20,7 +19,6 @@ import RepresentativeBadge from './RepresentativeBadge';
 import UserMenu from './UserMenu';
 
 const Header: React.FC = () => {
-  const theme = useTheme();
   const { currentTheme, setTheme } = useCustomTheme();
   const location = useLocation();
 
@@ -30,15 +28,10 @@ const Header: React.FC = () => {
     setTheme(currentTheme.name === 'light' ? darkTheme : lightTheme);
   };
 
+  const isLight = currentTheme.name === 'light';
+
   return (
-    <AppBar
-      position="static"
-      elevation={0}
-      sx={{
-        backgroundColor: theme.palette.background.paper,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-      }}
-    >
+    <AppBar position="static" elevation={0}>
       <Container maxWidth="lg">
         <Toolbar
           disableGutters
@@ -63,12 +56,8 @@ const Header: React.FC = () => {
                 alignItems: 'center',
                 textDecoration: 'none',
                 '&:hover': {
-                  '& .logo-icon': {
-                    color: theme.palette.primary.dark,
-                  },
-                  '& .logo-text': {
-                    color: theme.palette.primary.main,
-                  },
+                  '& .logo-icon': { opacity: 0.85 },
+                  '& .logo-text': { opacity: 0.85 },
                 },
               }}
             >
@@ -76,29 +65,29 @@ const Header: React.FC = () => {
                 className="logo-icon"
                 sx={{
                   mr: 1.5,
-                  color: theme.palette.primary.main,
-                  fontSize: 28,
-                  transition: 'color 0.2s ease',
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: 26,
+                  transition: 'opacity 0.2s ease',
                 }}
               />
               <Typography
                 className="logo-text"
                 variant="h6"
                 sx={{
-                  color: theme.palette.text.primary,
+                  color: '#FFFFFF',
                   textDecoration: 'none',
                   fontWeight: 700,
-                  letterSpacing: '0.5px',
-                  fontSize: { xs: '0.7rem' },
-                  transition: 'color 0.2s ease',
+                  fontFamily: '"Fraunces", Georgia, serif',
+                  letterSpacing: '0.3px',
+                  fontSize: { xs: '0.9rem', sm: '1rem' },
+                  transition: 'opacity 0.2s ease',
                 }}
               >
                 {appConfig.name}
               </Typography>
             </Box>
 
-            {/* Representative badge with popover - only show if screen is large enough */}
-            <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+            <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, ml: 2 }}>
               <RepresentativeBadge />
             </Box>
           </Box>
@@ -106,81 +95,68 @@ const Header: React.FC = () => {
           <Box
             sx={{
               flexGrow: 1,
-              display: { xs: 'none', sm: 'flex' }, // Hide on mobile
+              display: { xs: 'none', sm: 'flex' },
               justifyContent: 'center',
             }}
           >
-            <>
-              <Button
-                color="inherit"
-                component={RouterLink}
-                to="/"
-                sx={{
-                  mx: 1,
-                  color: isActive('/') ? theme.palette.primary.main : theme.palette.text.primary,
-                  fontWeight: isActive('/') ? 700 : 500,
-                  '&:hover': {
-                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                  },
-                }}
-              >
-                Home
-              </Button>
-              <Button
-                color="inherit"
-                component={RouterLink}
-                to="/projects"
-                sx={{
-                  mx: 1,
-                  color: isActive('/projects')
-                    ? theme.palette.primary.main
-                    : theme.palette.text.primary,
-                  fontWeight: isActive('/projects') ? 700 : 500,
-                  '&:hover': {
-                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                  },
-                }}
-              >
-                Projects
-              </Button>
-              <Button
-                color="inherit"
-                component={RouterLink}
-                to="/representatives"
-                sx={{
-                  mx: 1,
-                  color: isActive('/representatives')
-                    ? theme.palette.primary.main
-                    : theme.palette.text.primary,
-                  fontWeight: isActive('/representatives') ? 700 : 500,
-                  '&:hover': {
-                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                  },
-                }}
-              >
-                Find Representatives
-              </Button>
-            </>
+            {(['/', '/projects', '/representatives'] as const).map((path, i) => {
+              const labels = ['Home', 'Projects', 'Find Representatives'];
+              return (
+                <Button
+                  key={path}
+                  color="inherit"
+                  component={RouterLink}
+                  to={path}
+                  sx={{
+                    mx: 0.5,
+                    px: 2,
+                    py: 1,
+                    color: isActive(path) ? '#FFFFFF' : 'rgba(255,255,255,0.72)',
+                    fontWeight: isActive(path) ? 700 : 500,
+                    fontSize: '0.875rem',
+                    position: 'relative',
+                    borderRadius: '6px',
+                    '&::after': isActive(path)
+                      ? {
+                          content: '""',
+                          position: 'absolute',
+                          bottom: 2,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '20px',
+                          height: '2px',
+                          backgroundColor: 'rgba(255,255,255,0.8)',
+                          borderRadius: '1px',
+                        }
+                      : {},
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      color: '#FFFFFF',
+                    },
+                  }}
+                >
+                  {labels[i]}
+                </Button>
+              );
+            })}
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <IconButton
               onClick={toggleTheme}
-              color="inherit"
               sx={{
-                color: theme.palette.text.primary,
-                mr: 1,
+                color: 'rgba(255,255,255,0.8)',
+                width: 36,
+                height: 36,
+                '&:hover': { color: '#FFFFFF', backgroundColor: 'rgba(255,255,255,0.1)' },
               }}
-              aria-label={
-                currentTheme.name === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-              }
+              aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
             >
-              {currentTheme.name === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+              {isLight ? (
+                <Brightness4Icon sx={{ fontSize: 20 }} />
+              ) : (
+                <Brightness7Icon sx={{ fontSize: 20 }} />
+              )}
             </IconButton>
 
             <UserMenu />

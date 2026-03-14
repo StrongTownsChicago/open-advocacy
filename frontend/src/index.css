@@ -11,3 +11,32 @@ body {
 a {
   text-decoration: none;
 }
+
+/* Refined scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Leaflet map container refinements */
+.leaflet-container {
+  font-family: inherit !important;
+}
+
+/* Smooth theme transition on body-level elements only */
+body, #root {
+  transition: background-color 0.2s ease;
+}

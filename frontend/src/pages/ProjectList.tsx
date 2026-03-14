@@ -12,7 +12,9 @@ import {
   Button,
   CircularProgress,
   SelectChangeEvent,
+  Link,
 } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import PeopleIcon from '@mui/icons-material/People';
@@ -171,8 +173,19 @@ const ProjectList: React.FC = () => {
                   </Box>
                 </Box>
 
-                <Typography variant="body2" color="text.secondary" mb={2}>
-                  {project.description}
+                <Typography variant="body2" color="text.secondary" mb={2} sx={{ lineHeight: 1.6 }}>
+                  <ReactMarkdown
+                    components={{
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      a: ({ node, ...props }) => (
+                        <Link {...props} target="_blank" rel="noopener noreferrer" color="primary" />
+                      ),
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      p: ({ node, ...props }) => <span {...props} />,
+                    }}
+                  >
+                    {project.description}
+                  </ReactMarkdown>
                 </Typography>
 
                 {project.status_distribution && (

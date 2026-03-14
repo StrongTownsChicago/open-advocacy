@@ -110,16 +110,28 @@ const EntityList: React.FC<EntityListProps> = ({
       <Paper sx={{ width: '100%', mb: 2, borderRadius: 2, overflow: 'hidden' }}>
         <Toolbar
           sx={{
-            pl: { sm: 2 },
-            pr: { xs: 1, sm: 1 },
-            flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on mobile
+            pl: { sm: 2.5 },
+            pr: { xs: 1.5, sm: 2 },
+            py: { xs: 1.5, sm: 1.5 },
+            minHeight: { xs: 'auto', sm: '56px' },
+            flexDirection: { xs: 'column', sm: 'row' },
             alignItems: { xs: 'flex-start', sm: 'center' },
             '& > :first-of-type': {
-              mb: { xs: 1, sm: 0 }, // Add margin below title on mobile
+              mb: { xs: 1, sm: 0 },
             },
           }}
         >
-          <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+          <Typography
+            sx={{
+              flex: '1 1 100%',
+              fontFamily: '"Fraunces", Georgia, serif',
+              fontWeight: 600,
+              fontSize: '1.1rem',
+            }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
             Representatives
           </Typography>
 
@@ -230,7 +242,7 @@ const EntityList: React.FC<EntityListProps> = ({
                     District
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell>
                   <TableSortLabel
                     active={orderBy === 'status'}
                     direction={orderBy === 'status' ? order : 'asc'}

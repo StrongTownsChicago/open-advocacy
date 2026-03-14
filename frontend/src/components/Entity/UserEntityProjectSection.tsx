@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Paper,
   Typography,
   Box,
   Button,
@@ -14,6 +13,7 @@ import {
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from 'react-router-dom';
 import { useUserRepresentatives } from '../../contexts/UserRepresentativesContext';
 import { Project, EntityStatusRecord, EntityStatus, Entity } from '../../types';
@@ -34,10 +34,12 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
+  const isLight = theme.palette.mode === 'light';
 
   const getStatusLabel = makeStatusLabelFn(statusLabels);
   const status = statusRecord?.status || 'unknown';
   const notes = statusRecord?.notes;
+  const statusColor = getStatusColor(status as EntityStatus);
 
   const handleToggle = () => {
     setExpanded(!expanded);
@@ -46,46 +48,69 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
   return (
     <Box
       sx={{
-        mb: 2,
-        borderLeft: `4px solid ${getStatusColor(status as EntityStatus)}`,
-        borderRadius: '0 4px 4px 0',
+        mb: 1.5,
+        borderRadius: 2,
         overflow: 'hidden',
-        backgroundColor: theme.palette.background.default,
+        border: `1px solid ${isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)'}`,
+        borderLeft: `3px solid ${statusColor}`,
+        backgroundColor: isLight
+          ? `${statusColor}06`
+          : `${statusColor}10`,
+        transition: 'all 0.15s ease',
+        '&:hover': {
+          backgroundColor: isLight ? `${statusColor}10` : `${statusColor}15`,
+        },
       }}
     >
-      {/* Header section - always visible */}
       <Box
         display="flex"
         alignItems="center"
         onClick={handleToggle}
         sx={{
-          padding: 2,
+          padding: '12px 16px',
           cursor: 'pointer',
-          '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
         }}
       >
-        <Avatar src={entity.image_url} sx={{ mr: 2, bgcolor: theme.palette.primary.main }}>
-          <PersonIcon />
+        <Avatar
+          src={entity.image_url}
+          sx={{
+            mr: 1.5,
+            width: 40,
+            height: 40,
+            bgcolor: statusColor,
+            fontSize: '0.9rem',
+            fontWeight: 700,
+          }}
+        >
+          {entity.image_url ? null : <PersonIcon sx={{ fontSize: 20 }} />}
         </Avatar>
 
-        <Box flexGrow={1}>
-          <Box display="flex" alignItems="center" mb={0.5}>
-            <Typography variant="subtitle1" fontWeight="bold">
+        <Box flexGrow={1} minWidth={0}>
+          <Box display="flex" alignItems="center" gap={1} flexWrap="wrap" mb={0.25}>
+            <Typography
+              variant="body1"
+              fontWeight="700"
+              sx={{ fontFamily: '"Fraunces", Georgia, serif', fontSize: '1rem' }}
+            >
               {entity.name}
             </Typography>
             <Chip
               label={getStatusLabel(status as EntityStatus)}
               size="small"
               sx={{
-                ml: 1,
-                backgroundColor: getStatusColor(status as EntityStatus),
+                backgroundColor: statusColor,
                 color: '#fff',
+                fontWeight: 600,
+                fontSize: '0.7rem',
+                height: 20,
+                borderRadius: '4px',
               }}
             />
           </Box>
 
-          <Typography variant="body2" color="text.secondary">
-            {entity.title} {entity.district_name ? `(${entity.district_name})` : ''}
+          <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+            {entity.title}
+            {entity.district_name ? ` · ${entity.district_name}` : ''}
           </Typography>
         </Box>
 
@@ -95,45 +120,60 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
             e.stopPropagation();
             handleToggle();
           }}
-          sx={{ padding: 1 }}
+          sx={{
+            padding: 0.5,
+            color: 'text.secondary',
+            ml: 1,
+          }}
           aria-expanded={expanded}
           aria-label="show more"
         >
-          {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          {expanded ? (
+            <KeyboardArrowUpIcon sx={{ fontSize: 18 }} />
+          ) : (
+            <KeyboardArrowDownIcon sx={{ fontSize: 18 }} />
+          )}
         </IconButton>
       </Box>
 
-      {/* Expandable content */}
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Box sx={{ px: 2, pb: 2 }}>
-          {/* Notes section */}
+        <Box
+          sx={{
+            px: 2,
+            pb: 2,
+            borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}`,
+            pt: 1.5,
+          }}
+        >
           {notes && (
             <Box
               sx={{
-                my: 1,
+                mb: 1.5,
                 p: 1.5,
-                backgroundColor: 'rgba(0,0,0,0.03)',
-                borderRadius: 1,
+                backgroundColor: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)',
+                borderRadius: 1.5,
+                borderLeft: `2px solid ${statusColor}`,
               }}
             >
-              <Typography variant="body2">{notes}</Typography>
+              <Typography variant="body2" sx={{ fontSize: '0.85rem', fontStyle: 'italic' }}>
+                "{notes}"
+              </Typography>
             </Box>
           )}
 
-          {/* Contact information section */}
-          <Box sx={{ mt: 2 }}>
+          <Box sx={{ mt: 1 }}>
             <EntityContactInfo entity={entity} />
           </Box>
 
-          {/* Entity Details button */}
-          <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Box display="flex" justifyContent="flex-end" mt={1.5}>
             <Button
-              variant="contained"
+              variant="outlined"
               size="small"
               color="primary"
               onClick={() => navigate(`/representatives/${entity.id}`)}
+              sx={{ fontSize: '0.8rem' }}
             >
-              View Representative Details
+              View Details
             </Button>
           </Box>
         </Box>
@@ -155,13 +195,14 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
 }) => {
   const navigate = useNavigate();
   const { userRepresentatives, hasUserRepresentatives } = useUserRepresentatives();
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+  const primaryColor = theme.palette.primary.main;
 
-  // Filter entities that match the project jurisdiction
   const relevantEntities = userRepresentatives.filter(
     entity => entity.jurisdiction_id === project.jurisdiction_id
   );
 
-  // Create a map of entity ID to status record for quick lookups
   const statusMap = statusRecords.reduce(
     (acc, record) => {
       acc[record.entity_id] = record;
@@ -172,38 +213,91 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
 
   if (!hasUserRepresentatives) {
     return (
-      <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Your {representativeTitle}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          Find your {representativeTitle.toLowerCase()} to see where they stand on this project.
-        </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          onClick={() => navigate('/representatives')}
-          sx={{ mt: 2 }}
+      <Box
+        sx={{
+          p: 3,
+          mb: 3,
+          borderRadius: 2,
+          background: isLight
+            ? `linear-gradient(135deg, ${primaryColor}08 0%, ${primaryColor}04 100%)`
+            : `linear-gradient(135deg, ${primaryColor}18 0%, ${primaryColor}08 100%)`,
+          border: `1px solid ${primaryColor}20`,
+          borderLeft: `4px solid ${primaryColor}`,
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: 48,
+            height: 48,
+            borderRadius: '12px',
+            backgroundColor: `${primaryColor}15`,
+            border: `1px solid ${primaryColor}25`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            mt: 0.25,
+          }}
         >
-          Find Your {representativeTitle}
-        </Button>
-      </Paper>
+          <LocationOnIcon sx={{ color: primaryColor, fontSize: 24 }} />
+        </Box>
+
+        <Box flexGrow={1}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: '"Fraunces", Georgia, serif',
+              fontWeight: 600,
+              mb: 0.5,
+              fontSize: '1.05rem',
+              color: 'text.primary',
+            }}
+          >
+            Your {representativeTitle}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mb: 1.5, fontSize: '0.875rem', lineHeight: 1.5 }}
+          >
+            Find your {representativeTitle.toLowerCase()} to see where they stand on this project.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => navigate('/representatives')}
+            sx={{ fontWeight: 600, fontSize: '0.8rem' }}
+          >
+            Find Your {representativeTitle}
+          </Button>
+        </Box>
+      </Box>
     );
   }
 
   if (relevantEntities.length === 0) {
     return (
-      <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-        <Typography variant="h6" gutterBottom>
+      <Box
+        sx={{
+          p: 3,
+          mb: 3,
+          borderRadius: 2,
+          backgroundColor: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)',
+          border: `1px solid ${isLight ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)'}`,
+        }}
+      >
+        <Typography variant="h6" gutterBottom sx={{ fontFamily: '"Fraunces", Georgia, serif', fontSize: '1.05rem' }}>
           Your {representativeTitle}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
           Your saved{' '}
           {userRepresentatives?.length > 1
             ? representativeTitle.toLowerCase() + 's are '
-            : representativeTitle.toLowerCase()}
-          {' is '}
+            : representativeTitle.toLowerCase() + ' is '}
           not involved with this project.
         </Typography>
         <Button
@@ -211,23 +305,43 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
           color="primary"
           size="small"
           onClick={() => navigate('/representatives')}
-          sx={{ mt: 2 }}
+          sx={{ fontWeight: 600, fontSize: '0.8rem' }}
         >
           Find More Representatives
         </Button>
-      </Paper>
+      </Box>
     );
   }
 
   return (
-    <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        {relevantEntities?.length == 1
+    <Box
+      sx={{
+        p: 3,
+        mb: 3,
+        borderRadius: 2,
+        background: isLight
+          ? `linear-gradient(135deg, ${primaryColor}06 0%, ${primaryColor}02 100%)`
+          : `linear-gradient(135deg, ${primaryColor}15 0%, ${primaryColor}06 100%)`,
+        border: `1px solid ${primaryColor}18`,
+        borderLeft: `4px solid ${primaryColor}`,
+      }}
+    >
+      <Typography
+        variant="h6"
+        gutterBottom
+        sx={{
+          fontFamily: '"Fraunces", Georgia, serif',
+          fontWeight: 600,
+          fontSize: '1.05rem',
+          mb: 2,
+        }}
+      >
+        {relevantEntities?.length === 1
           ? `Where Your ${representativeTitle} Stands`
           : `Where Your ${representativeTitle}s Stand`}
       </Typography>
 
-      <List disablePadding sx={{ mt: 2 }}>
+      <List disablePadding>
         {relevantEntities.map(entity => (
           <RepresentativeItem
             key={entity.id}
@@ -241,14 +355,15 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
       {relevantEntities.length > 1 && (
         <Button
           variant="outlined"
+          color="primary"
           fullWidth
           onClick={() => navigate(`/contact?project=${project.id}`)}
-          sx={{ mt: 1 }}
+          sx={{ mt: 1.5, fontWeight: 600, fontSize: '0.85rem' }}
         >
           Contact All Your {representativeTitle}s
         </Button>
       )}
-    </Paper>
+    </Box>
   );
 };
 

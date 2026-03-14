@@ -134,7 +134,7 @@ const EntityRow: React.FC<EntityRowProps> = ({
 
         <TableCell>{entity.district_name || entity.entity_type}</TableCell>
 
-        <TableCell align="right">
+        <TableCell>
           <Tooltip
             title={statusRecord?.notes ?? ''}
             arrow
