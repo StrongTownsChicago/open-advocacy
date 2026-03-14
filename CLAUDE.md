@@ -23,6 +23,7 @@ python -m scripts.add_super_admin         # Create super admin user
 python -m scripts.initialize_app          # Full initialization (DB + Chicago import + ADU project seed)
 python -m scripts.import_adu_project_data # Seed ADU opt-in project data
 python -m scripts.import_example_project_data # Seed example projects
+python -m scripts.fetch_ward_zoning_data      # Fetch ward zoning data from Cityscape API
 
 # Code quality
 poetry run ruff check .                   # Lint
@@ -46,7 +47,8 @@ npm run type-check    # TypeScript check
 ### Docker (full stack)
 
 ```bash
-docker-compose up     # Start postgres + backend + frontend
+docker-compose up         # Start postgres + backend + frontend
+docker-compose up --build # Start and rebuild
 ```
 
 ## Architecture
@@ -78,6 +80,7 @@ API Routes (app/api/routes/) → Service Layer (app/services/) → DB Providers 
 ### Auto-Initialization on Startup
 
 On first startup, `app/main.py` calls `scripts/initialize_app.py:initialize_application()`, which:
+
 1. Creates DB tables
 2. Seeds location data based on `SEED_LOCATIONS` env var (e.g. `chicago`, `illinois`)
 3. Seeds project data based on `SEED_PROJECTS` env var (e.g. `adu`, `example`)
@@ -122,6 +125,7 @@ Key variables (set in `.env` for local dev, Railway for production):
 - `DATA_DIR` — Override the data directory path
 - `SEED_LOCATIONS` — Comma-separated location keys to seed on cold start (e.g. `chicago`, `chicago,illinois`; default: empty)
 - `SEED_PROJECTS` — Comma-separated project keys to seed on cold start (e.g. `adu`, `adu,example`; default: empty)
+- `CHICAGO_CITYSCAPE_API_KEY` — API key for Chicago Cityscape Zoning Explorer (required for `fetch_ward_zoning_data` script)
 - `VITE_API_URL` — (Frontend) Override API base URL; without this, falls back to `/api` (relative)
 - `VITE_APPLICATION_NAME` — (Frontend) App display name (default: `Open Advocacy`)
 - `VITE_APPLICATION_DESCRIPTION` — (Frontend) App tagline

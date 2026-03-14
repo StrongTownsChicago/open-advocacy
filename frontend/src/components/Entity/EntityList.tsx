@@ -26,6 +26,7 @@ import {
   MenuItem,
   SelectChangeEvent,
   Link,
+  LinearProgress,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -41,6 +42,7 @@ import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '../../u
 import { formatMetricValue } from '../../utils/dataTransformers';
 import { useAuth } from '../../contexts/AuthContext';
 import ConditionalUI from '../auth/ConditionalUI';
+import { compareEntities } from './entitySort';
 
 type Order = 'asc' | 'desc';
 
@@ -218,14 +220,22 @@ const EntityRow = ({
               : statusRecord.notes
             : ''}
         </TableCell>
-        {tableMetrics.map(metric => (
-          <TableCell key={metric.key} align="right">
-            {formatMetricValue(
-              statusRecord?.record_metadata?.[metric.key],
-              metric.format ?? 'text'
-            )}
-          </TableCell>
-        ))}
+        {tableMetrics.map(metric => {
+          const rawValue = statusRecord?.record_metadata?.[metric.key];
+          const numericValue = typeof rawValue === 'number' ? rawValue : parseFloat(String(rawValue));
+          return (
+            <TableCell key={metric.key} align="right">
+              {formatMetricValue(rawValue, metric.format ?? 'text')}
+              {metric.format === 'percentage' && !isNaN(numericValue) && (
+                <LinearProgress
+                  variant="determinate"
+                  value={Math.min(numericValue, 100)}
+                  sx={{ height: 4, borderRadius: 1, mt: 0.5 }}
+                />
+              )}
+            </TableCell>
+          );
+        })}
       </TableRow>
 
       <TableRow>
@@ -463,26 +473,27 @@ const EntityList: React.FC<EntityListProps> = ({
 
   // State for filtering and sorting
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Entity>('name');
+  const [orderBy, setOrderBy] = useState<keyof Entity | 'status' | string>('name');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
+  const statusRecordsMap = useMemo(() => {
+    const map: Record<string, EntityStatusRecord> = {};
+    for (const sr of statusRecords) {
+      if (sr.project_id === project.id) {
+        map[sr.entity_id] = sr;
+      }
+    }
+    return map;
+  }, [statusRecords, project.id]);
+
   // Sort entities based on orderBy and order
   const sortedEntities = useMemo(() => {
-    const comparator = (a: Entity, b: Entity, orderBy: keyof Entity) => {
-      const aVal = a[orderBy] ?? '';
-      const bVal = b[orderBy] ?? '';
-      if (bVal < aVal) {
-        return order === 'desc' ? -1 : 1;
-      }
-      if (bVal > aVal) {
-        return order === 'desc' ? 1 : -1;
-      }
-      return 0;
-    };
-
-    return [...entities].sort((a, b) => comparator(a, b, orderBy));
-  }, [entities, order, orderBy]);
+    const metricKeys = tableMetrics.map(m => m.key);
+    return [...entities].sort((a, b) =>
+      compareEntities(a, b, orderBy, order, statusRecordsMap, metricKeys)
+    );
+  }, [entities, order, orderBy, statusRecordsMap, tableMetrics]);
 
   // Filter entities based on search term and filter settings
   const filteredEntities = useMemo(() => {
@@ -510,7 +521,7 @@ const EntityList: React.FC<EntityListProps> = ({
     });
   }, [sortedEntities, searchTerm, filterStatus, statusRecords, project.id]);
 
-  const handleRequestSort = (property: keyof Entity) => {
+  const handleRequestSort = (property: keyof Entity | 'status' | string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -641,11 +652,25 @@ const EntityList: React.FC<EntityListProps> = ({
                     District
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">Status</TableCell>
+                <TableCell align="right">
+                  <TableSortLabel
+                    active={orderBy === 'status'}
+                    direction={orderBy === 'status' ? order : 'asc'}
+                    onClick={() => handleRequestSort('status')}
+                  >
+                    Status
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell align="center">Notes</TableCell>
                 {tableMetrics.map(metric => (
                   <TableCell key={metric.key} align="right">
-                    {metric.label}
+                    <TableSortLabel
+                      active={orderBy === metric.key}
+                      direction={orderBy === metric.key ? order : 'asc'}
+                      onClick={() => handleRequestSort(metric.key)}
+                    >
+                      {metric.label}
+                    </TableSortLabel>
                   </TableCell>
                 ))}
               </TableRow>
