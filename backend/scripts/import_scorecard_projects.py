@@ -213,6 +213,25 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         },
     },
     {
+        "base_slug": "nwpo-sponsorship",
+        "title": "Northwest Side Preservation Ordinance — Cosponsors",
+        "description": (
+            "Led by Ald. Ramirez-Rosa (35) and passed 41-3 in September 2024, this "
+            "ordinance raised demolition surcharges to $20,000/unit in neighborhoods "
+            "around the 606 trail corridor and established a Tenant Opportunity to "
+            "Purchase program giving tenants first refusal when their building is listed "
+            "for sale. "
+            "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=C3F5E354-5F44-EF11-8409-001DD8306DF0"
+        ),
+        "matter_guid": "C3F5E354-5F44-EF11-8409-001DD8306DF0",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": {
+            "solid_approval": "Cosponsored",
+            "unknown": "Not a Cosponsor",
+        },
+    },
+    {
         "base_slug": "gsh-vote",
         "title": "Green Social Housing — Vote",
         "description": (

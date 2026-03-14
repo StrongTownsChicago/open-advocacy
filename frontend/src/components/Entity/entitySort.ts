@@ -1,4 +1,5 @@
 import { Entity, EntityStatus, EntityStatusRecord } from '../../types';
+import { compareDistrictNames } from '../../utils/districtSort';
 
 type Order = 'asc' | 'desc';
 
@@ -30,6 +31,9 @@ export function compareEntities(
     const bRaw = statusRecordsMap[b.id]?.record_metadata?.[orderBy];
     aVal = aRaw != null ? parseFloat(String(aRaw)) : -Infinity;
     bVal = bRaw != null ? parseFloat(String(bRaw)) : -Infinity;
+  } else if (orderBy === 'district_name') {
+    const cmp = compareDistrictNames(a.district_name, b.district_name);
+    return order === 'asc' ? cmp : -cmp;
   } else {
     aVal = a[orderBy as keyof Entity] ?? '';
     bVal = b[orderBy as keyof Entity] ?? '';

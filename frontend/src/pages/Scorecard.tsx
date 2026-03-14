@@ -20,11 +20,13 @@ import {
   useTheme,
 } from '@mui/material';
 import ErrorDisplay from '../components/common/ErrorDisplay';
+import { STATUS_SORT_ORDER } from '../components/Entity/entitySort';
 import { scorecardService } from '../services/scorecard';
-import { ScorecardEntityRow, ScorecardResponse } from '../types';
+import { EntityStatus, ScorecardEntityRow, ScorecardResponse } from '../types';
+import { compareDistrictNames } from '../utils/districtSort';
 import { getStatusColor } from '../utils/statusColors';
 
-type SortField = 'name' | 'ward' | 'score';
+type SortField = string;
 type SortDirection = 'asc' | 'desc';
 
 const Scorecard: React.FC = () => {
@@ -65,8 +67,8 @@ const Scorecard: React.FC = () => {
       if (sortField === 'name') {
         comparison = a.entity.name.localeCompare(b.entity.name);
       } else if (sortField === 'ward') {
-        comparison = (a.entity.district_name ?? '').localeCompare(b.entity.district_name ?? '');
-      } else {
+        comparison = compareDistrictNames(a.entity.district_name, b.entity.district_name);
+      } else if (sortField === 'score') {
         // Sort by alignment score ratio (aligned / total), then by name as tiebreaker
         const aScore = a.total_scoreable > 0 ? a.aligned_count / a.total_scoreable : 0;
         const bScore = b.total_scoreable > 0 ? b.aligned_count / b.total_scoreable : 0;
@@ -74,13 +76,18 @@ const Scorecard: React.FC = () => {
         if (comparison === 0) {
           comparison = a.entity.name.localeCompare(b.entity.name);
         }
+      } else {
+        // Sort by a specific project's status (sortField is the project UUID)
+        const aRank = STATUS_SORT_ORDER[a.statuses[sortField]?.status ?? EntityStatus.UNKNOWN] ?? 5;
+        const bRank = STATUS_SORT_ORDER[b.statuses[sortField]?.status ?? EntityStatus.UNKNOWN] ?? 5;
+        comparison = aRank - bRank;
       }
       return sortDirection === 'asc' ? comparison : -comparison;
     });
     return rows;
   }, [data, sortField, sortDirection]);
 
-  const handleSort = (field: SortField) => {
+  const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(d => (d === 'asc' ? 'desc' : 'asc'));
     } else {
@@ -154,9 +161,9 @@ const Scorecard: React.FC = () => {
 interface TableProps {
   rows: ScorecardEntityRow[];
   data: ScorecardResponse;
-  sortField: SortField;
+  sortField: string;
   sortDirection: SortDirection;
-  onSort: (field: SortField) => void;
+  onSort: (field: string) => void;
 }
 
 const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirection, onSort }) => (
@@ -207,7 +214,13 @@ const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirecti
                 }
                 arrow
               >
-                <span>{project.title}</span>
+                <TableSortLabel
+                  active={sortField === project.id}
+                  direction={sortField === project.id ? sortDirection : 'asc'}
+                  onClick={() => onSort(project.id)}
+                >
+                  {project.title}
+                </TableSortLabel>
               </Tooltip>
             </TableCell>
           ))}

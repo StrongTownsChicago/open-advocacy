@@ -140,6 +140,33 @@ describe('compareEntities — status sort', () => {
   });
 });
 
+describe('compareEntities — district_name sort', () => {
+  it('sorts Ward 2 before Ward 10 ascending (numeric)', () => {
+    const ward2 = makeEntity('a', 'Alice', { district_name: 'Ward 2' });
+    const ward10 = makeEntity('b', 'Bob', { district_name: 'Ward 10' });
+    expect(compareEntities(ward2, ward10, 'district_name', 'asc', {}, [])).toBeLessThan(0);
+  });
+
+  it('sorts Ward 10 before Ward 2 descending', () => {
+    const ward2 = makeEntity('a', 'Alice', { district_name: 'Ward 2' });
+    const ward10 = makeEntity('b', 'Bob', { district_name: 'Ward 10' });
+    expect(compareEntities(ward2, ward10, 'district_name', 'desc', {}, [])).toBeGreaterThan(0);
+  });
+
+  it('treats null district_name as empty string (sorts first ascending)', () => {
+    const noDistrict = makeEntity('a', 'Alice', { district_name: undefined });
+    const ward5 = makeEntity('b', 'Bob', { district_name: 'Ward 5' });
+    // empty string < 'Ward 5' via localeCompare (no number in '')
+    expect(compareEntities(noDistrict, ward5, 'district_name', 'asc', {}, [])).toBeLessThan(0);
+  });
+
+  it('returns 0 for equal district names', () => {
+    const a = makeEntity('a', 'Alice', { district_name: 'Ward 7' });
+    const b = makeEntity('b', 'Bob', { district_name: 'Ward 7' });
+    expect(compareEntities(a, b, 'district_name', 'asc', {}, [])).toBe(0);
+  });
+});
+
 describe('compareEntities — metric sort', () => {
   const entityA = makeEntity('a', 'Alice');
   const entityB = makeEntity('b', 'Bob');

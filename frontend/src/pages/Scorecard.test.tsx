@@ -73,6 +73,40 @@ const mockScorecardResponse: ScorecardResponse = {
   ],
 };
 
+// Extended mock data with wards 2, 9, 10 and varied project statuses
+const extendedScorecardResponse: ScorecardResponse = {
+  group_name: 'Test Group',
+  projects: [
+    {
+      id: 'project-1',
+      title: 'ADU Citywide Vote',
+      slug: 'adu-citywide-vote',
+      preferred_status: EntityStatus.SOLID_APPROVAL,
+      status_labels: { solid_approval: 'Voted Yes', solid_disapproval: 'Voted No', unknown: 'Absent' },
+    },
+  ],
+  entities: [
+    {
+      entity: { id: 'e-10', name: 'Alderperson Ten', entity_type: 'alderperson', district_name: 'Ward 10', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.SOLID_DISAPPROVAL, label: 'Voted No' } },
+      aligned_count: 0,
+      total_scoreable: 1,
+    },
+    {
+      entity: { id: 'e-2', name: 'Alderperson Two', entity_type: 'alderperson', district_name: 'Ward 2', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.SOLID_APPROVAL, label: 'Voted Yes' } },
+      aligned_count: 1,
+      total_scoreable: 1,
+    },
+    {
+      entity: { id: 'e-9', name: 'Alderperson Nine', entity_type: 'alderperson', district_name: 'Ward 9', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.UNKNOWN, label: 'Absent' } },
+      aligned_count: 0,
+      total_scoreable: 1,
+    },
+  ],
+};
+
 function renderScorecard(groupSlug = 'strong-towns-chicago') {
   return render(
     <MemoryRouter initialEntries={[`/scorecard/${groupSlug}`]}>
@@ -146,6 +180,71 @@ describe('Scorecard', () => {
     } as never);
     renderScorecard();
     expect(await screen.findByText(/no scorecard data available/i)).toBeInTheDocument();
+  });
+
+  it('ward sort uses numeric ordering (Ward 2 before Ward 9 before Ward 10)', async () => {
+    vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+      data: extendedScorecardResponse,
+    } as never);
+    renderScorecard();
+    await screen.findByText('Alderperson Two');
+
+    // Click Ward header to sort ascending by ward
+    const wardSortLabel = screen.getByText('Ward');
+    fireEvent.click(wardSortLabel);
+
+    const rows = screen.getAllByRole('row');
+    // rows[0] = header, rows[1..3] = data rows in order
+    expect(rows[1]).toHaveTextContent('Ward 2');
+    expect(rows[2]).toHaveTextContent('Ward 9');
+    expect(rows[3]).toHaveTextContent('Ward 10');
+  });
+
+  it('ward sort descending puts Ward 10 first', async () => {
+    vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+      data: extendedScorecardResponse,
+    } as never);
+    renderScorecard();
+    await screen.findByText('Alderperson Two');
+
+    const wardSortLabel = screen.getByText('Ward');
+    fireEvent.click(wardSortLabel); // asc
+    fireEvent.click(wardSortLabel); // desc
+
+    const rows = screen.getAllByRole('row');
+    expect(rows[1]).toHaveTextContent('Ward 10');
+  });
+
+  it('clicking a project column header sorts by that project status', async () => {
+    vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+      data: extendedScorecardResponse,
+    } as never);
+    renderScorecard();
+    await screen.findByText('Alderperson Two');
+
+    // Click the project column header — solid_approval (rank 0) sorts to top
+    const projectSortLabel = screen.getByText('ADU Citywide Vote');
+    fireEvent.click(projectSortLabel);
+
+    const rows = screen.getAllByRole('row');
+    // solid_approval entity (Alderperson Two, Ward 2) should be first
+    expect(rows[1]).toHaveTextContent('Alderperson Two');
+  });
+
+  it('clicking a project column twice reverses the order', async () => {
+    vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+      data: extendedScorecardResponse,
+    } as never);
+    renderScorecard();
+    await screen.findByText('Alderperson Two');
+
+    const projectSortLabel = screen.getByText('ADU Citywide Vote');
+    fireEvent.click(projectSortLabel); // asc: solid_approval first
+    fireEvent.click(projectSortLabel); // desc: solid_disapproval first
+
+    const rows = screen.getAllByRole('row');
+    // unknown (rank 5) sorts last ascending, so first descending
+    expect(rows[1]).toHaveTextContent('Alderperson Nine');
   });
 
   it('sort by alignment score re-orders rows', async () => {
