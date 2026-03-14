@@ -2,6 +2,7 @@ from uuid import UUID
 
 from app.models.pydantic.models import District, DistrictBase
 from app.db.base import DatabaseProvider
+from app.exceptions import NotFoundError
 
 
 class DistrictService:
@@ -33,7 +34,7 @@ class DistrictService:
                 district.jurisdiction_id
             )
             if not jurisdiction:
-                raise ValueError("Jurisdiction not found")
+                raise NotFoundError("Jurisdiction not found")
 
         return await self.districts_provider.create(district)
 
@@ -47,7 +48,7 @@ class DistrictService:
                 district.jurisdiction_id
             )
             if not jurisdiction:
-                raise ValueError("Jurisdiction not found")
+                raise NotFoundError("Jurisdiction not found")
 
         return await self.districts_provider.update(district_id, district)
 

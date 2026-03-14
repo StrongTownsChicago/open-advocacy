@@ -21,6 +21,43 @@ class PasswordUpdate(BaseModel):
     password: str
 
 
+def _check_edit_permission(
+    current_user: User, target_user: User, new_role: UserRole | None = None
+) -> None:
+    """Raise HTTPException if current_user cannot edit target_user.
+
+    Args:
+        current_user: The authenticated user performing the action.
+        target_user: The user being modified.
+        new_role: The proposed new role (only relevant for role updates).
+    """
+    if current_user.role == UserRole.SUPER_ADMIN:
+        if (
+            target_user.role == UserRole.SUPER_ADMIN
+            and current_user.id != target_user.id
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot change the role of another super admin",
+            )
+    else:  # Group admin
+        if target_user.group_id != current_user.group_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Can only update users in your own group",
+            )
+        if target_user.role == UserRole.SUPER_ADMIN or new_role == UserRole.SUPER_ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Group admins cannot manage super admins",
+            )
+        if new_role is not None and target_user.id == current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot change your own role",
+            )
+
+
 @router.get("/group/{group_id}", response_model=List[User])
 async def list_users_in_group(
     group_id: UUID,
@@ -66,37 +103,7 @@ async def update_user_role(
             detail="User not found",
         )
 
-    # Permission checks
-    # 1. Super admins can update any user except other super admins
-    # 2. Group admins can only update users in their group, and can't make someone a super admin
-    if current_user.role == UserRole.SUPER_ADMIN:
-        if (
-            user_to_update.role == UserRole.SUPER_ADMIN
-            and current_user.id != user_to_update.id
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Cannot change the role of another super admin",
-            )
-    else:  # Group admin
-        if user_to_update.group_id != current_user.group_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Can only update users in your own group",
-            )
-        if (
-            user_to_update.role == UserRole.SUPER_ADMIN
-            or new_role == UserRole.SUPER_ADMIN
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Group admins cannot manage super admins",
-            )
-        if user_id == current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Cannot change your own role",
-            )
+    _check_edit_permission(current_user, user_to_update, new_role=new_role)
 
     # Update the role
     updated_user = await user_service.update_user_role(user_id, new_role)
@@ -119,29 +126,7 @@ async def update_user_password(
             detail="User not found",
         )
 
-    # Permission checks
-    # 1. Super admins can update any user except other super admins
-    # 2. Group admins can only update users in their group, and can't update super admins
-    if current_user.role == UserRole.SUPER_ADMIN:
-        if (
-            user_to_update.role == UserRole.SUPER_ADMIN
-            and current_user.id != user_to_update.id
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Cannot change another super admin's password",
-            )
-    else:  # Group admin
-        if user_to_update.group_id != current_user.group_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Can only update users in your own group",
-            )
-        if user_to_update.role == UserRole.SUPER_ADMIN:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Group admins cannot manage super admins",
-            )
+    _check_edit_permission(current_user, user_to_update)
 
     # Update the password
     await user_service.update_user_password(user_id, password_update.password)

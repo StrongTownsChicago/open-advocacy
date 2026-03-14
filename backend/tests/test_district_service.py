@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import pytest
 
+from app.exceptions import NotFoundError
 from app.models.pydantic.models import DistrictBase
 from app.services.district_service import DistrictService
 from tests.factories import make_district, make_jurisdiction
@@ -23,13 +24,13 @@ class TestCreateDistrict:
         )
 
     async def test_validates_jurisdiction_exists(self):
-        """Creating a district with a nonexistent jurisdiction should raise ValueError."""
+        """Creating a district with a nonexistent jurisdiction should raise NotFoundError."""
         district = DistrictBase(
             name="Ward 1",
             code="W-01",
             jurisdiction_id=uuid4(),
         )
-        with pytest.raises(ValueError, match="Jurisdiction not found"):
+        with pytest.raises(NotFoundError, match="Jurisdiction not found"):
             await self.service.create_district(district)
 
     async def test_succeeds_with_valid_jurisdiction(self):

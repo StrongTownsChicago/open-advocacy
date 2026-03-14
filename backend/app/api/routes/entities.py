@@ -6,6 +6,7 @@ from app.models.pydantic.models import Entity, EntityCreate, AddressLookupReques
 from app.services.entity_service import EntityService
 from app.services.service_factory import get_entity_service
 from app.core.auth import get_active_user
+from app.exceptions import NotFoundError
 
 router = APIRouter()
 
@@ -28,7 +29,7 @@ async def create_entity(
     """Create a new entity."""
     try:
         return await entity_service.create_entity(entity)
-    except ValueError as e:
+    except NotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 

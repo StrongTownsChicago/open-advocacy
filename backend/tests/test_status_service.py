@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import pytest
 
+from app.exceptions import NotFoundError
 from app.models.pydantic.models import EntityStatus
 from tests.factories import make_entity, make_project, make_status_record
 from tests.mock_provider import MockDatabaseProvider
@@ -105,7 +106,7 @@ class TestCreateStatusRecordValidation:
         )
 
     async def test_create_raises_for_missing_project(self):
-        """Creating a status record with nonexistent project should raise ValueError."""
+        """Creating a status record with nonexistent project should raise NotFoundError."""
         entity = make_entity()
         self.entities_provider.seed(entity)
 
@@ -114,11 +115,11 @@ class TestCreateStatusRecordValidation:
             project_id=uuid4(),
             status=EntityStatus.NEUTRAL,
         )
-        with pytest.raises(ValueError, match="Project not found"):
+        with pytest.raises(NotFoundError, match="Project not found"):
             await self.service.create_status_record(record)
 
     async def test_create_raises_for_missing_entity(self):
-        """Creating a status record with nonexistent entity should raise ValueError."""
+        """Creating a status record with nonexistent entity should raise NotFoundError."""
         project = make_project()
         self.projects_provider.seed(project)
 
@@ -127,7 +128,7 @@ class TestCreateStatusRecordValidation:
             project_id=project.id,
             status=EntityStatus.NEUTRAL,
         )
-        with pytest.raises(ValueError, match="Entity not found"):
+        with pytest.raises(NotFoundError, match="Entity not found"):
             await self.service.create_status_record(record)
 
 

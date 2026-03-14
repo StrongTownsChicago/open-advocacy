@@ -5,6 +5,7 @@ from app.models.pydantic.models import Project, ProjectBase, ProjectStatus, User
 from app.services.project_service import ProjectService
 from app.services.service_factory import get_project_service
 from app.core.auth import get_active_user
+from app.exceptions import NotFoundError
 
 
 router = APIRouter()
@@ -57,7 +58,7 @@ async def create_project(
     """Create a new project."""
     try:
         return await project_service.create_project(project)
-    except ValueError as e:
+    except NotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
@@ -86,7 +87,7 @@ async def update_project(
         if not updated_project:
             raise HTTPException(status_code=404, detail="Project not found")
         return updated_project
-    except ValueError as e:
+    except NotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 

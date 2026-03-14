@@ -3,6 +3,7 @@ from uuid import UUID
 from app.models.pydantic.models import Entity, EntityCreate, AddressLookupRequest
 from app.db.base import DatabaseProvider
 from app.geo.geocoding_service import GeocodingService
+from app.exceptions import NotFoundError
 
 
 class EntityService:
@@ -22,18 +23,14 @@ class EntityService:
     async def list_entities(self, jurisdiction_id: UUID) -> list[Entity]:
         """List entities by jurisdiction with district name enrichment."""
         entities = await self.entities_provider.filter(jurisdiction_id=jurisdiction_id)
-        for entity in entities:
-            district = await self.districts_provider.get(entity.district_id)
-            if district:
-                entity.district_name = district.name
-        return entities
+        return await self._enrich_with_district_names(entities)
 
     async def create_entity(self, entity: EntityCreate) -> Entity:
         """Create a new entity after validating the jurisdiction."""
         # Verify jurisdiction exists
         jurisdiction = await self.jurisdictions_provider.get(entity.jurisdiction_id)
         if not jurisdiction:
-            raise ValueError("Jurisdiction not found")
+            raise NotFoundError("Jurisdiction not found")
 
         return await self.entities_provider.create(entity)
 
@@ -59,6 +56,18 @@ class EntityService:
 
         return await self.entities_provider.delete(entity_id)
 
+    async def _enrich_with_district_names(self, entities: list[Entity]) -> list[Entity]:
+        """Batch-fetch district names and attach them to the given entities."""
+        district_ids = [e.district_id for e in entities if e.district_id]
+        if not district_ids:
+            return entities
+        districts = await self.districts_provider.filter_in("id", district_ids)
+        district_map = {d.id: d.name for d in districts}
+        for entity in entities:
+            if entity.district_id and entity.district_id in district_map:
+                entity.district_name = district_map[entity.district_id]
+        return entities
+
     async def lookup_entities_by_address(
         self, request: AddressLookupRequest
     ) -> list[Entity]:
@@ -78,9 +87,4 @@ class EntityService:
         )
 
         # 4. Enhance with district and jurisdiction names
-        for entity in entities:
-            district = await self.districts_provider.get(entity.district_id)
-            if district:
-                entity.district_name = district.name
-
-        return entities
+        return await self._enrich_with_district_names(entities)

@@ -4,6 +4,7 @@ from datetime import datetime
 from app.models.pydantic.models import User, UserCreate, UserRole
 from app.core.auth import get_password_hash, verify_password
 from app.db.base import DatabaseProvider
+from app.exceptions import ConflictError, NotFoundError
 
 
 class UserService:
@@ -38,12 +39,12 @@ class UserService:
         # Verify group exists
         group = await self.groups_provider.get(user_create.group_id)
         if not group:
-            raise ValueError("Group not found")
+            raise NotFoundError("Group not found")
 
         # Check if email already exists
         existing = await self.get_user_by_email(user_create.email)
         if existing:
-            raise ValueError("Email already registered")
+            raise ConflictError("Email already registered")
 
         # Create user with hashed password
         user_data = user_create.model_dump(exclude={"password"})
@@ -63,7 +64,7 @@ class UserService:
         """Update a user's role."""
         updated_user = await self.users_provider.update(user_id, {"role": new_role})
         if updated_user is None:
-            raise ValueError("User not found")
+            raise NotFoundError("User not found")
         return updated_user
 
     async def update_user_password(self, user_id: UUID, new_password: str) -> bool:

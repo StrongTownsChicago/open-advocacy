@@ -41,8 +41,8 @@ class GroupService:
 
     async def find_or_create_by_name(self, name: str, description: str) -> Group:
         """Find a group by name or create it if it doesn't exist."""
-        groups = await self.list_groups()
-        existing_group = next((g for g in groups if g.name == name), None)
+        results = await self.groups_provider.filter(name=name)
+        existing_group = results[0] if results else None
 
         if existing_group:
             return existing_group

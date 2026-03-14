@@ -5,6 +5,7 @@ from uuid import uuid4
 
 import pytest
 
+from app.exceptions import NotFoundError
 from app.models.pydantic.models import AddressLookupRequest
 from app.services.entity_service import EntityService
 from tests.factories import make_district, make_entity, make_jurisdiction
@@ -104,7 +105,7 @@ class TestCreateEntity:
         )
 
     async def test_validates_jurisdiction_exists(self):
-        """Creating an entity with a nonexistent jurisdiction should raise ValueError."""
+        """Creating an entity with a nonexistent jurisdiction should raise NotFoundError."""
         from app.models.pydantic.models import EntityCreate
 
         entity_create = EntityCreate(
@@ -113,7 +114,7 @@ class TestCreateEntity:
             jurisdiction_id=uuid4(),
             district_id=uuid4(),
         )
-        with pytest.raises(ValueError, match="Jurisdiction not found"):
+        with pytest.raises(NotFoundError, match="Jurisdiction not found"):
             await self.service.create_entity(entity_create)
 
     async def test_succeeds_with_valid_jurisdiction(self):

@@ -2,6 +2,7 @@ from uuid import UUID
 
 from app.models.pydantic.models import EntityStatusRecord
 from app.db.base import DatabaseProvider
+from app.exceptions import NotFoundError
 
 
 class StatusService:
@@ -48,27 +49,29 @@ class StatusService:
         # Verify project exists
         project = await self.projects_provider.get(status_record.project_id)
         if not project:
-            raise ValueError("Project not found")
+            raise NotFoundError("Project not found")
 
         # Verify entity exists
         entity = await self.entities_provider.get(status_record.entity_id)
         if not entity:
-            raise ValueError("Entity not found")
+            raise NotFoundError("Entity not found")
 
         # Check if status record already exists for this entity and project
-        existing_records = await self.status_records_provider.list()
-        for record in existing_records:
-            if (
-                record.entity_id == status_record.entity_id
-                and record.project_id == status_record.project_id
-            ):
-                # Update existing record
-                updated_record = await self.status_records_provider.update(
-                    record.id, status_record
-                )
-                if updated_record is None:
-                    raise ValueError("Failed to update existing status record")
-                return updated_record
+        existing_records = await self.status_records_provider.filter_multiple(
+            filters={
+                "entity_id": status_record.entity_id,
+                "project_id": status_record.project_id,
+            },
+            in_filters=None,
+        )
+        if existing_records:
+            record = existing_records[0]
+            updated = await self.status_records_provider.update(
+                record.id, status_record
+            )
+            if updated is None:
+                raise ValueError("Failed to update existing status record")
+            return updated
 
         return await self.status_records_provider.create(status_record)
 

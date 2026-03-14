@@ -5,6 +5,7 @@ from app.models.pydantic.models import EntityStatusRecord, User
 from app.services.status_service import StatusService
 from app.services.service_factory import get_status_service
 from app.core.auth import get_active_user
+from app.exceptions import NotFoundError
 
 
 router = APIRouter()
@@ -31,7 +32,7 @@ async def create_status_record(
     """Create a new status record."""
     try:
         return await status_service.create_status_record(status_record)
-    except ValueError as e:
+    except NotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 

@@ -40,5 +40,5 @@ class JurisdictionService:
 
     async def find_by_name(self, name: str) -> Jurisdiction | None:
         """Find a jurisdiction by name."""
-        jurisdictions = await self.list_jurisdictions()
-        return next((j for j in jurisdictions if j.name == name), None)
+        results = await self.jurisdictions_provider.filter(name=name)
+        return results[0] if results else None

@@ -4,6 +4,7 @@ from uuid import uuid4
 
 import pytest
 
+from app.exceptions import NotFoundError
 from app.models.pydantic.models import (
     EntityStatus,
     ProjectBase,
@@ -238,17 +239,17 @@ class TestCreateProject:
         )
 
     async def test_create_project_validates_group(self):
-        """Creating a project with a nonexistent group should raise ValueError."""
+        """Creating a project with a nonexistent group should raise NotFoundError."""
         project_base = ProjectBase(
             title="Test",
             group_id=uuid4(),
             jurisdiction_id=None,
         )
-        with pytest.raises(ValueError, match="Group not found"):
+        with pytest.raises(NotFoundError, match="Group not found"):
             await self.service.create_project(project_base)
 
     async def test_create_project_validates_jurisdiction(self):
-        """Creating a project with a nonexistent jurisdiction should raise ValueError."""
+        """Creating a project with a nonexistent jurisdiction should raise NotFoundError."""
         group = make_group()
         self.groups_provider.seed(group)
 
@@ -257,7 +258,7 @@ class TestCreateProject:
             group_id=group.id,
             jurisdiction_id=uuid4(),
         )
-        with pytest.raises(ValueError, match="Jurisdiction not found"):
+        with pytest.raises(NotFoundError, match="Jurisdiction not found"):
             await self.service.create_project(project_base)
 
     async def test_create_project_success(self):

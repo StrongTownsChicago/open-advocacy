@@ -5,6 +5,7 @@ from uuid import uuid4
 import pytest
 
 from app.core.auth import get_password_hash
+from app.exceptions import ConflictError, NotFoundError
 from app.models.pydantic.models import UserCreate, UserRole
 from app.services.user_service import UserService
 from tests.factories import make_group, make_user
@@ -42,7 +43,7 @@ class TestCreateUser:
         assert "password" not in result
 
     async def test_create_user_validates_group(self):
-        """Creating a user with nonexistent group should raise ValueError."""
+        """Creating a user with nonexistent group should raise NotFoundError."""
         user_create = UserCreate(
             email="new@example.com",
             name="New User",
@@ -50,11 +51,11 @@ class TestCreateUser:
             group_id=uuid4(),
             role=UserRole.VIEWER,
         )
-        with pytest.raises(ValueError, match="Group not found"):
+        with pytest.raises(NotFoundError, match="Group not found"):
             await self.service.create_user(user_create)
 
     async def test_create_user_rejects_duplicate_email(self):
-        """Creating a user with an existing email should raise ValueError."""
+        """Creating a user with an existing email should raise ConflictError."""
         group = make_group()
         self.groups_provider.seed(group)
 
@@ -68,7 +69,7 @@ class TestCreateUser:
             group_id=group.id,
             role=UserRole.VIEWER,
         )
-        with pytest.raises(ValueError, match="Email already registered"):
+        with pytest.raises(ConflictError, match="Email already registered"):
             await self.service.create_user(user_create)
 
 

@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import projects, groups, entities, status, jurisdictions, auth
@@ -18,12 +20,34 @@ logging.basicConfig(
 
 logger = logging.getLogger("open-advocacy")
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize database and load data on startup, ensuring it happens only once."""
+    logger.info(
+        f"Starting application with {settings.DATABASE_PROVIDER} database provider"
+    )
+
+    try:
+        initialized = await initialize_application()
+        if initialized:
+            logger.info("Application initialization completed")
+        else:
+            logger.info("Application initialization skipped (already initialized)")
+    except Exception as e:
+        logger.error(f"Application initialization failed: {str(e)}")
+        raise
+
+    yield
+
+
 app = FastAPI(
     title="Open Advocacy API",
     description="API for connecting citizens with representatives and tracking advocacy projects",
     version="0.1.0",
     root_path="/",
     redirect_slashes=False,  # This has been added as some deployment environments enforce this (so this helps detecting problems in dev)
+    lifespan=lifespan,
 )
 
 if settings.ALLOWED_ORIGIN:
@@ -89,24 +113,6 @@ app.include_router(
     tags=["imports"],
 )
 app.include_router(auth.router, prefix="/api")
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database and load data on startup, ensuring it happens only once."""
-    logger.info(
-        f"Starting application with {settings.DATABASE_PROVIDER} database provider"
-    )
-
-    try:
-        initialized = await initialize_application()
-        if initialized:
-            logger.info("Application initialization completed")
-        else:
-            logger.info("Application initialization skipped (already initialized)")
-    except Exception as e:
-        logger.error(f"Application initialization failed: {str(e)}")
-        raise
 
 
 if __name__ == "__main__":

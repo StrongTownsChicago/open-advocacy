@@ -9,6 +9,7 @@ from app.models.pydantic.models import (
     EntityStatusRecord,
 )
 from app.db.base import DatabaseProvider
+from app.exceptions import NotFoundError
 
 
 class ProjectService:
@@ -106,7 +107,7 @@ class ProjectService:
         if project.group_id:
             group = await self.groups_provider.get(project.group_id)
             if not group:
-                raise ValueError("Group not found")
+                raise NotFoundError("Group not found")
 
         # Verify jurisdiction exists if provided
         if project.jurisdiction_id:
@@ -114,7 +115,7 @@ class ProjectService:
                 project.jurisdiction_id
             )
             if not jurisdiction:
-                raise ValueError("Jurisdiction not found")
+                raise NotFoundError("Jurisdiction not found")
 
         return await self.projects_provider.create(project)
 
@@ -130,7 +131,7 @@ class ProjectService:
         if project.group_id:
             group = await self.groups_provider.get(project.group_id)
             if not group:
-                raise ValueError("Group not found")
+                raise NotFoundError("Group not found")
 
         # Verify jurisdiction exists if provided
         if project.jurisdiction_id:
@@ -138,7 +139,7 @@ class ProjectService:
                 project.jurisdiction_id
             )
             if not jurisdiction:
-                raise ValueError("Jurisdiction not found")
+                raise NotFoundError("Jurisdiction not found")
 
         return await self.projects_provider.update(project_id, project)
 
@@ -240,13 +241,17 @@ class ProjectService:
         if not projects:
             return []
 
+        jurisdiction_ids = [p.jurisdiction_id for p in projects if p.jurisdiction_id]
+        if not jurisdiction_ids:
+            return projects
+
+        jurisdictions = await self.jurisdictions_provider.filter_in(
+            "id", jurisdiction_ids
+        )
+        jurisdiction_map = {j.id: j.name for j in jurisdictions if j.name}
         for project in projects:
-            if project.jurisdiction_id:
-                jurisdiction = await self.jurisdictions_provider.get(
-                    project.jurisdiction_id
-                )
-                if jurisdiction and jurisdiction.name:
-                    project.jurisdiction_name = jurisdiction.name
+            if project.jurisdiction_id and project.jurisdiction_id in jurisdiction_map:
+                project.jurisdiction_name = jurisdiction_map[project.jurisdiction_id]
 
         return projects
 

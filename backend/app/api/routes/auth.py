@@ -9,6 +9,7 @@ from app.core.auth import (
     get_group_admin_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
 )
+from app.exceptions import ConflictError, NotFoundError
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -55,8 +56,10 @@ async def register_user(
 
     try:
         return await user_service.create_user(user_create)
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except NotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except ConflictError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
 
 
 @router.get("/me", response_model=User, summary="Get current user information")
