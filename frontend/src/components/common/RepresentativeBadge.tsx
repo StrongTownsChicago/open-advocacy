@@ -50,16 +50,18 @@ const RepresentativeBadge: React.FC = () => {
     <>
       <Tooltip title={`Your representatives for: ${userAddress}`}>
         <Chip
-          icon={<PersonIcon />}
+          icon={<PersonIcon sx={{ color: 'rgba(255,255,255,0.8) !important' }} />}
           label={`${userRepresentatives.length} Saved Representative${userRepresentatives.length > 1 ? 's' : ''}`}
-          color="primary"
           variant="outlined"
           onClick={handleClick}
           sx={{
             ml: 2,
             cursor: 'pointer',
+            color: 'rgba(255,255,255,0.9)',
+            borderColor: 'rgba(255,255,255,0.4)',
             '&:hover': {
-              backgroundColor: theme.palette.primary.main + '1A', // 10% opacity
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              borderColor: 'rgba(255,255,255,0.7)',
             },
           }}
         />
