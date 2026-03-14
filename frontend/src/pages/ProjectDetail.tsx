@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import {
@@ -15,19 +15,14 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/Edit';
-import { entityService } from '../services/entities';
-import { projectService } from '../services/projects';
-import { statusService } from '../services/status';
-import { jurisdictionService } from '../services/jurisdictions';
-import { Project, Entity, EntityStatusRecord, UserRole } from '../types';
+import { UserRole } from '../types';
 import StatusDistribution from '../components/Status/StatusDistribution';
 import EntityList from '../components/Entity/EntityList';
 import UserEntityProjectSection from '../components/Entity/UserEntityProjectSection';
 import ErrorDisplay from '../components/common/ErrorDisplay';
 import ConditionalUI from '../components/auth/ConditionalUI';
 import EntityDistrictMap from '../components/Entity/EntityDistrictMap';
-import { transformEntityFromApi } from '../utils/dataTransformers';
-
+import { useProjectData } from '../hooks/useProjectData';
 
 interface ProjectDetailProps {
   projectId?: string;
@@ -38,96 +33,23 @@ interface ProjectDetailProps {
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({
   projectId,
-  getStatusLabel,
   representativeTitle = 'Representative',
   isDashboard = false,
 }) => {
   const { id: routeId } = useParams<{ id: string }>();
   const id = projectId || routeId;
   const navigate = useNavigate();
-  const [project, setProject] = useState<Project | null>(null);
-  const [entities, setEntities] = useState<Entity[]>([]);
-  const [loadingEntities, setLoadingEntities] = useState(false);
-  const [statusRecords, setStatusRecords] = useState<EntityStatusRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [geojsonByDistrict, setGeojsonByDistrict] = useState<{
-    [districtId: string]: GeoJSON.GeoJsonObject;
-  }>({});
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!id) return;
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Fetch project
-        const projectResponse = await projectService.getProject(id);
-        setProject(projectResponse.data);
-
-        // Fetch status records for this project
-        const statusResponse = await statusService.getStatusRecords(id);
-        setStatusRecords(statusResponse.data);
-      } catch (err) {
-        console.error('Error fetching project data:', err);
-        setError('Failed to load project details');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchEntities = async () => {
-      if (!project || !project.jurisdiction_id) return;
-
-      setLoadingEntities(true);
-      try {
-        const response = await entityService.getEntitiesByJurisdictions(project.jurisdiction_id);
-        const transformedEntities = response.data.map(transformEntityFromApi);
-        setEntities(transformedEntities);
-      } catch (err) {
-        console.error('Failed to fetch entities:', err);
-      } finally {
-        setLoadingEntities(false);
-      }
-    };
-
-    fetchEntities();
-  }, [project]);
-
-  useEffect(() => {
-    const fetchGeoJSON = async () => {
-      if (!project?.jurisdiction_id) return;
-      try {
-        const data = await jurisdictionService.getDistrictGeoJSON(project.jurisdiction_id);
-        setGeojsonByDistrict(data);
-      } catch (err) {
-        console.error('Failed to fetch district geojson:', err);
-      }
-    };
-    fetchGeoJSON();
-  }, [project]);
-
-  const refreshStatusRecords = async () => {
-    if (!id) return;
-
-    try {
-      // Fetch raw status records
-      const statusResponse = await statusService.getStatusRecords(id);
-      setStatusRecords(statusResponse.data);
-
-      // Also refresh the project to get updated status distribution
-      const projectResponse = await projectService.getProject(id);
-      setProject(projectResponse.data);
-    } catch (err) {
-      console.error('Error refreshing project data:', err);
-    }
-  };
+  const {
+    project,
+    entities,
+    statusRecords,
+    geojsonByDistrict,
+    loading,
+    loadingEntities,
+    error,
+    refreshStatusRecords,
+  } = useProjectData(id);
 
   if (loading) {
     return (
@@ -227,7 +149,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         <UserEntityProjectSection
           project={project}
           statusRecords={statusRecords}
-          getStatusLabel={getStatusLabel}
           representativeTitle={representativeTitle}
         />
 
@@ -237,7 +158,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               entities={entities}
               statusRecords={statusRecords}
               geojsonByDistrict={geojsonByDistrict}
-              getStatusLabel={getStatusLabel}
               dashboardConfig={project.dashboard_config}
             />
           </Box>
@@ -251,7 +171,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               showPercentages
               showCounts
               showLabels
-              getStatusLabel={getStatusLabel}
+              statusLabels={project.dashboard_config?.status_labels}
             />
           ) : (
             <Typography variant="body2" color="text.secondary">
@@ -278,7 +198,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
             project={project}
             statusRecords={statusRecords}
             onStatusUpdated={refreshStatusRecords}
-            getStatusLabel={getStatusLabel}
           />
         )}
       </Box>

@@ -33,3 +33,10 @@ export const getStatusLabel = (status: EntityStatus): string => {
       return 'Unknown';
   }
 };
+
+export const makeStatusLabelFn = (
+  statusLabels?: Record<string, string>
+) => (status: EntityStatus): string => {
+  if (statusLabels?.[status]) return statusLabels[status];
+  return getStatusLabel(status);
+};

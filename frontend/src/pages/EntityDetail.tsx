@@ -12,26 +12,18 @@ import {
   Card,
   CardContent,
   CardActions,
-  Link,
   CircularProgress,
   Avatar,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PersonIcon from '@mui/icons-material/Person';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PublicIcon from '@mui/icons-material/Public';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { entityService } from '../services/entities';
 import { projectService } from '../services/projects';
 import { statusService } from '../services/status';
 import { Entity, Project, EntityStatusRecord, EntityStatus } from '../types';
 import { getStatusColor, getStatusLabel } from '../utils/statusColors';
 import ErrorDisplay from '../components/common/ErrorDisplay';
+import EntityContactInfo from '../components/Entity/EntityContactInfo';
 
 const EntityDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -139,53 +131,7 @@ const EntityDetail: React.FC = () => {
               Contact Information
             </Typography>
 
-            <List dense>
-              {entity.email && (
-                <ListItem disablePadding sx={{ mb: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <EmailIcon color="action" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Link href={`mailto:${entity.email}`}>{entity.email}</Link>}
-                  />
-                </ListItem>
-              )}
-
-              {entity.phone && (
-                <ListItem disablePadding sx={{ mb: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <PhoneIcon color="action" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Link href={`tel:${entity.phone}`}>{entity.phone}</Link>}
-                  />
-                </ListItem>
-              )}
-
-              {entity.website && (
-                <ListItem disablePadding sx={{ mb: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <PublicIcon color="action" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      <Link href={entity.website} target="_blank" rel="noopener noreferrer">
-                        Website
-                      </Link>
-                    }
-                  />
-                </ListItem>
-              )}
-
-              {entity.address && (
-                <ListItem disablePadding sx={{ mb: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <LocationOnIcon color="action" />
-                  </ListItemIcon>
-                  <ListItemText primary={entity.address} />
-                </ListItem>
-              )}
-            </List>
+            <EntityContactInfo entity={entity} />
           </Paper>
         </Grid>
 

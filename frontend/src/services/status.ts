@@ -14,16 +14,11 @@ export const statusService = {
     projectId?: string,
     entityId?: string
   ): Promise<{ data: EntityStatusRecord[] }> {
-    let url = '/status/';
-    const params = [];
-
-    if (projectId) params.push(`project_id=${projectId}`);
-    if (entityId) params.push(`entity_id=${entityId}`);
-
-    if (params.length > 0) {
-      url += `?${params.join('&')}`;
-    }
-
+    const params = new URLSearchParams();
+    if (projectId) params.set('project_id', projectId);
+    if (entityId) params.set('entity_id', entityId);
+    const query = params.toString();
+    const url = query ? `/status/?${query}` : '/status/';
     return api.get<EntityStatusRecord[]>(url);
   },
 

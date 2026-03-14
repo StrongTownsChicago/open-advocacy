@@ -13,11 +13,6 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for debugging
-api.interceptors.request.use(request => {
-  return request;
-});
-
 // Add response interceptor for error handling
 api.interceptors.response.use(
   response => {

@@ -182,6 +182,7 @@ const ProjectList: React.FC = () => {
                       size="small"
                       showCounts={true}
                       showLabels={true}
+                      statusLabels={project.dashboard_config?.status_labels}
                     />
                   </Box>
                 )}

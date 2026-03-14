@@ -2,14 +2,13 @@ import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Entity, EntityStatus, EntityStatusRecord, DashboardConfig } from '../../types';
-import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '@/utils/statusColors';
+import { getStatusColor, makeStatusLabelFn } from '@/utils/statusColors';
 import { formatMetricValue } from '@/utils/dataTransformers';
 
 interface EntityDistrictMapProps {
   entities: Entity[];
   statusRecords: EntityStatusRecord[];
   geojsonByDistrict: { [districtName: string]: GeoJSON.GeoJsonObject };
-  getStatusLabel?: (status: string) => string;
   centerPoint?: [number, number];
   dashboardConfig?: DashboardConfig;
 }
@@ -18,7 +17,6 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
   entities,
   statusRecords,
   geojsonByDistrict,
-  getStatusLabel = getStatusLabelDefault,
   centerPoint = [41.8781, -87.6298],
   dashboardConfig,
 }) => {
@@ -38,6 +36,7 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
     {} as Record<string, EntityStatusRecord>
   );
 
+  const getStatusLabel = makeStatusLabelFn(dashboardConfig?.status_labels);
   const tooltipMetrics = dashboardConfig?.metrics?.filter(m => m.show_in_tooltip !== false) ?? [];
 
   const entityByDistrict: Record<string, Entity | undefined> = {};

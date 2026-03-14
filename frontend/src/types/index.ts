@@ -18,6 +18,7 @@ export enum UserRole {
   SUPER_ADMIN = 'super_admin',
   GROUP_ADMIN = 'group_admin',
   EDITOR = 'editor',
+  VIEWER = 'viewer',
 }
 export interface Jurisdiction {
   id: string;

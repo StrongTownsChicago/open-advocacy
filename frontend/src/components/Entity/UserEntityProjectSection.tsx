@@ -10,37 +10,32 @@ import {
   useTheme,
   IconButton,
   Collapse,
-  Link,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PublicIcon from '@mui/icons-material/Public';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from 'react-router-dom';
 import { useUserRepresentatives } from '../../contexts/UserRepresentativesContext';
 import { Project, EntityStatusRecord, EntityStatus, Entity } from '../../types';
-import { getStatusColor, getStatusLabel as getStatusLabelDefault } from '../../utils/statusColors';
+import { getStatusColor, makeStatusLabelFn } from '../../utils/statusColors';
+import EntityContactInfo from './EntityContactInfo';
 
 interface RepresentativeItemProps {
   entity: Entity;
   statusRecord?: EntityStatusRecord;
-  project: Project;
-  getStatusLabel?: (status: EntityStatus) => string;
+  statusLabels?: Record<string, string>;
 }
 
 const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
   entity,
   statusRecord,
-  project,
-  getStatusLabel = getStatusLabelDefault,
+  statusLabels,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const getStatusLabel = makeStatusLabelFn(statusLabels);
   const status = statusRecord?.status || 'unknown';
   const notes = statusRecord?.notes;
 
@@ -126,49 +121,8 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
           )}
 
           {/* Contact information section */}
-          <Box
-            sx={{
-              mt: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
-            }}
-          >
-            {(entity.email || entity.phone || entity.website || entity.address) && (
-              <>
-                {entity.email && (
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <EmailIcon fontSize="small" color="action" />
-                    <Link href={`mailto:${entity.email}?subject=Regarding ${project.title}`}>
-                      {entity.email}
-                    </Link>
-                  </Box>
-                )}
-
-                {entity.phone && (
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <PhoneIcon fontSize="small" color="action" />
-                    <Link href={`tel:${entity.phone}`}>{entity.phone}</Link>
-                  </Box>
-                )}
-
-                {entity.website && (
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <PublicIcon fontSize="small" color="action" />
-                    <Link href={entity.website} target="_blank" rel="noopener">
-                      Website
-                    </Link>
-                  </Box>
-                )}
-
-                {entity.address && (
-                  <Box display="flex" alignItems="flex-start" gap={1}>
-                    <LocationOnIcon fontSize="small" color="action" sx={{ mt: 0.3 }} />
-                    <Typography variant="body2">{entity.address}</Typography>
-                  </Box>
-                )}
-              </>
-            )}
+          <Box sx={{ mt: 2 }}>
+            <EntityContactInfo entity={entity} />
           </Box>
 
           {/* Entity Details button */}
@@ -191,14 +145,12 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
 interface UserEntityProjectSectionProps {
   project: Project;
   statusRecords: EntityStatusRecord[];
-  getStatusLabel?: (status: EntityStatus) => string;
   representativeTitle?: string;
 }
 
 const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
   project,
   statusRecords,
-  getStatusLabel = getStatusLabelDefault,
   representativeTitle = 'Representative',
 }) => {
   const navigate = useNavigate();
@@ -281,8 +233,7 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
             key={entity.id}
             entity={entity}
             statusRecord={statusMap[entity.id]}
-            project={project}
-            getStatusLabel={getStatusLabel}
+            statusLabels={project.dashboard_config?.status_labels}
           />
         ))}
       </List>
