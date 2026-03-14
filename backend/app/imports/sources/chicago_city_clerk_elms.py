@@ -25,8 +25,8 @@ VOTE_VALUE_TO_STATUS: dict[str, EntityStatus] = {
     "nay": EntityStatus.SOLID_DISAPPROVAL,
     "abstain": EntityStatus.NEUTRAL,
     "recuse": EntityStatus.NEUTRAL,
-    "absent": EntityStatus.UNKNOWN,
-    "not voting": EntityStatus.UNKNOWN,
+    "absent": EntityStatus.NEUTRAL,
+    "not voting": EntityStatus.NEUTRAL,
 }
 
 

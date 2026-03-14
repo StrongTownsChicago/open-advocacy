@@ -49,7 +49,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -69,7 +70,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -87,8 +89,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": {
             "solid_approval": "Voted Yes",
             "solid_disapproval": "Voted No",
-            "neutral": "Abstained",
-            "unknown": "Absent/Not Voting",
+            "neutral": "Absent/Not Voting",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -105,7 +107,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -125,8 +128,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": {
             "solid_approval": "Voted Yes",
             "solid_disapproval": "Voted No",
-            "neutral": "Abstained",
-            "unknown": "Absent/Not Voting",
+            "neutral": "Absent/Not Voting",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -145,7 +148,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -165,8 +169,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": {
             "solid_approval": "Voted Yes",
             "solid_disapproval": "Voted No",
-            "neutral": "Abstained",
-            "unknown": "Absent/Not Voting",
+            "neutral": "Absent/Not Voting",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -185,7 +189,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -205,8 +210,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": {
             "solid_approval": "Voted Yes",
             "solid_disapproval": "Voted No",
-            "neutral": "Abstained",
-            "unknown": "Absent/Not Voting",
+            "neutral": "Absent/Not Voting",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -225,7 +230,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -246,8 +252,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": {
             "solid_approval": "Voted Yes",
             "solid_disapproval": "Voted No",
-            "neutral": "Abstained",
-            "unknown": "Absent/Not Voting",
+            "neutral": "Absent/Not Voting",
+            "unknown": "Not in Office",
         },
     },
     {
@@ -267,7 +273,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": {
             "solid_approval": "Cosponsored",
-            "unknown": "Not a Cosponsor",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
         },
     },
 ]
@@ -321,6 +328,17 @@ async def import_scorecard_projects() -> None:
 
     entities = await entity_service.list_entities(jurisdiction_id=jurisdiction.id)
     logger.info("Found %d alderpersons.", len(entities))
+
+    # Pre-build vote ELMS data keyed by matter_guid so sponsorship projects can
+    # detect "not in office": if an alder is absent from the vote roll call they
+    # were not serving, and should be UNKNOWN for cosponsorship too.
+    vote_data_by_guid: dict[str, dict[str, EntityStatus]] = {}
+    for pd in ALL_SCORECARD_PROJECTS:
+        if pd["import_type"] == "vote":
+            raw = ELMS_SCORECARD_DATA.get(str(pd["base_slug"])) or {}
+            vote_data_by_guid[str(pd["matter_guid"])] = {
+                name: EntityStatus(status) for name, status in raw.items()
+            }
 
     total_created = 0
     total_found = 0
@@ -383,18 +401,41 @@ async def import_scorecard_projects() -> None:
                 name: EntityStatus(status) for name, status in elms_raw.items()
             }
 
+            import_type = str(project_def["import_type"])
+            # Sponsorship cache only contains cosponsors; absent alders weren't
+            # out of office — they just didn't cosponsor. Vote data includes everyone
+            # who was serving, so missing from vote cache → not in office.
+            default_status = (
+                EntityStatus.NEUTRAL
+                if import_type == "sponsorship"
+                else EntityStatus.UNKNOWN
+            )
+
+            # For sponsorship projects, use the paired vote roll call (same matter_guid)
+            # to distinguish "not a cosponsor" (NEUTRAL) from "not in office" (UNKNOWN).
+            # The vote record includes every alder who was serving; anyone absent from it
+            # was not yet in office and should be UNKNOWN for cosponsorship too.
+            paired_vote_lookup: dict[str, EntityStatus] = {}
+            if import_type == "sponsorship":
+                paired_vote_lookup = vote_data_by_guid.get(
+                    str(project_def["matter_guid"]), {}
+                )
+
             matched = 0
             unmatched = 0
             for entity in entities:
                 normalized_entity_name = normalize_name(entity.name)
-                entity_status = elms_lookup.get(
-                    normalized_entity_name, EntityStatus.UNKNOWN
-                )
+                entity_status = elms_lookup.get(normalized_entity_name, default_status)
 
+                # If paired vote data exists and this alder isn't in it, they weren't
+                # serving at the time — override the sponsorship status to UNKNOWN.
                 if (
-                    entity_status == EntityStatus.UNKNOWN
-                    and normalized_entity_name not in elms_lookup
+                    paired_vote_lookup
+                    and normalized_entity_name not in paired_vote_lookup
                 ):
+                    entity_status = EntityStatus.UNKNOWN
+
+                if normalized_entity_name not in elms_lookup:
                     unmatched += 1
                     if unmatched <= 5:
                         logger.warning(
@@ -415,10 +456,11 @@ async def import_scorecard_projects() -> None:
                 await status_service.create_status_record(status_record)
 
             logger.info(
-                "Project %s: %d entities matched, %d unmatched (set to UNKNOWN)",
+                "Project %s: %d entities matched, %d unmatched (set to %s)",
                 slug,
                 matched,
                 unmatched,
+                default_status.value,
             )
 
     logger.info(

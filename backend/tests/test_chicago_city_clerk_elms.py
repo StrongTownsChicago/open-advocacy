@@ -86,11 +86,11 @@ class TestVoteValueToEntityStatus:
     def test_recuse_maps_to_neutral(self):
         assert vote_value_to_entity_status("Recuse") == EntityStatus.NEUTRAL
 
-    def test_absent_maps_to_unknown(self):
-        assert vote_value_to_entity_status("Absent") == EntityStatus.UNKNOWN
+    def test_absent_maps_to_neutral(self):
+        assert vote_value_to_entity_status("Absent") == EntityStatus.NEUTRAL
 
-    def test_not_voting_maps_to_unknown(self):
-        assert vote_value_to_entity_status("Not Voting") == EntityStatus.UNKNOWN
+    def test_not_voting_maps_to_neutral(self):
+        assert vote_value_to_entity_status("Not Voting") == EntityStatus.NEUTRAL
 
     def test_unknown_value_maps_to_unknown(self):
         assert vote_value_to_entity_status("MYSTERY_VALUE") == EntityStatus.UNKNOWN

@@ -237,6 +237,50 @@ class TestGetScorecardEntityRowsContainAllProjects:
             assert len(row.statuses) == 3
 
 
+class TestGetScorecardUnknownExcludedFromDenominator:
+    @pytest.mark.asyncio
+    async def test_unknown_status_excluded_from_total_scoreable(self):
+        """UNKNOWN (not in office) must not count toward total_scoreable."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        p_vote = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            preferred_status=EntityStatus.SOLID_APPROVAL,
+        )
+        p_other = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            preferred_status=EntityStatus.SOLID_APPROVAL,
+        )
+        entity = make_entity(jurisdiction_id=jurisdiction_id)
+
+        # Entity was not in office for p_vote (UNKNOWN), aligned on p_other
+        sr_vote = make_status_record(
+            entity_id=entity.id,
+            project_id=p_vote.id,
+            status=EntityStatus.UNKNOWN,
+        )
+        sr_other = make_status_record(
+            entity_id=entity.id,
+            project_id=p_other.id,
+            status=EntityStatus.SOLID_APPROVAL,
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[p_vote, p_other],
+            entities_data=[entity],
+            status_records_data=[sr_vote, sr_other],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        row = result.entities[0]
+        # Only p_other counts toward denominator (p_vote is UNKNOWN = not in office)
+        assert row.total_scoreable == 1
+        assert row.aligned_count == 1
+
+
 class TestNormalizeNameEdgeCases:
     def test_middle_initial_stripped_comma_reversed(self):
         """Middle initial is stripped from comma-reversed ELMS names so they match DB entity names.

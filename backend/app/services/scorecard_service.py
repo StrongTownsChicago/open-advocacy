@@ -116,10 +116,12 @@ class ScorecardService:
                 label = _resolve_label(status, sp.status_labels)
                 statuses[str(sp.id)] = ScorecardEntityStatus(status=status, label=label)
 
-                # Count scoreable projects (all projects with a preferred_status)
-                total_scoreable += 1
-                if status == sp.preferred_status:
-                    aligned_count += 1
+                # Only count projects where the entity was in office (not UNKNOWN).
+                # An alder not serving at the time shouldn't affect their score.
+                if status != EntityStatus.UNKNOWN:
+                    total_scoreable += 1
+                    if status == sp.preferred_status:
+                        aligned_count += 1
 
             entity_rows.append(
                 ScorecardEntityRow(
