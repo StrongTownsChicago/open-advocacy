@@ -15,11 +15,8 @@ import asyncio
 import logging
 from typing import Any
 
-from app.imports.sources.chicago_city_clerk_elms import (
-    ELMSClient,
-    normalize_name,
-    vote_value_to_entity_status,
-)
+from app.data.elms_scorecard_data import ELMS_SCORECARD_DATA
+from app.imports.sources.chicago_city_clerk_elms import normalize_name
 from app.models.pydantic.models import (
     DashboardConfig,
     EntityStatus,
@@ -325,7 +322,6 @@ async def import_scorecard_projects() -> None:
     entities = await entity_service.list_entities(jurisdiction_id=jurisdiction.id)
     logger.info("Found %d alderpersons.", len(entities))
 
-    client = ELMSClient()
     total_created = 0
     total_found = 0
 
@@ -374,43 +370,18 @@ async def import_scorecard_projects() -> None:
                 total_created += 1
                 logger.info("Created project: %s (%s)", slug, project.id)
 
-            # Fetch ELMS data for this project
-            matter_guid = str(project_def["matter_guid"])
-            import_type = str(project_def["import_type"])
-
-            matter = await client.get_matter(matter_guid)
-            if matter is None:
+            # Look up pre-fetched ELMS data from the static cache
+            elms_raw = ELMS_SCORECARD_DATA.get(base_slug)
+            if elms_raw is None:
                 logger.warning(
-                    "Matter GUID %s not found in ELMS; skipping status import for %s",
-                    matter_guid,
-                    slug,
+                    "No cache entry for '%s'. Run scripts/fetch_elms_scorecard_data.py "
+                    "to regenerate app/data/elms_scorecard_data.py.",
+                    base_slug,
                 )
-                continue
-
-            if import_type == "vote":
-                votes = client.extract_votes(matter)
-                if votes is None:
-                    logger.warning(
-                        "No final passage vote found for matter %s (%s); skipping",
-                        matter_guid,
-                        slug,
-                    )
-                    continue
-                elms_lookup: dict[str, EntityStatus] = {
-                    normalize_name(str(v["voterName"])): vote_value_to_entity_status(
-                        str(v.get("vote", ""))
-                    )
-                    for v in votes
-                    if v.get("voterName")
-                }
-            else:
-                # sponsorship
-                sponsors = client.extract_sponsors(matter)
-                elms_lookup = {  # type: ignore[assignment]
-                    normalize_name(str(s["sponsorName"])): EntityStatus.SOLID_APPROVAL
-                    for s in sponsors
-                    if s.get("sponsorName")
-                }
+                elms_raw = {}
+            elms_lookup: dict[str, EntityStatus] = {
+                name: EntityStatus(status) for name, status in elms_raw.items()
+            }
 
             matched = 0
             unmatched = 0

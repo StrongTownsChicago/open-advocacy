@@ -1,9 +1,10 @@
-"""Unit tests for ScorecardService."""
+"""Unit tests for ScorecardService and scorecard import helpers."""
 
 from uuid import uuid4
 
 import pytest
 
+from app.imports.sources.chicago_city_clerk_elms import normalize_name
 from app.models.pydantic.models import DashboardConfig, EntityStatus
 from app.services.scorecard_service import ScorecardService
 from tests.factories import make_entity, make_project, make_status_record
@@ -234,3 +235,25 @@ class TestGetScorecardEntityRowsContainAllProjects:
         assert len(result.entities) == 2
         for row in result.entities:
             assert len(row.statuses) == 3
+
+
+class TestNormalizeNameEdgeCases:
+    def test_middle_initial_stripped_comma_reversed(self):
+        """Middle initial is stripped from comma-reversed ELMS names so they match DB entity names.
+
+        ELMS returns "Lee, Nicole T." but the DB stores "Nicole Lee" — both must
+        normalize to "nicole lee" for the cache lookup to match.
+        """
+        assert normalize_name("Lee, Nicole T.") == "nicole lee"
+        assert normalize_name("Nicole Lee") == "nicole lee"
+
+    def test_hyphenated_name_loses_hyphen(self):
+        """Hyphenated names collapse to a single token after punctuation removal.
+
+        "Ramirez-Rosa" → "ramirezrosa" (hyphen stripped). Both the DB entity name
+        and the ELMS name must go through normalize_name to produce the same key;
+        a DB entry stored as "Carlos Ramirez-Rosa" will match the cache key
+        "carlos ramirezrosa" correctly.
+        """
+        assert normalize_name("Ramirez-Rosa, Carlos") == "carlos ramirezrosa"
+        assert normalize_name("Carlos Ramirez-Rosa") == "carlos ramirezrosa"

@@ -83,7 +83,9 @@ class ScorecardService:
         # 3. Fetch all entities for that jurisdiction
         entities = await self.entities_provider.filter(jurisdiction_id=jurisdiction_id)
         if not entities:
-            return ScorecardResponse(group_name=group_name, projects=scorecard_projects, entities=[])
+            return ScorecardResponse(
+                group_name=group_name, projects=scorecard_projects, entities=[]
+            )
 
         # Enrich entities with district names
         entities = await self._enrich_with_district_names(entities)
@@ -128,7 +130,9 @@ class ScorecardService:
                 )
             )
 
-        return ScorecardResponse(group_name=group_name, projects=scorecard_projects, entities=entity_rows)
+        return ScorecardResponse(
+            group_name=group_name, projects=scorecard_projects, entities=entity_rows
+        )
 
     async def _enrich_with_district_names(self, entities: list) -> list:
         """Batch-fetch district names and attach them to entities."""
