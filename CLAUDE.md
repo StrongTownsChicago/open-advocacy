@@ -24,7 +24,8 @@ python -m scripts.initialize_app          # Full initialization (DB + Chicago im
 python -m scripts.import_adu_project_data # Seed ADU opt-in project data
 python -m scripts.import_example_project_data # Seed example projects
 python -m scripts.import_scorecard_projects   # Seed scorecard projects from City Clerk data
-python -m scripts.fetch_ward_zoning_data      # Fetch ward zoning data from Cityscape API
+python -m scripts.fetch_elms_scorecard_data   # Fetch/refresh City Clerk eLMS vote data (writes app/data/elms_scorecard_data.py)
+python -m scripts.fetch_ward_zoning_data      # Fetch ward zoning data from Cityscape API (writes app/data/ward_zoning_data.py)
 
 # Code quality
 poetry run ruff check .                   # Lint
@@ -84,7 +85,7 @@ On first startup, `app/main.py` calls `scripts/initialize_app.py:initialize_appl
 
 1. Creates DB tables
 2. Seeds location data based on `SEED_LOCATIONS` env var (e.g. `chicago`, `illinois`)
-3. Seeds project data based on `SEED_PROJECTS` env var (e.g. `adu`, `example`)
+3. Seeds project data based on `SEED_PROJECTS` env var (e.g. `adu`, `example`, `scorecard`)
 
 Initialization is guarded by a database-state check: `scripts/init_db.py:tables_exist()` queries whether the `groups` table already exists using SQLAlchemy's `inspect` API (works for both SQLite and PostgreSQL). If the table exists, initialization is skipped entirely and no data is modified. This replaces a previous `/tmp` file-based lock that was ephemeral and caused data loss on Railway redeployments.
 
@@ -126,9 +127,9 @@ Key variables (set in `.env` for local dev, Railway for production):
 - `GEOCODING_API_KEY` — API key for geocoding provider
 - `DATA_DIR` — Override the data directory path
 - `SEED_LOCATIONS` — Comma-separated location keys to seed on cold start (e.g. `chicago`, `chicago,illinois`; default: empty)
-- `SEED_PROJECTS` — Comma-separated project keys to seed on cold start (e.g. `adu`, `adu,example`; default: empty)
+- `SEED_PROJECTS` — Comma-separated project keys to seed on cold start (e.g. `adu`, `adu,example`, `scorecard`; default: empty)
 - `CHICAGO_CITYSCAPE_API_KEY` — API key for Chicago Cityscape Zoning Explorer (required for `fetch_ward_zoning_data` script)
-- `VITE_API_URL` — (Frontend) Override API base URL; without this, falls back to `/api` (relative)
+- `VITE_API_URL` — (Frontend) Override API base URL; without this, falls back to a hardcoded Railway production URL (see `src/services/api.ts`)
 - `VITE_APPLICATION_NAME` — (Frontend) App display name (default: `Open Advocacy`)
 - `VITE_APPLICATION_DESCRIPTION` — (Frontend) App tagline
 

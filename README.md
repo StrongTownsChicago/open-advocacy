@@ -1,22 +1,25 @@
 # Open Advocacy
 
-Open Advocacy is an open-source web application connecting citizens with representatives and tracking advocacy projects. The web application allows users to look up their representatives, track advocacy projects, and understand where representatives stand on various issues.
+Open Advocacy is an open-source web application connecting citizens with representatives and tracking advocacy projects. It allows users to look up their representatives, track advocacy projects, and understand where representatives stand on various issues, including a multi-issue scorecard view for comparing representative alignment across projects.
 
 ## Current Project Features
 
 - **Project Tracking**: View active advocacy projects with details on their status
 - **Representative Lookup**: Find your representatives by entering your address
 - **Status Visualization**: See color-coded representations of where representatives stand on issues
-- **Geographic Integration**: Utilizes geospatial data to accurately match addresses to districts (if the geojson data has been imported into the DB)
+- **Multi-Issue Scorecard**: Compare representatives across multiple advocacy projects with alignment scores
+- **Geographic Integration**: Utilizes geospatial data to accurately match addresses to districts
 - **Authentication & User Management**: Role-based access control with user registration, login, and admin functionality
-- **Flexible Data Import System**: Extensible framework for importing location-specific data from various sources
+- **Flexible Data Import System**: Extensible framework for importing location-specific data from various sources (Chicago City Council, Illinois legislature, Chicago City Clerk voting records)
+- **Custom Dashboards**: Slug-based project dashboards with configurable labels and status displays
 
 ## Tech Stack
 
-- **Backend**: FastAPI with SQLAlchemy ORM and Pydantic models
-- **Frontend**: React with TypeScript and Vite
-- **Database**: Flexible database layer supporting SQLite (for development) and PostgreSQL (for production)
+- **Backend**: FastAPI with SQLAlchemy 2.0 ORM and Pydantic models (Python 3.12)
+- **Frontend**: React 19 with TypeScript, Vite, and Material UI
+- **Database**: PostgreSQL/PostGIS (production) or SQLite (development)
 - **Containerization**: Docker and Docker Compose for easy deployment
+- **Deployment**: Railway
 
 ## Data Model
 
@@ -26,12 +29,12 @@ The application uses the following core concepts:
 - **Entities**: Representatives or officials who have a position on projects
 - **Jurisdictions**: Legislative bodies (e.g., City Council, State Senate)
 - **Districts**: Geographic areas represented by entities
-- **Status Records**: Track where entities stand on specific projects
-- **Users & Groups**: User management with role-based permissions (Super Admin, Group Admin, Editor, Public)
+- **Status Records**: Track where entities stand on specific projects (`solid_approval`, `leaning_approval`, `neutral`, `leaning_disapproval`, `solid_disapproval`, `unknown`)
+- **Users & Groups**: User management with role-based permissions
 
 ## User Roles & Permissions
 
-- **Public**: Can view projects, lookup representatives, see status distributions
+- **Public**: Can view projects, look up representatives, see status distributions and scorecards
 - **Editors**: Can create/edit projects and update entity statuses
 - **Group Admins**: Can manage users within their group and have editor permissions
 - **Super Admins**: Full system access including user management across all groups
@@ -39,10 +42,10 @@ The application uses the following core concepts:
 ## Backend Architecture
 
 - **API Layer**: FastAPI routes that handle HTTP requests and responses
-- **Service Layer**: Business logic organized by domain entities
-- **Data Access Layer**: Abstract database providers with concrete implementations
+- **Service Layer**: Business logic organized by domain entities (including `scorecard_service.py` for cross-project alignment scoring)
+- **Data Access Layer**: Abstract database providers with concrete implementations for SQLite and PostgreSQL
 - **Authentication Layer**: JWT-based auth with role-based access control
-- **Geo Services**: Specialized geographic functionality
+- **Geo Services**: Specialized geographic functionality (PostGIS in production, Shapely in development)
 - **Import System**: Modular framework for importing location-specific data
 - **Models**: Pydantic models for validation and ORM models for persistence
 
@@ -52,8 +55,8 @@ The application uses the following core concepts:
 
 - [Docker](https://www.docker.com/products/docker-desktop/) and Docker Compose for the simplest setup
 - Alternatively for local development:
-  - Python 3.9+ with [Poetry](https://python-poetry.org/docs/)
-  - Node.js 16+ with npm
+  - Python 3.12 with [Poetry](https://python-poetry.org/docs/)
+  - Node.js 18+ with npm
 
 ### Running the Application with Docker Compose
 
@@ -62,61 +65,73 @@ The easiest way to get started is using Docker Compose, which will run frontend,
 ```bash
 docker-compose up
 ```
+
 Once running, you can access:
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
 
-### Setting Up Example Data
+### Auto-Initialization
 
-To populate the database with example data, follow these steps:
+On first startup, the backend automatically creates database tables and seeds data based on environment variables:
 
-1. Navigate to the backend directory:
+- `SEED_LOCATIONS` — Comma-separated locations to import (e.g. `chicago`, `chicago,illinois`)
+- `SEED_PROJECTS` — Comma-separated project sets to seed (e.g. `adu`, `example`, `scorecard`)
+
+Initialization is skipped on subsequent starts if the database tables already exist.
+
+### Setting Up Data Manually
+
+To populate the database manually (outside Docker):
+
+1. Navigate to the backend directory and activate Poetry:
+
    ```bash
    cd backend
-   ```
-
-2. Activate the Poetry shell:
-   ```bash
    poetry shell
    ```
 
-3. Create necessary database tables:
+2. Initialize the database:
+
    ```bash
    python -m scripts.init_db
    ```
 
-4. Import Chicago data (City Council, wards, and alderpersons):
+3. Import location data:
+
    ```bash
-   python -m scripts.import_data chicago
+   python -m scripts.import_data chicago      # Chicago City Council + wards + alderpersons
+   python -m scripts.import_data illinois     # Illinois House/Senate districts + legislators
    ```
 
-5. Import Illinois data (House/Senate districts and legislators):
+4. Seed project data:
+
    ```bash
-   python -m scripts.import_data illinois
+   python -m scripts.import_example_project_data   # Generic example projects
+   python -m scripts.import_adu_project_data        # ADU Opt-In project (Chicago-specific)
+   python -m scripts.import_scorecard_projects      # Scorecard projects from City Clerk data
    ```
 
-6. Create a super admin user (required for accessing admin features):
-   ```bash  
+5. Create a super admin user:
+   ```bash
    python -m scripts.add_super_admin
    ```
 
 #### Import System Options
 
-The import system is flexible and allows selective importing:
+The import system supports selective importing:
 
 ```bash
-# Import only specific steps for a location
+# Import only specific steps
 python -m scripts.import_data chicago --steps "Import Chicago City Council jurisdiction" "Import Chicago Alderpersons"
-
-# Import Illinois with custom GeoJSON paths
-python -m scripts.import_data illinois --geojson-path /path/to/custom/districts.geojson
 
 # Import only jurisdictions and districts (skip entities)
 python -m scripts.import_data chicago --steps "Import Chicago City Council jurisdiction" "Import Chicago Wards GeoJSON"
 ```
 
 ## Project Structure
+
 ```
 open-advocacy/
 ├── backend/                     # FastAPI backend service
@@ -131,6 +146,7 @@ open-advocacy/
 │   │   │       ├── groups.py    # Group management routes
 │   │   │       ├── jurisdictions.py
 │   │   │       ├── projects.py  # Project management routes
+│   │   │       ├── scorecard.py # Multi-project scorecard endpoint
 │   │   │       └── status.py    # Status tracking routes
 │   │   ├── core/                # Core configuration
 │   │   │   ├── auth.py          # Authentication utilities
@@ -149,34 +165,43 @@ open-advocacy/
 │   │   │   │   ├── chicago.py   # Chicago import configuration
 │   │   │   │   └── illinois.py  # Illinois import configuration
 │   │   │   └── sources/         # Data source implementations
-│   │   │       ├── chicago_alderpersons.py
-│   │   │       ├── geojson.py   # GeoJSON file handler
-│   │   │       └── openstates.py # OpenStates API integration
+│   │   │       ├── chicago_alderpersons.py        # Chicago Open Data API
+│   │   │       ├── chicago_city_clerk_elms.py     # City Clerk vote/sponsorship data
+│   │   │       ├── geojson.py                     # GeoJSON file handler
+│   │   │       ├── openstates.py                  # OpenStates API integration
+│   │   │       └── ward_zoning.py                 # Cityscape zoning data
 │   │   ├── models/              # Data models
 │   │   │   ├── orm/             # SQLAlchemy ORM models
 │   │   │   └── pydantic/        # Pydantic validation models
-│   │   └── services/            # Business logic services
-│   │       ├── entity_service.py
-│   │       ├── group_service.py
-│   │       ├── project_service.py
-│   │       ├── status_service.py
-│   │       ├── user_service.py
-│   │       └── service_factory.py
-│   ├── data/                    # Database and geospatial data
-│   └── scripts/                 # Setup and maintenance scripts
-│       ├── add_super_admin.py   # Create super admin user
-│       ├── import_data.py       # Main data import script
-│       └── init_db.py           # Database initialization
+│   │   ├── services/            # Business logic services
+│   │   │   ├── entity_service.py
+│   │   │   ├── group_service.py
+│   │   │   ├── project_service.py
+│   │   │   ├── scorecard_service.py  # Cross-project alignment scoring
+│   │   │   ├── status_service.py
+│   │   │   ├── user_service.py
+│   │   │   └── service_factory.py
+│   │   └── data/                # Auto-generated data caches
+│   │       ├── elms_scorecard_data.py   # City Clerk vote/sponsorship cache
+│   │       └── ward_zoning_data.py      # Ward zoning percentages cache
+│   ├── scripts/                 # Setup and maintenance scripts
+│   │   ├── add_super_admin.py          # Create super admin user
+│   │   ├── fetch_elms_scorecard_data.py # Fetch/refresh City Clerk eLMS data
+│   │   ├── fetch_ward_zoning_data.py   # Fetch ward zoning data from Cityscape
+│   │   ├── import_adu_project_data.py  # Seed ADU Opt-In project
+│   │   ├── import_data.py              # Main data import script
+│   │   ├── import_example_project_data.py # Seed example projects
+│   │   ├── import_scorecard_projects.py   # Seed scorecard projects from eLMS data
+│   │   ├── init_db.py                  # Database initialization
+│   │   └── initialize_app.py           # Auto-run startup initialization
+│   └── tests/                   # Backend tests
 ├── frontend/                    # React+TypeScript frontend
-│   ├── public/                  # Static assets
+│   ├── e2e/                     # Playwright end-to-end tests
 │   └── src/                     # Application source code
 │       ├── components/          # Reusable UI components
 │       │   ├── auth/            # Authentication components
-│       │   │   ├── ConditionalUI.tsx    # Role-based UI rendering
-│       │   │   └── ProtectedRoute.tsx   # Route protection
 │       │   ├── common/          # Common UI components
 │       │   ├── Entity/          # Entity-specific components
-│       │   ├── Group/           # Group management components
 │       │   ├── Project/         # Project-specific components
 │       │   └── Status/          # Status visualization components
 │       ├── contexts/            # React contexts
@@ -185,18 +210,25 @@ open-advocacy/
 │       ├── hooks/               # Custom React hooks
 │       ├── pages/               # Page components
 │       │   ├── admin/           # Admin-specific pages
+│       │   │   ├── AdminDashboard.tsx
+│       │   │   ├── DataImportPage.tsx   # Trigger data imports
 │       │   │   ├── RegisterPage.tsx     # User registration
-│       │   │   └── UserManagementPage.tsx # User management
+│       │   │   └── UserManagementPage.tsx
+│       │   ├── CustomProjects/  # Project-specific dashboards
+│       │   │   └── AduOptInDashboard.tsx
 │       │   ├── EntityDetail.tsx
 │       │   ├── HomePage.tsx
-│       │   ├── LoginPage.tsx    # User login
+│       │   ├── LoginPage.tsx
+│       │   ├── ProjectDashboard.tsx  # Generic slug-based dashboard
 │       │   ├── ProjectDetail.tsx
+│       │   ├── ProjectFormPage.tsx   # Create/edit projects
 │       │   ├── ProjectList.tsx
-│       │   └── RepresentativeLookup.tsx
+│       │   ├── RepresentativeLookup.tsx
+│       │   └── Scorecard.tsx         # Multi-project alignment scorecard
 │       ├── services/            # API services
-│       │   ├── api.ts           # Base API configuration
-│       │   ├── auth.ts          # Authentication API calls
-│       │   ├── user.ts          # User management API calls
+│       │   ├── api.ts           # Base Axios configuration
+│       │   ├── auth.ts
+│       │   ├── scorecard.ts     # Scorecard API calls
 │       │   └── ...              # Other service files
 │       ├── types/               # TypeScript type definitions
 │       └── utils/               # Utility functions
@@ -217,13 +249,24 @@ The application features a modular import system designed to handle location-spe
 ### Supported Data Sources
 
 - **Chicago Open Data API**: Official alderperson data
-- **OpenStates API**: State legislator information with configurable API key
+- **Chicago City Clerk eLMS API**: Vote and sponsorship records for scorecard projects
+- **OpenStates API**: State legislator information (requires `OPENSTATES_API_KEY`)
 - **GeoJSON Files**: District boundary data with automatic validation
-- **Custom APIs**: Extensible framework for additional data sources
+- **Cityscape API**: Ward zoning data (requires `CHICAGO_CITYSCAPE_API_KEY`)
+
+### Refreshing Cached Data
+
+Some data sources generate static Python cache files that are committed to the repo:
+
+```bash
+# Refresh City Clerk vote/sponsorship data (writes app/data/elms_scorecard_data.py)
+python -m scripts.fetch_elms_scorecard_data
+
+# Refresh ward zoning percentages (writes app/data/ward_zoning_data.py)
+python -m scripts.fetch_ward_zoning_data
+```
 
 ### Adding New Locations
-
-To add a new location:
 
 1. Create a location configuration in `app/imports/locations/`
 2. Define the import steps (jurisdictions, districts, entities)
@@ -233,47 +276,65 @@ To add a new location:
 
 ## Configuration
 
-The application can be configured through environment variables. The primary configurations are:
+Key environment variables:
 
-- `DATABASE_PROVIDER`: Database backend to use (`sqlite` or `postgres`)
-- `DATABASE_URL`: Connection string for the database
-- `AUTH_SECRET_KEY`: Secret key for JWT token generation
-- `OPENSTATES_API_KEY`: API key for OpenStates data (required for state legislature imports)
-- `DATA_DIR`: Directory containing data files (defaults to `data/`)
+| Variable                       | Description                                                             |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `DATABASE_PROVIDER`            | `sqlite` (default) or `postgres`                                        |
+| `DATABASE_URL`                 | Database connection string                                              |
+| `AUTH_SECRET_KEY`              | Secret key for JWT token generation                                     |
+| `ENVIRONMENT`                  | `development` or `production`                                           |
+| `ALLOWED_ORIGIN`               | CORS origin (defaults to `localhost:3000` and `localhost:5173`)         |
+| `OPENSTATES_API_KEY`           | Required for Illinois legislature imports                               |
+| `CHICAGO_CITYSCAPE_API_KEY`    | Required for ward zoning data script                                    |
+| `SEED_LOCATIONS`               | Locations to seed on cold start (e.g. `chicago`, `chicago,illinois`)    |
+| `SEED_PROJECTS`                | Project sets to seed on cold start (e.g. `adu`, `example`, `scorecard`) |
+| `VITE_API_URL`                 | Frontend API base URL override                                          |
+| `VITE_APPLICATION_NAME`        | App display name (default: `Open Advocacy`)                             |
+| `VITE_APPLICATION_DESCRIPTION` | App tagline                                                             |
 
-See `backend/app/core/config.py` for all available configuration options.
+See `backend/app/core/config.py` for all available options.
 
 ## Development Status
 
-This project is currently in active development. The implementation plan in PROJECT_PLAN.md tracks completed and upcoming features.
+This project is in active development.
 
 Currently completed:
+
 - ✅ Core backend and frontend implementation
 - ✅ Project and representative lookup functionality
-- ✅ Database integration with SQLite and PostgreSQL support
+- ✅ Database integration with SQLite and PostgreSQL/PostGIS support
 - ✅ Representative lookup with geographic data integration using Nominatim/OpenStreetMap
-- ✅ Authentication, user management, and role-based access control system
+- ✅ Authentication, user management, and role-based access control
 - ✅ Extensible data import system with support for multiple locations and data sources
+- ✅ Multi-issue scorecard with cross-project alignment scoring
+- ✅ Chicago City Clerk eLMS vote/sponsorship data integration
+- ✅ Generic slug-based project dashboards with configurable display
+- ✅ Playwright E2E test coverage
 
 Planned additional work:
-- Improved bulk data management and import/export functionality via admin UI
-- Better project segmentation and sharing capabilities
+
+- Improved bulk data management and import/export via admin UI
+- Better generalization of scorecard and dashboard systems
 - Enhanced mobile styling and user experience
-- Test coverage
-- General code cleanup and optimization
+- Database migration system (currently tables are recreated on cold start)
 
 ## Screenshots
 
 ### Project List Page
+
 ![Project List Page](./screenshots/project_list.png)
 
 ### Project Page
+
 ![Project Page](./screenshots/project.png)
 
 ### Find Your Representatives Page
+
 ![Find Your Representatives Page](./screenshots/find_your_representatives.png)
 
 ### Representatives Page
+
 ![Representative Page](./screenshots/representative.png)
 
 ## Contributing
