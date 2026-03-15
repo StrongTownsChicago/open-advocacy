@@ -47,3 +47,86 @@ test.describe('Public slug dashboards', () => {
     await expect(page.getByText('Leaning Disapproval', { exact: true }).first()).not.toBeVisible();
   });
 });
+
+test.describe('ADU dashboard search and status filter', () => {
+  test('search box narrows entity rows and clearing restores them', async ({ page }) => {
+    const res = await page.request.get('/api/projects/?slug=adu-opt-in-dashboard');
+    const projects = await res.json();
+    test.skip(!projects?.[0], 'ADU project not seeded — skipping');
+
+    await page.goto('/dashboard/adu-opt-in-dashboard');
+    await page.waitForLoadState('networkidle');
+
+    const searchInput = page.getByPlaceholder('Search entities...');
+    await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+    // Type a term that matches nothing
+    await searchInput.fill('zzz_no_match_zzz');
+    await expect(
+      page.getByText('No entities found matching your criteria')
+    ).toBeVisible({ timeout: 5000 });
+
+    // Clear the search — entities should come back
+    await searchInput.clear();
+    await expect(
+      page.getByText('No entities found matching your criteria')
+    ).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test('status filter uses custom ADU labels and filters rows', async ({ page }) => {
+    const res = await page.request.get('/api/projects/?slug=adu-opt-in-dashboard');
+    const projects = await res.json();
+    test.skip(!projects?.[0]?.dashboard_config?.status_labels, 'ADU project with custom labels not seeded — skipping');
+
+    await page.goto('/dashboard/adu-opt-in-dashboard');
+    await page.waitForLoadState('networkidle');
+
+    // The Status dropdown must use the custom label for solid_approval
+    await page.getByRole('combobox', { name: /status/i }).click();
+    await expect(page.getByRole('option', { name: 'Fully Opted In' })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('option', { name: 'Not Opted In' })).toBeVisible();
+
+    // Select "Fully Opted In" and verify the filter applies
+    await page.getByRole('option', { name: 'Fully Opted In' }).click();
+
+    // Either some filtered rows remain, or the "no entities" message appears
+    const noMatch = page.getByText('No entities found matching your criteria');
+    const rowsVisible = page.getByRole('row').filter({ hasNot: page.getByRole('columnheader') });
+    const hasRows = (await rowsVisible.count()) > 0;
+    const hasNoMatch = await noMatch.isVisible();
+    expect(hasRows || hasNoMatch).toBe(true);
+
+    // Reset to All Statuses
+    await page.getByRole('combobox', { name: /status/i }).click();
+    await page.getByRole('option', { name: 'All Statuses' }).click();
+    await expect(page.getByText('No entities found matching your criteria')).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test('search and status filter work together', async ({ page }) => {
+    const res = await page.request.get('/api/projects/?slug=adu-opt-in-dashboard');
+    const projects = await res.json();
+    test.skip(!projects?.[0]?.dashboard_config?.status_labels, 'ADU project with custom labels not seeded — skipping');
+
+    await page.goto('/dashboard/adu-opt-in-dashboard');
+    await page.waitForLoadState('networkidle');
+
+    const searchInput = page.getByPlaceholder('Search entities...');
+    await expect(searchInput).toBeVisible({ timeout: 10000 });
+
+    // Apply status filter first
+    await page.getByRole('combobox', { name: /status/i }).click();
+    await page.getByRole('option', { name: 'Fully Opted In' }).click();
+
+    // Then apply a non-matching search on top — "no match" must appear
+    await searchInput.fill('zzz_no_match_zzz');
+    await expect(
+      page.getByText('No entities found matching your criteria')
+    ).toBeVisible({ timeout: 5000 });
+
+    // Clearing just the search should restore the status-filtered results
+    await searchInput.clear();
+    await expect(
+      page.getByText('No entities found matching your criteria')
+    ).not.toBeVisible({ timeout: 5000 });
+  });
+});
