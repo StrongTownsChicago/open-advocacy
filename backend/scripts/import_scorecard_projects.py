@@ -497,6 +497,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "import_type": "sponsorship",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_SPONSORSHIP_LABELS,
+        "position": 2,
     },
     {
         "base_slug": "il-transit-funding-sb2111-vote",
@@ -512,6 +513,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "vote_date": "2025-04-10",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_VOTE_LABELS,
+        "position": 1,
     },
     {
         "base_slug": "il-transit-funding-sb2111-house-vote",
