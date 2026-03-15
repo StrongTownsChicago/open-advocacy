@@ -11,7 +11,7 @@ vi.mock('../services/scorecard', () => ({
   },
 }));
 
-import Scorecard from './Scorecard';
+import Scorecard from './Scorecard/index';
 import { scorecardService } from '../services/scorecard';
 
 const mockScorecardResponse: ScorecardResponse = {

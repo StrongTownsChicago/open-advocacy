@@ -14,7 +14,7 @@ import EntityDetail from './pages/EntityDetail';
 import LoginPage from './pages/LoginPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import ProjectDashboard from './pages/ProjectDashboard';
-import Scorecard from './pages/Scorecard';
+import Scorecard from './pages/Scorecard/index';
 import ScorecardIndex from './pages/ScorecardIndex';
 
 // Admin Pages
