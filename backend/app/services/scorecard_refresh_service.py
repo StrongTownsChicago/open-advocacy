@@ -103,16 +103,20 @@ async def run_scorecard_refresh(
       - "updated": number of status records successfully upserted
       - "errors": number of failures (missing projects, missing matters, etc.)
     """
-    jurisdiction = await jurisdiction_service.find_by_name("Chicago City Council")
+    # Only process ELMS (Chicago) groups — IL groups do not have a runtime refresh yet.
+    elms_groups = [g for g in GROUP_CONFIG if g.get("data_source", "elms") == "elms"]
+
+    jurisdiction_name = "Chicago City Council"
+    jurisdiction = await jurisdiction_service.find_by_name(jurisdiction_name)
     if not jurisdiction:
         raise ValueError(
-            "Chicago City Council jurisdiction not found. Run import_data chicago first."
+            f"{jurisdiction_name} jurisdiction not found. Run import_data chicago first."
         )
 
     entities = await entity_service.list_entities(jurisdiction_id=jurisdiction.id)
     logger.info("Found %d alderpersons for refresh.", len(entities))
 
-    # Collect unique matter GUIDs
+    # Collect unique matter GUIDs from ELMS projects only
     matter_to_projects: dict[str, list[dict[str, Any]]] = {}
     for project_def in ALL_SCORECARD_PROJECTS:
         guid = str(project_def["matter_guid"])
@@ -163,7 +167,7 @@ async def run_scorecard_refresh(
     updated = 0
     errors = fetch_errors
 
-    for group_cfg in GROUP_CONFIG:
+    for group_cfg in elms_groups:
         slug_prefix = str(group_cfg["slug_prefix"])
         base_slugs: set[str] = group_cfg["base_slugs"]  # type: ignore[assignment]
         group_projects = [

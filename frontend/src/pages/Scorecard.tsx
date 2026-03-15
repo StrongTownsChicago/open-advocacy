@@ -129,7 +129,7 @@ const Scorecard: React.FC = () => {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Alderperson Scorecard
+          Scorecard
         </Typography>
         <Typography color="text.secondary">No scorecard data available.</Typography>
       </Container>
@@ -139,7 +139,7 @@ const Scorecard: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom fontWeight={700}>
-        {data.group_name} — Alderperson Scorecard
+        {data.group_name} — {data.representative_title} Scorecard
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Tracks positions across {data.projects.length} issues.
@@ -190,7 +190,7 @@ const DesktopTable: React.FC<TableProps> = ({ rows, data, sortField, sortDirecti
               direction={sortField === 'name' ? sortDirection : 'asc'}
               onClick={() => onSort('name')}
             >
-              Alderperson
+              {data.representative_title}
             </TableSortLabel>
           </TableCell>
           {data.projects.map(project => (

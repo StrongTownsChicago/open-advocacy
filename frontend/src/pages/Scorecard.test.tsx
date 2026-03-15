@@ -16,6 +16,7 @@ import { scorecardService } from '../services/scorecard';
 
 const mockScorecardResponse: ScorecardResponse = {
   group_name: 'Test Group',
+  representative_title: 'Alderperson',
   projects: [
     {
       id: 'project-1',
@@ -76,6 +77,7 @@ const mockScorecardResponse: ScorecardResponse = {
 // Extended mock data with wards 2, 9, 10 and varied project statuses
 const extendedScorecardResponse: ScorecardResponse = {
   group_name: 'Test Group',
+  representative_title: 'Alderperson',
   projects: [
     {
       id: 'project-1',
@@ -268,5 +270,20 @@ describe('Scorecard', () => {
     const rowsAfterSort = screen.getAllByRole('row');
     const firstDataRowAfterSort = rowsAfterSort[1];
     expect(firstDataRowAfterSort).toHaveTextContent('Maria Hadden');
+  });
+
+  it('uses representative_title from data in entity column header', async () => {
+    const senateScorecard: ScorecardResponse = {
+      ...mockScorecardResponse,
+      group_name: 'Abundant Housing Illinois — IL Senate',
+      representative_title: 'Senator',
+    };
+    vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+      data: senateScorecard,
+    } as never);
+    renderScorecard();
+    await screen.findByText('Maria Hadden');
+    expect(screen.getByText('Senator')).toBeInTheDocument();
+    expect(screen.queryByText('Alderperson')).not.toBeInTheDocument();
   });
 });

@@ -200,6 +200,7 @@ class ScorecardEntityRow(BaseModel):
 
 class ScorecardResponse(BaseModel):
     group_name: str
+    representative_title: str = "Representative"
     projects: list[ScorecardProject]
     entities: list[ScorecardEntityRow]
 

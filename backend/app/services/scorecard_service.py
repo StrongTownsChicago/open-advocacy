@@ -58,7 +58,12 @@ class ScorecardService:
             in_filters=None,
         )
         if not projects:
-            return ScorecardResponse(group_name=group_name, projects=[], entities=[])
+            return ScorecardResponse(
+                group_name=group_name,
+                representative_title="Representative",
+                projects=[],
+                entities=[],
+            )
 
         # Build ScorecardProject list
         scorecard_projects = [
@@ -77,14 +82,26 @@ class ScorecardService:
             for p in projects
         ]
 
+        # Derive representative_title from the first project's dashboard_config
+        representative_title = "Representative"
+        first_project = projects[0]
+        if (
+            first_project.dashboard_config
+            and first_project.dashboard_config.representative_title
+        ):
+            representative_title = first_project.dashboard_config.representative_title
+
         # 2. Get jurisdiction from the first project (all scorecard projects share one jurisdiction)
-        jurisdiction_id = projects[0].jurisdiction_id
+        jurisdiction_id = first_project.jurisdiction_id
 
         # 3. Fetch all entities for that jurisdiction
         entities = await self.entities_provider.filter(jurisdiction_id=jurisdiction_id)
         if not entities:
             return ScorecardResponse(
-                group_name=group_name, projects=scorecard_projects, entities=[]
+                group_name=group_name,
+                representative_title=representative_title,
+                projects=scorecard_projects,
+                entities=[],
             )
 
         # Enrich entities with district names
@@ -133,7 +150,10 @@ class ScorecardService:
             )
 
         return ScorecardResponse(
-            group_name=group_name, projects=scorecard_projects, entities=entity_rows
+            group_name=group_name,
+            representative_title=representative_title,
+            projects=scorecard_projects,
+            entities=entity_rows,
         )
 
     async def _enrich_with_district_names(self, entities: list) -> list:

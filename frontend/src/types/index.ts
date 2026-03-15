@@ -190,6 +190,7 @@ export interface ScorecardEntityRow {
 
 export interface ScorecardResponse {
   group_name: string;
+  representative_title: string;
   projects: ScorecardProject[];
   entities: ScorecardEntityRow[];
 }

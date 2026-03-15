@@ -1,11 +1,163 @@
+import re
 from typing import Any
 import aiohttp
 import logging
 from abc import abstractmethod
 
 from app.imports.base import DataSource
+from app.models.pydantic.models import EntityStatus
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# IL name normalization
+# ---------------------------------------------------------------------------
+
+_IL_HONORIFIC_PREFIXES = re.compile(
+    r"^(representative|rep\.?|senator|sen\.?)\s+", re.IGNORECASE
+)
+_GENERATIONAL_SUFFIXES = frozenset({"jr", "sr", "ii", "iii", "iv"})
+
+
+def normalize_il_name(name: str) -> str:
+    """Normalize an Illinois legislator name for matching.
+
+    Names from the OpenStates /people endpoint are already in "First Last" order
+    (no comma-reversal needed). This function:
+    - Strips honorific prefixes (Rep., Representative, Sen., Senator)
+    - Removes punctuation
+    - Strips single-character tokens (middle initials)
+    - Strips generational suffixes (Jr, Sr, II, III, IV)
+    - Lowercases and collapses whitespace
+    """
+    # Strip honorific prefix before punctuation removal so "Rep." → "rep " works
+    name = _IL_HONORIFIC_PREFIXES.sub("", name.strip())
+    # Remove all punctuation (apostrophes, periods, hyphens, etc.)
+    name = re.sub(r"[^\w\s]", "", name)
+    # Lowercase
+    name = name.lower()
+    # Collapse whitespace
+    tokens = name.split()
+    # Remove single-character tokens (middle initials) and generational suffixes
+    tokens = [t for t in tokens if len(t) > 1 and t not in _GENERATIONAL_SUFFIXES]
+    return " ".join(tokens)
+
+
+# ---------------------------------------------------------------------------
+# OpenStates vote-to-EntityStatus mapping
+# ---------------------------------------------------------------------------
+
+OPENSTATES_VOTE_TO_STATUS: dict[str, EntityStatus] = {
+    "yes": EntityStatus.SOLID_APPROVAL,
+    "no": EntityStatus.SOLID_DISAPPROVAL,
+    "abstain": EntityStatus.NEUTRAL,
+    "not voting": EntityStatus.NEUTRAL,
+    "excused": EntityStatus.NEUTRAL,
+    "absent": EntityStatus.NEUTRAL,
+}
+
+
+def openstates_vote_option_to_status(option: str) -> EntityStatus:
+    """Convert an OpenStates vote option string to an EntityStatus.
+
+    Falls back to UNKNOWN for unrecognized values.
+    """
+    return OPENSTATES_VOTE_TO_STATUS.get(option.lower(), EntityStatus.UNKNOWN)
+
+
+# ---------------------------------------------------------------------------
+# OpenStates bills client
+# ---------------------------------------------------------------------------
+
+IL_JURISDICTION_ID = "ocd-jurisdiction/country:us/state:il/government"
+
+
+class OpenStateBillsClient:
+    """Client for fetching bill data from the OpenStates v3 API."""
+
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str = "https://v3.openstates.org",
+    ):
+        self.api_key = api_key
+        self.base_url = base_url
+        self.bills_endpoint = f"{base_url}/bills"
+
+    async def get_bill(
+        self,
+        session: str,
+        bill_identifier: str,
+        jurisdiction_id: str,
+        include: str,
+    ) -> dict[str, Any] | None:
+        """Fetch a single bill from OpenStates.
+
+        Args:
+            session: OpenStates session name, e.g. "104th"
+            bill_identifier: Bill identifier, e.g. "SB 4061"
+            jurisdiction_id: OCD jurisdiction ID
+            include: Field to include, e.g. "sponsorships" or "votes"
+
+        Returns:
+            The first matching bill dict, or None if not found.
+        """
+        headers = {"X-API-Key": self.api_key}
+        params: dict[str, Any] = {
+            "jurisdiction": jurisdiction_id,
+            "identifier": bill_identifier,
+            "session": session,
+            "include": include,
+        }
+        async with aiohttp.ClientSession() as http_session:
+            async with http_session.get(
+                self.bills_endpoint, headers=headers, params=params
+            ) as response:
+                if response.status != 200:
+                    error_text = await response.text()
+                    logger.warning(
+                        "OpenStates bills API returned %d for %s: %s",
+                        response.status,
+                        bill_identifier,
+                        error_text,
+                    )
+                    return None
+                data = await response.json()
+                results = data.get("results", [])
+                if not results:
+                    logger.warning("No results found for bill %s", bill_identifier)
+                    return None
+                return results[0]  # type: ignore[no-any-return]
+
+    def extract_sponsors(self, bill: dict[str, Any]) -> list[dict[str, Any]]:
+        """Return the sponsorships list from a bill dict.
+
+        Each entry contains at minimum a ``person`` sub-dict with a ``name``
+        field (the canonical OpenStates name) and a ``classification`` field
+        (``"primary"`` or ``"cosponsor"``).
+        """
+        return list(bill.get("sponsorships") or [])
+
+    def extract_votes(self, bill: dict[str, Any]) -> list[dict[str, Any]] | None:
+        """Return the vote list from the most recent non-committee vote event.
+
+        Prefers chamber-level votes (``organization.classification`` in
+        ``{"upper", "lower"}``) over committee votes.  If only committee votes
+        exist, falls back to the last vote event.  Returns ``None`` if the bill
+        has no vote events.
+        """
+        vote_events: list[dict[str, Any]] = list(bill.get("votes") or [])
+        if not vote_events:
+            return None
+
+        # Prefer chamber votes over committee votes
+        chamber_votes = [
+            v
+            for v in vote_events
+            if v.get("organization", {}).get("classification") in ("upper", "lower")
+        ]
+        chosen_event = chamber_votes[-1] if chamber_votes else vote_events[-1]
+        return chosen_event.get("votes") or None
 
 
 class OpenStatesDataSource(DataSource[dict[str, list[dict[str, Any]]]]):

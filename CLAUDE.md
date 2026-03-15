@@ -24,8 +24,9 @@ python -m scripts.initialize_app          # Full initialization (DB + Chicago im
 python -m scripts.import_adu_project_data # Seed ADU opt-in project data
 python -m scripts.import_example_project_data # Seed example projects
 python -m scripts.import_scorecard_projects   # Seed scorecard projects from City Clerk data
-python -m scripts.fetch_elms_scorecard_data   # Fetch/refresh City Clerk eLMS vote data (writes app/data/elms_scorecard_data.py)
-python -m scripts.fetch_ward_zoning_data      # Fetch ward zoning data from Cityscape API (writes app/data/ward_zoning_data.py)
+python -m scripts.fetch_elms_scorecard_data           # Fetch/refresh City Clerk eLMS vote data (writes app/data/elms_scorecard_data.py)
+python -m scripts.fetch_openstates_il_scorecard_data  # Fetch/refresh IL General Assembly sponsorship data (writes app/data/il_scorecard_data.py)
+python -m scripts.fetch_ward_zoning_data              # Fetch ward zoning data from Cityscape API (writes app/data/ward_zoning_data.py)
 
 # Code quality
 poetry run ruff check .                   # Lint
