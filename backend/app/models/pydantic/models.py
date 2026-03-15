@@ -185,6 +185,7 @@ class ScorecardProject(BaseModel):
     description: str | None = None
     preferred_status: EntityStatus
     status_labels: dict[str, str] | None = None
+    position: int | None = None
 
 
 class ScorecardEntityStatus(BaseModel):

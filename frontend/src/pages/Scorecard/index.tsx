@@ -38,7 +38,12 @@ const Scorecard: React.FC = () => {
       setError(null);
       try {
         const response = await scorecardService.getScorecard(groupSlug);
-        setData(response.data);
+        const raw = response.data;
+        // Sort projects by position ascending (null/undefined → last)
+        const sortedProjects = [...raw.projects].sort(
+          (a, b) => (a.position ?? 999) - (b.position ?? 999)
+        );
+        setData({ ...raw, projects: sortedProjects });
       } catch {
         setError('Failed to load scorecard data. Please try again later.');
       } finally {

@@ -85,6 +85,11 @@ class ScorecardService:
                     if p.dashboard_config and p.dashboard_config.status_labels
                     else None
                 ),
+                position=(
+                    p.dashboard_config.position
+                    if p.dashboard_config and p.dashboard_config.position is not None
+                    else None
+                ),
             )
             for p in projects
         ]

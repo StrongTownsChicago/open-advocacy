@@ -174,6 +174,7 @@ export interface ScorecardProject {
   description?: string;
   preferred_status: EntityStatus;
   status_labels?: Record<string, string>;
+  position?: number | null;
 }
 
 export interface ScorecardEntityStatus {
