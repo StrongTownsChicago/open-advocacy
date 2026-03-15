@@ -47,6 +47,8 @@ class TestInitializeApplication:
             patch("scripts.initialize_app.import_adu_opt_in_project", mock_import_adu),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = ""
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -70,6 +72,8 @@ class TestInitializeApplication:
             patch("scripts.initialize_app.import_adu_opt_in_project", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = ""
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -135,6 +139,8 @@ class TestSeedConfiguration:
             ),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = ""
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -163,6 +169,8 @@ class TestSeedConfiguration:
             patch("scripts.initialize_app.import_example_projects", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = "chicago"
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -188,6 +196,8 @@ class TestSeedConfiguration:
             patch("scripts.initialize_app.import_example_projects", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = ""
             mock_settings.SEED_PROJECTS = "adu"
             from scripts.initialize_app import initialize_application
@@ -212,6 +222,8 @@ class TestSeedConfiguration:
             patch("scripts.initialize_app.import_example_projects", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = "chicago,illinois"
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -236,6 +248,8 @@ class TestSeedConfiguration:
             patch("scripts.initialize_app.import_example_projects", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = "  chicago , illinois  "
             mock_settings.SEED_PROJECTS = ""
             from scripts.initialize_app import initialize_application
@@ -260,6 +274,8 @@ class TestSeedConfiguration:
             patch("scripts.initialize_app.import_example_projects", AsyncMock()),
             patch("scripts.initialize_app.settings") as mock_settings,
         ):
+            mock_settings.ADMIN_USERNAME = ""
+            mock_settings.ADMIN_PASSWORD = ""
             mock_settings.SEED_LOCATIONS = "chicago"
             mock_settings.SEED_PROJECTS = "adu"
             from scripts.initialize_app import initialize_application

@@ -76,8 +76,10 @@ _TEST_GROUP_CONFIG = [
     {
         "name": "Strong Towns Chicago",
         "description": "Test group",
+        "jurisdiction_name": "Chicago City Council",
         "base_slugs": {"adu-citywide-vote", "adu-citywide-sponsorship"},
         "slug_prefix": "",
+        "data_source": "elms",
     },
 ]
 
@@ -255,7 +257,7 @@ async def test_refresh_skips_project_when_slug_not_in_db() -> None:
 
 @pytest.mark.asyncio
 async def test_refresh_raises_value_error_when_jurisdiction_missing() -> None:
-    """ValueError is raised if Chicago City Council jurisdiction is not found."""
+    """When Chicago City Council jurisdiction is not found, the group is skipped with 0 updates."""
     from app.services.scorecard_refresh_service import run_scorecard_refresh
 
     entity_service, jurisdiction_service, project_service, status_service, _ = (
@@ -266,15 +268,14 @@ async def test_refresh_raises_value_error_when_jurisdiction_missing() -> None:
         patch(_PATCH_PROJECTS, _TEST_PROJECTS),
         patch(_PATCH_GROUP_CONFIG, _TEST_GROUP_CONFIG),
     ):
-        with pytest.raises(
-            ValueError, match="Chicago City Council jurisdiction not found"
-        ):
-            await run_scorecard_refresh(
-                entity_service=entity_service,
-                jurisdiction_service=jurisdiction_service,
-                project_service=project_service,
-                status_service=status_service,
-            )
+        result = await run_scorecard_refresh(
+            entity_service=entity_service,
+            jurisdiction_service=jurisdiction_service,
+            project_service=project_service,
+            status_service=status_service,
+        )
+
+    assert result["updated"] == 0
 
 
 @pytest.mark.asyncio
@@ -316,8 +317,10 @@ async def test_refresh_applies_neutral_as_default_for_sponsorship() -> None:
         {
             "name": "Strong Towns Chicago",
             "description": "Test group",
+            "jurisdiction_name": "Chicago City Council",
             "base_slugs": {"adu-citywide-sponsorship"},
             "slug_prefix": "",
+            "data_source": "elms",
         }
     ]
 
@@ -452,8 +455,10 @@ async def test_refresh_applies_correct_vote_status() -> None:
         {
             "name": "Strong Towns Chicago",
             "description": "Test group",
+            "jurisdiction_name": "Chicago City Council",
             "base_slugs": {"adu-citywide-vote"},
             "slug_prefix": "",
+            "data_source": "elms",
         }
     ]
 

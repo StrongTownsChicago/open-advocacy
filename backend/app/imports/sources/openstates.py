@@ -185,7 +185,10 @@ class OpenStateBillsClient:
             chamber_votes = [
                 v for v in chamber_votes if v.get("start_date") == vote_date
             ]
-        chosen_event = chamber_votes[0] if chamber_votes else vote_events[0]
+        candidates = chamber_votes if chamber_votes else vote_events
+        chosen_event = max(
+            candidates, key=lambda v: v.get("date") or v.get("start_date") or ""
+        )
         return chosen_event.get("votes") or None
 
 
