@@ -203,11 +203,9 @@ const EntityList: React.FC<EntityListProps> = ({
         </Toolbar>
         <TableContainer
           sx={{
-            overflowX: 'auto', // Allows horizontal scrolling on mobile if needed
+            overflowX: 'auto',
             '& .MuiTableCell-root': {
-              // Make table cells more compact on mobile
               padding: { xs: '8px 6px', sm: '16px' },
-              whiteSpace: { xs: 'nowrap', sm: 'normal' },
             },
           }}
         >
@@ -224,7 +222,7 @@ const EntityList: React.FC<EntityListProps> = ({
                     Name
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                   <TableSortLabel
                     active={orderBy === 'title'}
                     direction={orderBy === 'title' ? order : 'asc'}
@@ -233,7 +231,7 @@ const EntityList: React.FC<EntityListProps> = ({
                     Title
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                   <TableSortLabel
                     active={orderBy === 'district_name'}
                     direction={orderBy === 'district_name' ? order : 'asc'}

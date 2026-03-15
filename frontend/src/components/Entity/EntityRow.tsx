@@ -122,17 +122,29 @@ const EntityRow: React.FC<EntityRowProps> = ({
                 width: 10,
                 height: 10,
                 borderRadius: '50%',
+                flexShrink: 0,
               }}
             />
-            <Typography variant="body1" fontWeight={500}>
-              {entity.name}
-            </Typography>
+            <Box>
+              <Typography variant="body1" fontWeight={500}>
+                {entity.name}
+              </Typography>
+              {(entity.district_name || entity.entity_type) && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: { xs: 'block', sm: 'none' } }}
+                >
+                  {entity.district_name || entity.entity_type}
+                </Typography>
+              )}
+            </Box>
           </Box>
         </TableCell>
 
-        <TableCell>{entity.title || ''}</TableCell>
+        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{entity.title || ''}</TableCell>
 
-        <TableCell>{entity.district_name || entity.entity_type}</TableCell>
+        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{entity.district_name || entity.entity_type}</TableCell>
 
         <TableCell>
           <Tooltip

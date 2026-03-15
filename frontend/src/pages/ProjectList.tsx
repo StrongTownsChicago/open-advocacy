@@ -160,7 +160,7 @@ const ProjectList: React.FC = () => {
             >
               <Box>
                 <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
                     <Typography
                       variant="h6"
                       fontWeight="600"
@@ -200,7 +200,7 @@ const ProjectList: React.FC = () => {
                   </Box>
                 )}
 
-                <Box display="flex" alignItems="center" gap={2} mb={2}>
+                <Box display="flex" alignItems="center" gap={2} mb={2} flexWrap="wrap">
                   {project.jurisdiction_name && (
                     <Chip label={project.jurisdiction_name} size="small" variant="outlined" />
                   )}
