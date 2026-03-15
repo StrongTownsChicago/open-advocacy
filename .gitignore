@@ -18,3 +18,4 @@
 /frontend/test-results/
 .mypy_cache
 .coverage
+/feature_planning

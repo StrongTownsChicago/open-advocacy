@@ -75,7 +75,8 @@ API Routes (app/api/routes/) → Service Layer (app/services/) → DB Providers 
 - **`app/core/auth.py`** — JWT auth, OAuth2, password hashing
 - **`app/db/`** — Abstract `DatabaseProvider` interface; `SQLProvider` supports both SQLite and PostgreSQL
 - **`app/geo/`** — Geographic lookup layer: abstract `GeoProvider` interface with `PostgresGeoProvider` (PostGIS) and `SQLiteGeoProvider` (Shapely) implementations, plus `geocoding_service.py` and `provider_factory.py`. Used by `EntityService` for address-to-district resolution.
-- **`app/services/`** — Business logic; `service_factory.py` provides three tiers of DI: plain `create_*()` factories, FastAPI `Depends()`-compatible `get_*()` functions, and `@lru_cache` singletons (`get_cached_*()`) for script use
+- **`app/services/`** — Business logic; `service_factory.py` provides three tiers of DI: plain `create_*()` factories, FastAPI `Depends()`-compatible `get_*()` functions, and `@lru_cache` singletons (`get_cached_*()`) for script use; `scorecard_refresh_service.py` provides `run_scorecard_refresh()` for the admin refresh endpoint
+- **`app/api/routes/admin/scorecard.py`** — `POST /api/admin/scorecard/refresh` — super-admin-only endpoint that fetches live eLMS data and upserts EntityStatusRecords for all scorecard projects
 - **`app/imports/`** — Modular data import system: `locations/` configs, `sources/` data fetchers, `importers/` processors, `orchestrator.py` coordinator
 - **`app/scripts/`** — Older utility scripts (`seed_dummy_data.py`, `db_diagnostic.py`, `import_chicago_ward_geojson.py`, etc.)
 
@@ -95,7 +96,7 @@ To force a clean reset in development, run `python -m scripts.init_db --drop` (d
 
 - **`src/services/api.ts`** — Axios client; base URL from `VITE_API_URL` or falls back to `/api` (relative); forces HTTPS on all requests
 - **`src/services/imports.ts`** — API service for data import operations (admin only)
-- **`src/services/scorecard.ts`** — API service for the scorecard endpoint
+- **`src/services/scorecard.ts`** — API service for the scorecard endpoint and `scorecardService.refreshScorecardData()` for the admin refresh action
 - **`src/contexts/`** — `AuthContext` (JWT auth state), `UserRepresentativesContext` (user's reps)
 - **`src/pages/`** — Route-level components; `admin/` for admin pages (AdminDashboard, UserManagement, DataImportPage, RegisterPage); `ProjectDashboard` for generic slug-based dashboards; `Scorecard` for the multi-issue alderperson scorecard at `/scorecard`
 - **`src/components/`** — Shared UI components organized by domain (`Entity/`, `Project/`, `Status/`, `auth/`, `common/`)
