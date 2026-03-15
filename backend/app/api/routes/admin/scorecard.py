@@ -32,10 +32,11 @@ async def refresh_scorecard_data(
     project_service: ProjectService = Depends(get_project_service),
     status_service: StatusService = Depends(get_status_service),
 ) -> dict[str, Any]:
-    """Fetch fresh eLMS vote/sponsorship data and upsert EntityStatusRecords.
+    """Fetch fresh scorecard data and upsert EntityStatusRecords.
 
     Only accessible by super admins. Triggers a live fetch from the Chicago
-    City Clerk eLMS API and updates all scorecard project status records.
+    City Clerk eLMS API and the OpenStates API, and updates all scorecard
+    project status records.
 
     Returns:
         {"updated": int, "errors": int}

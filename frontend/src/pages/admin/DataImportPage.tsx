@@ -71,7 +71,7 @@ const DataImportPage: React.FC = () => {
       const response = await scorecardService.refreshScorecardData();
       setRefreshResult(response.data);
     } catch {
-      setRefreshError('Scorecard refresh failed. Check that the eLMS API is reachable.');
+      setRefreshError('Scorecard refresh failed. Check that the eLMS and OpenStates APIs are reachable.');
     } finally {
       setIsRefreshing(false);
     }
@@ -156,8 +156,8 @@ const DataImportPage: React.FC = () => {
         Scorecard Vote Data
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Fetch the latest vote and sponsorship data from the Chicago City Clerk eLMS API and update
-        the alderperson scorecard records.
+        Fetch the latest vote and sponsorship data from the Chicago City Clerk eLMS API and the
+        Illinois OpenStates API, and update all scorecard records.
       </Typography>
 
       <Grid container spacing={3}>
@@ -166,11 +166,11 @@ const DataImportPage: React.FC = () => {
             <CardContent>
               <SyncIcon color="primary" sx={{ fontSize: 36, mb: 1 }} />
               <Typography variant="h6" gutterBottom>
-                Chicago Alderperson Scorecard
+                Scorecard Refresh
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 Updates vote and co-sponsorship status records for all scorecard projects using live
-                data from the eLMS API.
+                data from the eLMS API (Chicago) and OpenStates API (Illinois).
               </Typography>
 
               {refreshResult && (
