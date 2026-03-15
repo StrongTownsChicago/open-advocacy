@@ -11,7 +11,7 @@ from app.api.routes import (
     auth,
     scorecard,
 )
-from app.api.routes.admin import users, imports
+from app.api.routes.admin import users, imports, scorecard as scorecard_admin
 
 import logging
 import time
@@ -122,6 +122,11 @@ app.include_router(
 )
 app.include_router(auth.router, prefix="/api")
 app.include_router(scorecard.router, prefix="/api/scorecard", tags=["scorecard"])
+app.include_router(
+    scorecard_admin.router,
+    prefix="/api/admin/scorecard",
+    tags=["admin"],
+)
 
 
 if __name__ == "__main__":
