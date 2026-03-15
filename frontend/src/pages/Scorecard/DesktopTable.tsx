@@ -17,18 +17,20 @@ import {
 } from '@mui/material';
 import { ScorecardEntityRow, ScorecardResponse } from '../../types';
 import { getStatusColor } from '../../utils/statusColors';
+import ScoreCell from './ScoreCell';
 
 type SortDirection = 'asc' | 'desc';
 
 interface DesktopTableProps {
   rows: ScorecardEntityRow[];
   data: ScorecardResponse;
+  maxRatio: number;
   sortField: string;
   sortDirection: SortDirection;
   onSort: (field: string) => void;
 }
 
-const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, sortField, sortDirection, onSort }) => (
+const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, maxRatio, sortField, sortDirection, onSort }) => (
   <TableContainer
     sx={{ maxHeight: '75vh', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
   >
@@ -52,6 +54,17 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, sortField, sort
             >
               {data.representative_title}
             </TableSortLabel>
+          </TableCell>
+          <TableCell align="center" sx={{ fontWeight: 700, minWidth: 90 }}>
+            <Tooltip title="Aligned issues out of total scoreable issues" arrow>
+              <TableSortLabel
+                active={sortField === 'score'}
+                direction={sortField === 'score' ? sortDirection : 'desc'}
+                onClick={() => onSort('score')}
+              >
+                Alignment
+              </TableSortLabel>
+            </Tooltip>
           </TableCell>
           {data.projects.map(project => (
             <TableCell
@@ -95,15 +108,6 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, sortField, sort
               </Tooltip>
             </TableCell>
           ))}
-          <TableCell align="center" sx={{ fontWeight: 700, minWidth: 90 }}>
-            <TableSortLabel
-              active={sortField === 'score'}
-              direction={sortField === 'score' ? sortDirection : 'desc'}
-              onClick={() => onSort('score')}
-            >
-              Score
-            </TableSortLabel>
-          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -120,6 +124,9 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, sortField, sort
               >
                 {row.entity.name}
               </MuiLink>
+            </TableCell>
+            <TableCell align="center">
+              <ScoreCell alignedCount={row.aligned_count} totalScoreable={row.total_scoreable} maxRatio={maxRatio} />
             </TableCell>
             {data.projects.map(project => {
               const statusEntry = row.statuses[project.id];
@@ -139,11 +146,6 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, sortField, sort
                 </TableCell>
               );
             })}
-            <TableCell align="center">
-              <Typography variant="body2" fontWeight={600}>
-                {row.aligned_count} / {row.total_scoreable}
-              </Typography>
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>

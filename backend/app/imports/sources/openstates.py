@@ -138,24 +138,39 @@ class OpenStateBillsClient:
         """
         return list(bill.get("sponsorships") or [])
 
-    def extract_votes(self, bill: dict[str, Any]) -> list[dict[str, Any]] | None:
-        """Return the vote list from the most recent non-committee vote event.
+    def extract_votes(
+        self,
+        bill: dict[str, Any],
+        preferred_classification: str | None = None,
+    ) -> list[dict[str, Any]] | None:
+        """Return the vote list from the most recent relevant vote event.
 
         Prefers chamber-level votes (``organization.classification`` in
-        ``{"upper", "lower"}``) over committee votes.  If only committee votes
-        exist, falls back to the last vote event.  Returns ``None`` if the bill
-        has no vote events.
+        ``{"upper", "lower"}``) over committee votes.  If ``preferred_classification``
+        is given (``"upper"`` or ``"lower"``), picks the most recent vote from that
+        chamber first — useful for bills like SB 2111 that have both Senate and
+        House floor votes.  Falls back to any chamber vote, then any vote event.
+        Returns ``None`` if the bill has no vote events.
         """
         vote_events: list[dict[str, Any]] = list(bill.get("votes") or [])
         if not vote_events:
             return None
 
-        # Prefer chamber votes over committee votes
         chamber_votes = [
             v
             for v in vote_events
             if v.get("organization", {}).get("classification") in ("upper", "lower")
         ]
+
+        if preferred_classification and chamber_votes:
+            preferred = [
+                v
+                for v in chamber_votes
+                if v.get("organization", {}).get("classification") == preferred_classification
+            ]
+            if preferred:
+                return preferred[-1].get("votes") or None
+
         chosen_event = chamber_votes[-1] if chamber_votes else vote_events[-1]
         return chosen_event.get("votes") or None
 

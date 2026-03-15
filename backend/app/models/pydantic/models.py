@@ -143,6 +143,7 @@ class DashboardConfig(BaseModel):
     representative_title: str | None = None
     status_labels: dict[str, str] | None = None
     metrics: list[MetricDisplayConfig] | None = None
+    position: int | None = None
 
 
 class ProjectBase(BaseModel):

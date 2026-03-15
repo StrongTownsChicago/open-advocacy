@@ -263,8 +263,8 @@ describe('Scorecard', () => {
     const firstDataRow = rows[1]; // rows[0] is the header
     expect(firstDataRow).toHaveTextContent('Carlos Ramirez-Rosa');
 
-    // Click the Score sort label to toggle to ascending
-    const scoreSortLabel = screen.getByText('Score');
+    // Click the Alignment sort label to toggle to ascending
+    const scoreSortLabel = screen.getByText('Alignment');
     fireEvent.click(scoreSortLabel);
 
     const rowsAfterSort = screen.getAllByRole('row');

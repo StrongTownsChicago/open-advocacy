@@ -310,6 +310,20 @@ _IL_SPONSORSHIP_LABELS: dict[str, str] = {
     "unknown": "Not in Office",
 }
 
+_IL_VOTE_LABELS: dict[str, str] = {
+    "solid_approval": "Voted Yes",
+    "solid_disapproval": "Voted No",
+    "neutral": "Absent/Not Voting",
+    "unknown": "Not in Office",
+}
+
+_IL_COMMITTEE_VOTE_LABELS: dict[str, str] = {
+    "solid_approval": "Voted Yes",
+    "solid_disapproval": "Voted No",
+    "neutral": "Absent/Not Voting",
+    "unknown": "Not on Committee",
+}
+
 ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
     # --- IL Senate bills ---
     {
@@ -475,9 +489,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Northern Illinois Transit Authority Act (SB 2111) — Cosponsors",
         "description": (
             "Shell bill repurposed for transit funding for the Northern Illinois region. "
-            "OpenStates title: 'VEH CD-BICYCLES-EXEMPTIONS' (shell bill per common ILGA "
-            "practice). The 38 cosponsors represent real support for the transit measure. "
-            "Currently in committee. "
+            "Passed both chambers and signed into law as Public Act 104-0457. "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2111&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 2111",
@@ -485,6 +497,20 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "import_type": "sponsorship",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-transit-funding-sb2111-vote",
+        "title": "Northern Illinois Transit Authority Act (SB 2111) — Senate Vote",
+        "description": (
+            "Senate floor vote on SB 2111 transit funding bill. "
+            "Passed the Senate 47-4 and signed into law as Public Act 104-0457. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2111&GAID=18&DocTypeID=SB"
+        ),
+        "bill_identifier": "SB 2111",
+        "chamber": "senate",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_VOTE_LABELS,
     },
     # --- IL House bills ---
     {
@@ -530,6 +556,19 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "status_labels": _IL_SPONSORSHIP_LABELS,
     },
     {
+        "base_slug": "il-hb1813-vote",
+        "title": "ADU Reform (HB 1813) — Committee Vote",
+        "description": (
+            "House committee vote on HB 1813 ADU reform bill (18-0 on 2025-03-20). "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=1813&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 1813",
+        "chamber": "house",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_COMMITTEE_VOTE_LABELS,
+    },
+    {
         "base_slug": "il-hb1814-sponsorship",
         "title": "Middle Housing Zoning (HB 1814) — Cosponsors",
         "description": (
@@ -542,6 +581,19 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "import_type": "sponsorship",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb1814-vote",
+        "title": "Middle Housing Zoning (HB 1814) — Committee Vote",
+        "description": (
+            "House committee vote on HB 1814 middle housing zoning bill (12-6 on 2025-03-20). "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=1814&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 1814",
+        "chamber": "house",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_COMMITTEE_VOTE_LABELS,
     },
     {
         "base_slug": "il-hb4283-sponsorship",
@@ -584,6 +636,19 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "import_type": "sponsorship",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb4571-vote",
+        "title": "Affordable Housing Code Reform (HB 4571) — Committee Vote",
+        "description": (
+            "House committee vote on HB 4571 affordable housing code reform bill (12-5 on 2026-02-18). "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4571&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 4571",
+        "chamber": "house",
+        "import_type": "vote",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_COMMITTEE_VOTE_LABELS,
     },
     {
         "base_slug": "il-hb4835-sponsorship",

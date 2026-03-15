@@ -75,11 +75,13 @@ def extract_il_lookup(
     bill: dict,
     import_type: str,
     base_slug: str,
+    chamber: str = "",
 ) -> dict[str, str]:
     """Extract a {normalized_name: entity_status_value} dict from a bill."""
     client = OpenStateBillsClient(api_key="")  # api_key not needed for extraction
     if import_type == "vote":
-        votes = client.extract_votes(bill)
+        preferred = "upper" if chamber == "senate" else "lower" if chamber == "house" else None
+        votes = client.extract_votes(bill, preferred_classification=preferred)
         if votes is None:
             logger.warning("No vote data found for %s", base_slug)
             return {}
@@ -174,7 +176,8 @@ async def main() -> None:
             result[base_slug] = {}
             continue
 
-        lookup = extract_il_lookup(bill, import_type, base_slug)
+        chamber = str(project_def.get("chamber", ""))
+        lookup = extract_il_lookup(bill, import_type, base_slug, chamber=chamber)
         logger.info("Project %s: %d entries", base_slug, len(lookup))
         result[base_slug] = lookup
 

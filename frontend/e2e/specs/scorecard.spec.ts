@@ -34,7 +34,7 @@ test.describe('Scorecard page', () => {
     // Fixed column headers
     await expect(page.getByRole('columnheader', { name: /ward/i })).toBeVisible();
     await expect(page.getByRole('columnheader', { name: /alderperson/i })).toBeVisible();
-    await expect(page.getByRole('columnheader', { name: /score/i })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: /alignment/i })).toBeVisible();
 
     // At least one project column header is visible
     const firstProject = data.projects[0];
@@ -109,8 +109,8 @@ test.describe('Scorecard page', () => {
     // Default is score descending — record first row name
     const firstRowDesc = await page.getByRole('row').nth(1).textContent();
 
-    // Click Score to flip to ascending
-    await page.getByRole('columnheader', { name: /score/i }).click();
+    // Click Alignment to flip to ascending
+    await page.getByRole('columnheader', { name: /alignment/i }).click();
     await page.waitForTimeout(100);
 
     const firstRowAsc = await page.getByRole('row').nth(1).textContent();

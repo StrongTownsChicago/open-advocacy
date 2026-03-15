@@ -49,6 +49,13 @@ const Scorecard: React.FC = () => {
     fetchScorecard();
   }, [groupSlug]);
 
+  const maxRatio = useMemo(() => {
+    if (!data) return 0;
+    return Math.max(
+      ...data.entities.map(e => (e.total_scoreable > 0 ? e.aligned_count / e.total_scoreable : 0))
+    );
+  }, [data]);
+
   const sortedEntities = useMemo(() => {
     if (!data) return [];
     const rows = [...data.entities];
@@ -138,6 +145,7 @@ const Scorecard: React.FC = () => {
         <DesktopTable
           rows={sortedEntities}
           data={data}
+          maxRatio={maxRatio}
           sortField={sortField}
           sortDirection={sortDirection}
           onSort={handleSort}

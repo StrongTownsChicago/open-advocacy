@@ -169,6 +169,13 @@ Run backend and frontend checks independently. Fix any failures before moving on
 - Geo tests (representative lookup) run by default via Nominatim; set `PLAYWRIGHT_SKIP_GEO_TESTS=true` to skip them
 - If tests fail, run `npm run test:e2e:report` to open the HTML report with screenshots
 
+### Frontend Component Guidelines
+
+- **One component per file** — each React component lives in its own file named after the component (e.g. `ScoreCell.tsx`). Never define multiple exported or meaningful components in a single file. Small, purely internal render helpers (no props, no logic) are the only exception, and even those should be extracted if they grow.
+- **Group related components in a folder** — when a page or feature needs several components, create a folder (e.g. `src/pages/Scorecard/`) with an `index.tsx` entry point and sibling files for each sub-component.
+- **Co-locate tests** — unit test files (`*.test.tsx`) live next to the component file they test.
+- **Export pure logic separately** — utility functions extracted from components should be exported so they can be unit-tested independently.
+
 ### Testing Guidelines
 
 - No sleeps, waits, or fake timers in unit tests — keep tests fast and deterministic

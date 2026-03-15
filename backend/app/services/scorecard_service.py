@@ -52,10 +52,17 @@ class ScorecardService:
         Fetches projects, entities, and status records in three queries (no N+1).
         Entities missing a status record are treated as UNKNOWN.
         """
-        # 1. Fetch all active projects for the group
+        # 1. Fetch all active projects for the group, ordered by position then title
         projects = await self.projects_provider.filter_multiple(
             filters={"group_id": group_id, "status": "active"},
             in_filters=None,
+        )
+        projects.sort(
+            key=lambda p: (
+                p.dashboard_config.position
+                if p.dashboard_config and p.dashboard_config.position is not None
+                else 999
+            )
         )
         if not projects:
             return ScorecardResponse(
