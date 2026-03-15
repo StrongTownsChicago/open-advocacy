@@ -5,7 +5,7 @@ export class LoginPage {
 
   emailInput = () => this.page.getByLabel('Email Address');
   passwordInput = () => this.page.getByLabel('Password');
-  submitButton = () => this.page.getByRole('button', { name: 'Sign In' });
+  submitButton = () => this.page.getByRole('main').getByRole('button', { name: 'Sign In' });
   errorAlert = () => this.page.getByRole('alert');
 
   async goto() {
