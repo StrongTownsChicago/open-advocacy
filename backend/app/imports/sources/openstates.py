@@ -372,7 +372,14 @@ class OpenStatesDataSource(DataSource[dict[str, list[dict[str, Any]]]]):
 
 
 class IllinoisLegislatorsDataSource(OpenStatesDataSource):
-    """Data source for Illinois legislators."""
+    """Data source for Illinois legislators.
+
+    Bootstraps the parent's in-memory cache from the pre-fetched file
+    ``app/data/il_legislators_data.py`` so that ``fetch_data()`` never hits the
+    live API on a cold start.  Regenerate the file with:
+
+        python -m scripts.fetch_openstates_il_legislators_data
+    """
 
     def __init__(
         self,
@@ -386,6 +393,9 @@ class IllinoisLegislatorsDataSource(OpenStatesDataSource):
             base_url=base_url,
             include_fields=include_fields,
         )
+        from app.data.il_legislators_data import IL_LEGISLATORS_DATA
+
+        self._cached_data = dict(IL_LEGISLATORS_DATA)
 
     @property
     def jurisdiction_id(self) -> str:
