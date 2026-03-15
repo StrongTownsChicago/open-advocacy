@@ -509,8 +509,40 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "bill_identifier": "SB 2111",
         "chamber": "senate",
         "import_type": "vote",
+        "vote_date": "2025-04-10",
         "preferred_status": EntityStatus.SOLID_APPROVAL,
         "status_labels": _IL_VOTE_LABELS,
+    },
+    {
+        "base_slug": "il-transit-funding-sb2111-house-vote",
+        "title": "Northern Illinois Transit Authority Act (SB 2111) — House Vote",
+        "description": (
+            "House floor vote on SB 2111 transit funding bill. "
+            "Passed the House 72-32 on 10/31/2025 and signed into law as Public Act 104-0457. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2111&GAID=18&DocTypeID=SB"
+        ),
+        "bill_identifier": "SB 2111",
+        "chamber": "house",
+        "import_type": "vote",
+        "vote_date": "2025-10-31",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_VOTE_LABELS,
+        "position": 1,
+    },
+    {
+        "base_slug": "il-transit-funding-sb2111-house-sponsorship",
+        "title": "Northern Illinois Transit Authority Act (SB 2111) — House Cosponsors",
+        "description": (
+            "House members who cosponsored SB 2111 transit funding bill. "
+            "Signed into law as Public Act 104-0457. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2111&GAID=18&DocTypeID=SB"
+        ),
+        "bill_identifier": "SB 2111",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+        "position": 2,
     },
     # --- IL House bills ---
     {
@@ -910,12 +942,47 @@ async def import_scorecard_projects() -> None:
             slug = slug_prefix + base_slug
             logger.info("Processing project: %s (group: %s)", slug, group.name)
 
+            position: int | None = project_def.get("position")  # type: ignore[assignment]
+
             # Idempotency: check for existing project by slug
             existing_project = await project_service.get_project_by_slug(slug)
             if existing_project:
                 project = existing_project
                 total_found += 1
                 logger.info("Project already exists: %s (%s)", slug, project.id)
+                # Update position if it has changed
+                existing_position = (
+                    existing_project.dashboard_config.position
+                    if existing_project.dashboard_config
+                    else None
+                )
+                if existing_position != position:
+                    updated_config = DashboardConfig(
+                        representative_title=representative_title,
+                        status_labels=project_def["status_labels"],
+                        position=position,
+                    )
+                    await project_service.update_project(
+                        existing_project.id,
+                        ProjectBase(
+                            title=existing_project.title,
+                            description=existing_project.description,
+                            status=existing_project.status,
+                            active=existing_project.active,
+                            preferred_status=existing_project.preferred_status,
+                            jurisdiction_id=existing_project.jurisdiction_id,
+                            group_id=existing_project.group_id,
+                            created_by=existing_project.created_by or "admin",
+                            slug=existing_project.slug,
+                            dashboard_config=updated_config,
+                        ),
+                    )
+                    logger.info(
+                        "Updated position for %s: %s → %s",
+                        slug,
+                        existing_position,
+                        position,
+                    )
             else:
                 project = await project_service.create_project(
                     ProjectBase(
@@ -931,6 +998,7 @@ async def import_scorecard_projects() -> None:
                         dashboard_config=DashboardConfig(
                             representative_title=representative_title,
                             status_labels=project_def["status_labels"],
+                            position=position,
                         ),
                     )
                 )

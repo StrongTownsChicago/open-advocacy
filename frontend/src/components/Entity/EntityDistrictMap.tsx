@@ -46,25 +46,6 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function onEachFeature(feature: GeoJSON.Feature, layer: any) {
-    const wardNumber = feature.properties?.ward;
-    const districtName = wardNumber ? `Ward ${wardNumber}` : undefined;
-    const entity = districtName ? entityByDistrict[districtName] : undefined;
-    const status = entity ? statusMap[entity.id] : EntityStatus.NEUTRAL;
-
-    let tooltipContent = `<strong>${districtName || 'Unknown Ward'}</strong>`;
-    if (entity) {
-      tooltipContent += `<br/>${entity.name} (${entity.title || ''})<br/>Status: ${getStatusLabel(status)}`;
-      const record = recordMap[entity.id];
-      for (const metric of tooltipMetrics) {
-        const value = record?.record_metadata?.[metric.key];
-        tooltipContent += `<br/>${metric.label}: ${formatMetricValue(value, metric.format ?? 'text')}`;
-      }
-    }
-    layer.bindTooltip(tooltipContent, { sticky: true });
-  }
-
   return (
     <MapContainer center={centerPoint} zoom={11} style={{ height: 600, width: '100%' }}>
       <TileLayer
@@ -72,8 +53,8 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {Object.entries(geojsonByDistrict).map(([districtName, geojson]) => {
-        const wardNumber = districtName.match(/\d+/)?.[0];
-        const lookupName = wardNumber ? `Ward ${wardNumber}` : districtName;
+        const entity = entityByDistrict[districtName];
+        const status = entity ? statusMap[entity.id] : EntityStatus.NEUTRAL;
         return (
           <GeoJSON
             key={districtName}
@@ -81,14 +62,22 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
             style={() => ({
               color: '#333',
               weight: 1,
-              fillColor: getStatusColor(
-                entityByDistrict[lookupName]
-                  ? statusMap[entityByDistrict[lookupName]!.id]
-                  : EntityStatus.NEUTRAL
-              ),
+              fillColor: getStatusColor(status),
               fillOpacity: 0.7,
             })}
-            onEachFeature={onEachFeature}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onEachFeature={(_feature: GeoJSON.Feature, layer: any) => {
+              let tooltipContent = `<strong>${districtName}</strong>`;
+              if (entity) {
+                tooltipContent += `<br/>${entity.name} (${entity.title || ''})<br/>Status: ${getStatusLabel(status)}`;
+                const record = recordMap[entity.id];
+                for (const metric of tooltipMetrics) {
+                  const value = record?.record_metadata?.[metric.key];
+                  tooltipContent += `<br/>${metric.label}: ${formatMetricValue(value, metric.format ?? 'text')}`;
+                }
+              }
+              layer.bindTooltip(tooltipContent, { sticky: true });
+            }}
           />
         );
       })}

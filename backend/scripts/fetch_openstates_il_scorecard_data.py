@@ -76,12 +76,19 @@ def extract_il_lookup(
     import_type: str,
     base_slug: str,
     chamber: str = "",
+    vote_date: str = "",
 ) -> dict[str, str]:
     """Extract a {normalized_name: entity_status_value} dict from a bill."""
     client = OpenStateBillsClient(api_key="")  # api_key not needed for extraction
     if import_type == "vote":
-        preferred = "upper" if chamber == "senate" else "lower" if chamber == "house" else None
-        votes = client.extract_votes(bill, preferred_classification=preferred)
+        preferred = (
+            "upper" if chamber == "senate" else "lower" if chamber == "house" else None
+        )
+        votes = client.extract_votes(
+            bill,
+            preferred_classification=preferred,
+            vote_date=vote_date or None,
+        )
         if votes is None:
             logger.warning("No vote data found for %s", base_slug)
             return {}
@@ -97,6 +104,11 @@ def extract_il_lookup(
         return result
     else:
         # sponsorship: both primary and cosponsor → SOLID_APPROVAL
+        # Filter by chamber when specified: "senate" → upper, "house" → lower.
+        # The person.current_role.org_classification field carries chamber info.
+        chamber_classification = (
+            "upper" if chamber == "senate" else "lower" if chamber == "house" else None
+        )
         sponsors = client.extract_sponsors(bill)
         result = {}
         for s in sponsors:
@@ -104,6 +116,10 @@ def extract_il_lookup(
             name = person.get("name") or ""
             if not name:
                 continue
+            if chamber_classification:
+                current_role = person.get("current_role") or {}
+                if current_role.get("org_classification") != chamber_classification:
+                    continue
             result[normalize_il_name(name)] = EntityStatus.SOLID_APPROVAL.value
         return result
 
@@ -140,20 +156,22 @@ async def main() -> None:
     client = OpenStateBillsClient(api_key=api_key)
     semaphore = asyncio.Semaphore(MAX_CONCURRENT)
 
+    # Deduplicate by (bill_identifier, import_type) — multiple projects may share the same
+    # bill (e.g. SB 2111 Senate vote and House vote both come from the same OpenStates record).
+    unique_fetches: set[tuple[str, str]] = {
+        (str(p["bill_identifier"]), str(p["import_type"]))
+        for p in ALL_IL_SCORECARD_PROJECTS
+    }
     logger.info(
-        "Fetching %d IL bill(s) from OpenStates (session=%s)",
-        len(ALL_IL_SCORECARD_PROJECTS),
+        "Fetching %d unique IL bill(s) from OpenStates (session=%s) for %d projects",
+        len(unique_fetches),
         IL_SESSION,
+        len(ALL_IL_SCORECARD_PROJECTS),
     )
 
     tasks = [
-        fetch_bill_data(
-            semaphore,
-            client,
-            str(project_def["bill_identifier"]),
-            str(project_def["import_type"]),
-        )
-        for project_def in ALL_IL_SCORECARD_PROJECTS
+        fetch_bill_data(semaphore, client, bill_identifier, import_type)
+        for bill_identifier, import_type in unique_fetches
     ]
 
     # Map (bill_identifier, import_type) → bill dict
@@ -177,7 +195,10 @@ async def main() -> None:
             continue
 
         chamber = str(project_def.get("chamber", ""))
-        lookup = extract_il_lookup(bill, import_type, base_slug, chamber=chamber)
+        vote_date = str(project_def.get("vote_date", ""))
+        lookup = extract_il_lookup(
+            bill, import_type, base_slug, chamber=chamber, vote_date=vote_date
+        )
         logger.info("Project %s: %d entries", base_slug, len(lookup))
         result[base_slug] = lookup
 

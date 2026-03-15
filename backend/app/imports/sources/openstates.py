@@ -142,15 +142,22 @@ class OpenStateBillsClient:
         self,
         bill: dict[str, Any],
         preferred_classification: str | None = None,
+        vote_date: str | None = None,
     ) -> list[dict[str, Any]] | None:
-        """Return the vote list from the most recent relevant vote event.
+        """Return the vote list from the most relevant vote event.
 
         Prefers chamber-level votes (``organization.classification`` in
         ``{"upper", "lower"}``) over committee votes.  If ``preferred_classification``
-        is given (``"upper"`` or ``"lower"``), picks the most recent vote from that
-        chamber first — useful for bills like SB 2111 that have both Senate and
-        House floor votes.  Falls back to any chamber vote, then any vote event.
-        Returns ``None`` if the bill has no vote events.
+        is given (``"upper"`` or ``"lower"``), picks votes from that chamber first —
+        useful for bills like SB 2111 that have both Senate and House floor votes.
+
+        If ``vote_date`` is given (``"YYYY-MM-DD"``), restricts to vote events that
+        started on that date — use this to pin to a specific floor vote (e.g. the
+        Third Reading rather than a later concurrence vote).
+
+        The OpenStates API returns vote events newest-first, so ``[0]`` is the most
+        recent.  Falls back to any chamber vote, then any vote event.
+        Returns ``None`` if the bill has no matching vote events.
         """
         vote_events: list[dict[str, Any]] = list(bill.get("votes") or [])
         if not vote_events:
@@ -166,12 +173,19 @@ class OpenStateBillsClient:
             preferred = [
                 v
                 for v in chamber_votes
-                if v.get("organization", {}).get("classification") == preferred_classification
+                if v.get("organization", {}).get("classification")
+                == preferred_classification
             ]
+            if vote_date:
+                preferred = [v for v in preferred if v.get("start_date") == vote_date]
             if preferred:
-                return preferred[-1].get("votes") or None
+                return preferred[0].get("votes") or None
 
-        chosen_event = chamber_votes[-1] if chamber_votes else vote_events[-1]
+        if vote_date:
+            chamber_votes = [
+                v for v in chamber_votes if v.get("start_date") == vote_date
+            ]
+        chosen_event = chamber_votes[0] if chamber_votes else vote_events[0]
         return chosen_event.get("votes") or None
 
 
