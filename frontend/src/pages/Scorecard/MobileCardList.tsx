@@ -36,7 +36,7 @@ const MobileCardList: React.FC<MobileCardListProps> = ({ rows, data }) => (
             </Typography>
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-            Alignment: {row.aligned_count} / {row.total_scoreable}
+            Score: {row.aligned_count} / {row.total_scoreable}
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
             {data.projects.map(project => {

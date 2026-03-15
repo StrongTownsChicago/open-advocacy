@@ -157,7 +157,7 @@ describe('Scorecard', () => {
     expect(await screen.findByText('Maria Hadden')).toBeInTheDocument();
   });
 
-  it('renders alignment score as "X / Y" format', async () => {
+  it('renders score as "X / Y" format', async () => {
     vi.mocked(scorecardService.getScorecard).mockResolvedValue({
       data: mockScorecardResponse,
     } as never);
@@ -249,7 +249,7 @@ describe('Scorecard', () => {
     expect(rows[1]).toHaveTextContent('Alderperson Nine');
   });
 
-  it('sort by alignment score re-orders rows', async () => {
+  it('sort by score re-orders rows', async () => {
     vi.mocked(scorecardService.getScorecard).mockResolvedValue({
       data: mockScorecardResponse,
     } as never);
@@ -263,8 +263,8 @@ describe('Scorecard', () => {
     const firstDataRow = rows[1]; // rows[0] is the header
     expect(firstDataRow).toHaveTextContent('Carlos Ramirez-Rosa');
 
-    // Click the Alignment sort label to toggle to ascending
-    const scoreSortLabel = screen.getByText('Alignment');
+    // Click the Score sort label to toggle to ascending
+    const scoreSortLabel = screen.getByText('Score');
     fireEvent.click(scoreSortLabel);
 
     const rowsAfterSort = screen.getAllByRole('row');

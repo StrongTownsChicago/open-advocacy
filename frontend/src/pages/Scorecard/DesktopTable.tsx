@@ -56,13 +56,13 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, maxRatio, sortF
             </TableSortLabel>
           </TableCell>
           <TableCell align="center" sx={{ fontWeight: 700, minWidth: 90 }}>
-            <Tooltip title="Aligned issues out of total scoreable issues" arrow>
+            <Tooltip title="Score: issues aligned out of total scoreable issues" arrow>
               <TableSortLabel
                 active={sortField === 'score'}
                 direction={sortField === 'score' ? sortDirection : 'desc'}
                 onClick={() => onSort('score')}
               >
-                Alignment
+                Score
               </TableSortLabel>
             </Tooltip>
           </TableCell>
@@ -126,7 +126,7 @@ const DesktopTable: React.FC<DesktopTableProps> = ({ rows, data, maxRatio, sortF
               </MuiLink>
             </TableCell>
             <TableCell align="center">
-              <ScoreCell alignedCount={row.aligned_count} totalScoreable={row.total_scoreable} maxRatio={maxRatio} />
+              <ScoreCell scoreCount={row.aligned_count} totalScoreable={row.total_scoreable} maxRatio={maxRatio} />
             </TableCell>
             {data.projects.map(project => {
               const statusEntry = row.statuses[project.id];
