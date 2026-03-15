@@ -74,10 +74,14 @@ Once running, you can access:
 
 ### Auto-Initialization
 
-On first startup, the backend automatically creates database tables and seeds data based on environment variables:
+On first startup, the backend automatically creates database tables, creates an admin user, and seeds data based on environment variables:
 
+- `ADMIN_USERNAME` — Email address for the auto-created super admin user
+- `ADMIN_PASSWORD` — Password for the auto-created super admin user
 - `SEED_LOCATIONS` — Comma-separated locations to import (e.g. `chicago`, `chicago,illinois`)
 - `SEED_PROJECTS` — Comma-separated project sets to seed (e.g. `adu`, `example`, `scorecard`)
+
+If both `ADMIN_USERNAME` and `ADMIN_PASSWORD` are set, a super admin account is created automatically on cold start. If either is absent, no admin user is created and you must run `python -m scripts.add_super_admin` manually.
 
 Initialization is skipped on subsequent starts if the database tables already exist.
 
@@ -117,6 +121,7 @@ To populate the database manually (outside Docker):
    ```bash
    python -m scripts.add_super_admin
    ```
+   Alternatively, set `ADMIN_USERNAME` and `ADMIN_PASSWORD` environment variables before running the app and the super admin will be created automatically on cold start.
 
 #### Import System Options
 
@@ -278,20 +283,22 @@ python -m scripts.fetch_ward_zoning_data
 
 Key environment variables:
 
-| Variable                       | Description                                                             |
-| ------------------------------ | ----------------------------------------------------------------------- |
-| `DATABASE_PROVIDER`            | `sqlite` (default) or `postgres`                                        |
-| `DATABASE_URL`                 | Database connection string                                              |
-| `AUTH_SECRET_KEY`              | Secret key for JWT token generation                                     |
-| `ENVIRONMENT`                  | `development` or `production`                                           |
-| `ALLOWED_ORIGIN`               | CORS origin (defaults to `localhost:3000` and `localhost:5173`)         |
-| `OPENSTATES_API_KEY`           | Required for Illinois legislature imports                               |
-| `CHICAGO_CITYSCAPE_API_KEY`    | Required for ward zoning data script                                    |
-| `SEED_LOCATIONS`               | Locations to seed on cold start (e.g. `chicago`, `chicago,illinois`)    |
-| `SEED_PROJECTS`                | Project sets to seed on cold start (e.g. `adu`, `example`, `scorecard`) |
-| `VITE_API_URL`                 | Frontend API base URL override                                          |
-| `VITE_APPLICATION_NAME`        | App display name (default: `Open Advocacy`)                             |
-| `VITE_APPLICATION_DESCRIPTION` | App tagline                                                             |
+| Variable                       | Description                                                                                    |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `DATABASE_PROVIDER`            | `sqlite` (default) or `postgres`                                                               |
+| `DATABASE_URL`                 | Database connection string                                                                     |
+| `AUTH_SECRET_KEY`              | Secret key for JWT token generation                                                            |
+| `ENVIRONMENT`                  | `development` or `production`                                                                  |
+| `ALLOWED_ORIGIN`               | CORS origin (defaults to `localhost:3000` and `localhost:5173`)                                |
+| `ADMIN_USERNAME`               | Email for the super admin created on cold start (set with `ADMIN_PASSWORD` to enable)          |
+| `ADMIN_PASSWORD`               | Password for the super admin created on cold start (set with `ADMIN_USERNAME` to enable)       |
+| `OPENSTATES_API_KEY`           | Required for Illinois legislature imports                                                      |
+| `CHICAGO_CITYSCAPE_API_KEY`    | Required for ward zoning data script                                                           |
+| `SEED_LOCATIONS`               | Locations to seed on cold start (e.g. `chicago`, `chicago,illinois`)                           |
+| `SEED_PROJECTS`                | Project sets to seed on cold start (e.g. `adu`, `example`, `scorecard`)                        |
+| `VITE_API_URL`                 | Frontend API base URL override                                                                 |
+| `VITE_APPLICATION_NAME`        | App display name (default: `Open Advocacy`)                                                    |
+| `VITE_APPLICATION_DESCRIPTION` | App tagline                                                                                    |
 
 See `backend/app/core/config.py` for all available options.
 

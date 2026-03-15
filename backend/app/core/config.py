@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     DB_POOL_RECYCLE: int = 3600
     DB_ECHO: bool = False
 
-    # TODO: Change this
-    # Default admin user (for development only)
-    ADMIN_USERNAME: str = "admin"
+    # Super admin auto-creation (optional; set both to enable)
+    ADMIN_USERNAME: str | None = None
+    ADMIN_PASSWORD: str | None = None
 
     ENVIRONMENT: str = "development"
 

@@ -12,12 +12,52 @@ from scripts.import_adu_project_data import import_adu_project_data
 from scripts.import_scorecard_projects import import_scorecard_projects
 from app.core.config import settings
 from app.db.session import get_engine
+from app.models.pydantic.models import UserCreate, UserRole, GroupBase
 from app.services.service_factory import (
+    get_cached_group_service,
     get_cached_jurisdiction_service,
     get_cached_project_service,
+    get_cached_user_service,
 )
 
 logger = logging.getLogger("open-advocacy")
+
+
+async def create_super_admin_if_configured():
+    """Create a super admin user if ADMIN_USERNAME and ADMIN_PASSWORD env vars are set."""
+    username = settings.ADMIN_USERNAME
+    password = settings.ADMIN_PASSWORD
+    if not username or not password:
+        return
+
+    group_service = get_cached_group_service()
+    user_service = get_cached_user_service()
+
+    groups = await group_service.list_groups()
+    admin_group = next((g for g in groups if g.name == "Administrators"), None)
+    if not admin_group:
+        admin_group = await group_service.create_group(
+            GroupBase(
+                name="Administrators",
+                description="Default administrator group with full system access",
+            )
+        )
+
+    existing_user = await user_service.get_user_by_email(username)
+    if existing_user:
+        logger.info(f"Super admin '{username}' already exists, skipping creation")
+        return
+
+    user_data = UserCreate(
+        email=username,
+        password=password,
+        name="System Administrator",
+        role=UserRole.SUPER_ADMIN,
+        is_active=True,
+        group_id=admin_group.id,
+    )
+    user = await user_service.create_user(user_data)
+    logger.info(f"Created super admin user: {user.email}")
 
 
 async def import_chicago_data():
@@ -102,7 +142,10 @@ async def initialize_application():
     logger.info("Creating database tables...")
     await init_db(create_tables=True)
 
-    # Step 2: Seed locations based on configuration
+    # Step 2: Create super admin if configured
+    await create_super_admin_if_configured()
+
+    # Step 3: Seed locations based on configuration
     seed_locations = [
         s.strip() for s in settings.SEED_LOCATIONS.split(",") if s.strip()
     ]
@@ -111,7 +154,7 @@ async def initialize_application():
     if "illinois" in seed_locations:
         await import_illinois_data()
 
-    # Step 3: Seed projects based on configuration
+    # Step 4: Seed projects based on configuration
     seed_projects = [s.strip() for s in settings.SEED_PROJECTS.split(",") if s.strip()]
     if "adu" in seed_projects:
         await import_adu_opt_in_project()

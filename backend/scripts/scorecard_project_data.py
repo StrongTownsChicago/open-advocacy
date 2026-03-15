@@ -19,8 +19,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "description": (
             "Introduced by Ald. Matt Martin (47), this ordinance would allow new residential "
             "buildings up to 6 stories to use a single exit stairwell (paired with a "
-            "fire-rated elevator), reducing construction costs and enabling more efficient "
-            "floor plans for small-to-mid-rise apartments. Currently in committee. "
+            "automatic sprinkler system), reducing construction costs and enabling more efficient "
+            "floor plans for small-to-mid-rise apartments."
             "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=9F0FF51D-7036-F011-8C4D-001DD8309E73"
         ),
         "matter_guid": "9F0FF51D-7036-F011-8C4D-001DD8309E73",
@@ -34,14 +34,14 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
     },
     {
         "base_slug": "cha-housing-ordinance",
-        "title": "CHA Housing Ordinance — Cosponsors",
+        "title": "DOH Housing Standards Ordinance — Cosponsors",
         "description": (
             "Introduced by Ald. Matt Martin (47), this ordinance would prohibit the "
             "Department of Housing from holding affordable housing to higher design and "
             "construction standards than market-rate buildings — specifically eliminating "
             "the Architectural Technical Standards Manual (ATSM) applied to LIHTC-funded "
             "projects. It also sets a 10-day deadline for change order approvals during "
-            "construction. Currently in committee. "
+            "construction."
             "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=7F84A4EE-7136-F011-8C4D-001DD8309E73"
         ),
         "matter_guid": "7F84A4EE-7136-F011-8C4D-001DD8309E73",
@@ -58,8 +58,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "ADU Citywide Expansion — Vote",
         "description": (
             "Passed September 2025, this ordinance re-legalized accessory dwelling units "
-            "(coach houses, basement apartments, granny flats) citywide — though each "
-            "alderperson must separately opt their ward in. "
+            "(coach houses, basement apartments, granny flats) citywide — though in "
+            "single-family residential zones, alderpersons must separately opt in specific blocks. "
             "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=54028B60-C4FC-EE11-A1FE-001DD804AF4C"
         ),
         "matter_guid": "54028B60-C4FC-EE11-A1FE-001DD804AF4C",
@@ -77,8 +77,8 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "ADU Citywide Expansion — Cosponsors",
         "description": (
             "Passed September 2025, this ordinance re-legalized accessory dwelling units "
-            "(coach houses, basement apartments, granny flats) citywide — though each "
-            "alderperson must separately opt their ward in. "
+            "(coach houses, basement apartments, granny flats) citywide — though in "
+            "single-family residential zones, alderpersons must separately opt in specific blocks. "
             "Source: https://chicityclerkelms.chicago.gov/Matter/?matterId=54028B60-C4FC-EE11-A1FE-001DD804AF4C"
         ),
         "matter_guid": "54028B60-C4FC-EE11-A1FE-001DD804AF4C",
@@ -94,7 +94,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "no-parking-minimums-vote",
         "title": "No Parking Minimums — Vote",
         "description": (
-            "Sponsored by Ald. La Spata (1) and passed unanimously in July 2025, this "
+            "Sponsored by Ald. La Spata (1) and passed in July 2025, this "
             "ordinance allows developers to eliminate off-street parking requirements for "
             "new construction within Transit-Served Locations — defined as within half a "
             "mile of a CTA/Metra rail station or a quarter mile of major CTA bus corridors "
@@ -115,7 +115,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "no-parking-minimums-sponsorship",
         "title": "No Parking Minimums — Cosponsors",
         "description": (
-            "Sponsored by Ald. La Spata (1) and passed unanimously in July 2025, this "
+            "Sponsored by Ald. La Spata (1) and passed in July 2025, this "
             "ordinance allows developers to eliminate off-street parking requirements for "
             "new construction within Transit-Served Locations — defined as within half a "
             "mile of a CTA/Metra rail station or a quarter mile of major CTA bus corridors "
@@ -135,7 +135,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "hed-bond-vote",
         "title": "HED Bond — Vote",
         "description": (
-            "Sponsored by Mayor Brandon Johnson and passed 35-13 in April 2024, this "
+            "Sponsored by Mayor Brandon Johnson and passed 32-17 in April 2024, this "
             "ordinance authorized $1.25 billion in bonds over five years for affordable "
             "housing construction and neighborhood economic development, prioritizing "
             "historically underinvested South and West Side communities. A $135 million "
@@ -156,7 +156,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "hed-bond-sponsorship",
         "title": "HED Bond — Cosponsors",
         "description": (
-            "Sponsored by Mayor Brandon Johnson and passed 35-13 in April 2024, this "
+            "Sponsored by Mayor Brandon Johnson and passed 32-17 in April 2024, this "
             "ordinance authorized $1.25 billion in bonds over five years for affordable "
             "housing construction and neighborhood economic development, prioritizing "
             "historically underinvested South and West Side communities. A $135 million "
@@ -176,7 +176,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "nwpo-vote",
         "title": "Northwest Side Preservation Ordinance — Vote",
         "description": (
-            "Led by Ald. Ramirez-Rosa (35) and passed 41-3 in September 2024, this "
+            "Led by Ald. Ramirez-Rosa (35) and passed 44-3 in September 2024, this "
             "ordinance raised demolition surcharges to $20,000/unit in neighborhoods "
             "around the 606 trail corridor and established a Tenant Opportunity to "
             "Purchase program giving tenants first refusal when their building is listed "
@@ -197,7 +197,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "nwpo-sponsorship",
         "title": "Northwest Side Preservation Ordinance — Cosponsors",
         "description": (
-            "Led by Ald. Ramirez-Rosa (35) and passed 41-3 in September 2024, this "
+            "Led by Ald. Ramirez-Rosa (35) and passed 44-3 in September 2024, this "
             "ordinance raised demolition surcharges to $20,000/unit in neighborhoods "
             "around the 606 trail corridor and established a Tenant Opportunity to "
             "Purchase program giving tenants first refusal when their building is listed "
@@ -217,7 +217,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "gsh-vote",
         "title": "Green Social Housing — Vote",
         "description": (
-            "Sponsored by Mayor Johnson and passed 33-13 in May 2025, this ordinance "
+            "Sponsored by Mayor Johnson and passed 30-18 in May 2025, this ordinance "
             "created the Residential Investment Corporation (RIC) — a public entity that "
             "develops permanently affordable, mixed-income housing by retaining ownership "
             "stakes in joint ventures with private developers. Funded by a $135 million "
@@ -239,7 +239,7 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "gsh-sponsorship",
         "title": "Green Social Housing — Cosponsors",
         "description": (
-            "Sponsored by Mayor Johnson and passed 33-13 in May 2025, this ordinance "
+            "Sponsored by Mayor Johnson and passed 30-18 in May 2025, this ordinance "
             "created the Residential Investment Corporation (RIC) — a public entity that "
             "develops permanently affordable, mixed-income housing by retaining ownership "
             "stakes in joint ventures with private developers. Funded by a $135 million "
@@ -302,7 +302,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Build Act — Middle Housing (SB 4060) — Cosponsors",
         "description": (
             "Would allow middle housing types (duplexes, triplexes, etc.) in municipalities "
-            "across Illinois, reducing exclusionary zoning. Currently in committee. "
+            "across Illinois, reducing exclusionary zoning."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4060&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4060",
@@ -316,9 +316,8 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Single Stair Act (SB 4061) — Cosponsors",
         "description": (
             "Would allow new residential buildings up to 6 stories to use a single exit "
-            "stairwell (paired with a fire-rated elevator), reducing construction costs and "
+            "stairwell (paired with an automatic sprinkler system), reducing construction costs and "
             "enabling more efficient floor plans for small-to-mid-rise apartments statewide. "
-            "Currently in committee. "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4061&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4061",
@@ -332,7 +331,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Build Act — Impact Fees (SB 4062) — Cosponsors",
         "description": (
             "Would reform impact mitigation fees charged to new housing development, "
-            "reducing upfront costs that limit housing production. Currently in committee. "
+            "reducing upfront costs that limit housing production."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4062&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4062",
@@ -346,7 +345,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Build Act — Building Plans (SB 4063) — Cosponsors",
         "description": (
             "Would streamline municipal review of residential building plans and inspections, "
-            "reducing delays in the housing permitting process. Currently in committee. "
+            "reducing delays in the housing permitting process."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4063&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4063",
@@ -359,8 +358,9 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-build-act-sb4064-sponsorship",
         "title": "Build Act — Residential Parking (SB 4064) — Cosponsors",
         "description": (
-            "Would allow municipalities to reduce or eliminate residential parking minimums "
-            "near transit, lowering the cost of housing development. Currently in committee. "
+            "Would cap residential parking minimums statewide — at 0.5 spaces per multifamily "
+            "unit — and eliminate minimums entirely for affordable housing, units under 1,500 sq ft, "
+            "and certain other housing types."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4064&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4064",
@@ -375,7 +375,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "description": (
             "Would legalize accessory dwelling units (ADUs) — coach houses, basement "
             "apartments, backyard cottages — statewide, enabling more housing on existing "
-            "residential lots. Currently in committee. "
+            "residential lots."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4071&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4071",
@@ -388,9 +388,9 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-yigby-sb3187-sponsorship",
         "title": "YIGBY / Church Land Act (SB 3187) — Cosponsors",
         "description": (
-            "Would allow religious institutions to develop affordable housing on their "
-            "land (Yes In God's Backyard), unlocking underutilized faith community sites "
-            "for housing production. Currently in committee. "
+            "Would allow religious institutions to develop multifamily and mixed-use housing "
+            "on their land by-right (Yes In God's Backyard), unlocking underutilized faith "
+            "community sites for housing production."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=3187&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 3187",
@@ -404,7 +404,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Affordable Housing Revenue (SB 3169) — Cosponsors",
         "description": (
             "Would create new revenue mechanisms to fund affordable housing construction "
-            "and preservation across Illinois. Currently in committee. "
+            "and preservation across Illinois."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=3169&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 3169",
@@ -418,7 +418,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Transit Opportunity Zone Act (SB 3212) — Cosponsors",
         "description": (
             "Would establish Transit Opportunity Zones to incentivize affordable housing "
-            "development near public transit. Currently in committee. "
+            "development near public transit."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=3212&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 3212",
@@ -432,7 +432,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Affordable Housing Revenue (SB 3738) — Cosponsors",
         "description": (
             "Would provide additional revenue sources for affordable housing programs "
-            "across Illinois. Currently in committee. "
+            "across Illinois."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=3738&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 3738",
@@ -445,8 +445,9 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-sb4162-sponsorship",
         "title": "Home for Good Act (SB 4162) — Cosponsors",
         "description": (
-            "Would strengthen tenant protections and provide resources for households "
-            "at risk of homelessness. Currently in committee. "
+            "Would fund affordable housing development and reentry support services for "
+            "justice-involved and formerly incarcerated individuals, including case management, "
+            "behavioral health, and job training."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4162&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 4162",
@@ -475,7 +476,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Northern Illinois Transit Authority Act (SB 2111) — Senate Vote",
         "description": (
             "Senate floor vote on SB 2111 transit funding bill. "
-            "Passed the Senate 47-4 and signed into law as Public Act 104-0457. "
+            "Passed the Senate 48-4 and signed into law as Public Act 104-0457. "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2111&GAID=18&DocTypeID=SB"
         ),
         "bill_identifier": "SB 2111",
@@ -523,7 +524,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Build Act — ADUs (HB 5626) — Cosponsors",
         "description": (
             "House companion to SB 4071 — would legalize accessory dwelling units (ADUs) "
-            "statewide. Currently in committee. "
+            "statewide."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5626&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 5626",
@@ -537,7 +538,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "YIGBY / Church Land Act (HB 5083) — Cosponsors",
         "description": (
             "House companion to SB 3187 — would allow religious institutions to develop "
-            "affordable housing on their land. Currently in committee. "
+            "multifamily and mixed-use housing on their land by-right."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5083&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 5083",
@@ -551,7 +552,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "ADU Reform (HB 1813) — Cosponsors",
         "description": (
             "Would reform accessory dwelling unit regulations statewide, enabling more "
-            "homeowners to add ADUs to their properties. Currently in committee. "
+            "homeowners to add ADUs to their properties."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=1813&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 1813",
@@ -578,7 +579,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Middle Housing Zoning (HB 1814) — Cosponsors",
         "description": (
             "Would require municipalities to allow middle housing types (duplexes, "
-            "triplexes, etc.) in residential zones statewide. Currently in committee. "
+            "triplexes, etc.) in residential zones statewide."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=1814&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 1814",
@@ -605,7 +606,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "First-Generation Homebuyer Loans (HB 4283) — Cosponsors",
         "description": (
             "Would create a loan program to assist first-generation homebuyers who lack "
-            "family wealth to fund down payments. Currently in committee. "
+            "family wealth to fund down payments."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4283&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4283",
@@ -619,7 +620,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "PHA — No Work Requirements (HB 4377) — Cosponsors",
         "description": (
             "Would prohibit public housing authorities from imposing work requirements "
-            "as a condition of housing assistance. Currently in committee. "
+            "as a condition of housing assistance."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4377&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4377",
@@ -632,8 +633,8 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-hb4571-sponsorship",
         "title": "Affordable Housing Code Reform (HB 4571) — Cosponsors",
         "description": (
-            "Would reform city codes to remove barriers to affordable housing construction "
-            "and preservation. Currently in committee. "
+            "Would authorize counties to acquire, manage, and transfer real property for "
+            "affordable housing development under the Counties Code."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4571&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4571",
@@ -646,7 +647,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-hb4571-vote",
         "title": "Affordable Housing Code Reform (HB 4571) — Committee Vote",
         "description": (
-            "House committee vote on HB 4571 affordable housing code reform bill (12-5 on 2026-02-18). "
+            "House committee vote on HB 4571 county affordable housing land acquisition bill (12-5 on 2026-02-18). "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4571&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4571",
@@ -660,7 +661,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Adaptive Reuse (HB 4835) — Cosponsors",
         "description": (
             "Would facilitate the conversion of underutilized commercial and office "
-            "buildings into residential units. Currently in committee. "
+            "buildings into residential units."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4835&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4835",
@@ -674,7 +675,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Affordable Housing Tax Incentive (HB 4841) — Cosponsors",
         "description": (
             "Would create income tax incentives for affordable housing development "
-            "and preservation. Currently in committee. "
+            "and preservation."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4841&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4841",
@@ -687,8 +688,8 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-hb4998-sponsorship",
         "title": "Statewide Tenant Protections (HB 4998) — Cosponsors",
         "description": (
-            "Would establish baseline tenant protections across Illinois, including "
-            "just-cause eviction requirements. Currently in committee. "
+            "Would establish baseline tenant protections across Illinois, including caps "
+            "on security deposits (one month's rent), application fees, and late fees. "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4998&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 4998",
@@ -701,8 +702,9 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-hb5198-sponsorship",
         "title": "Affordable Housing CILAs (HB 5198) — Cosponsors",
         "description": (
-            "Would expand affordable housing options for people with disabilities "
-            "through Community Integrated Living Arrangements (CILAs). Currently in committee. "
+            "Would reform the Affordable Housing Planning and Appeal Act, expanding public notice "
+            "requirements, broadening appeal eligibility to include supportive housing service "
+            "providers, and enhancing IHDA rulemaking authority."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5198&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 5198",
@@ -715,8 +717,8 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "base_slug": "il-hb5394-sponsorship",
         "title": "Credit Score Protections (HB 5394) — Cosponsors",
         "description": (
-            "Would prohibit landlords from using credit scores as the sole basis for "
-            "denying rental applications, expanding housing access. Currently in committee. "
+            "Would prohibit landlords from using credit scores as a disqualifying factor "
+            "for applicants who receive a local, state, or federal housing subsidy. "
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5394&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 5394",
@@ -730,7 +732,7 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
         "title": "Anti-Growth Law Preemption (HB 5616) — Cosponsors",
         "description": (
             "Would preempt local anti-growth ordinances that restrict new housing "
-            "development, removing barriers to housing production statewide. Currently in committee. "
+            "development, removing barriers to housing production statewide."
             "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5616&GAID=18&DocTypeID=HB"
         ),
         "bill_identifier": "HB 5616",
