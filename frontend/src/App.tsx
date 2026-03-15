@@ -53,6 +53,7 @@ const App: React.FC = () => {
                 <Route path="/representatives/:id" element={<EntityDetail />} />
                 <Route path="/dashboard/:slug" element={<ProjectDashboard />} />
                 <Route path="/scorecard" element={<ScorecardIndex />} />
+                <Route path="/scorecard/abundant-housing-illinois" element={<Navigate to="/scorecard/abundant-housing-illinois-chicago-city-council" replace />} />
                 <Route path="/scorecard/:groupSlug" element={<Scorecard />} />
                 <Route
                   path="/adu-opt-in-dashboard"
