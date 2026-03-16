@@ -283,75 +283,24 @@ python -m scripts.fetch_ward_zoning_data
 
 Key environment variables:
 
-| Variable                       | Description                                                                                    |
-| ------------------------------ | ---------------------------------------------------------------------------------------------- |
-| `DATABASE_PROVIDER`            | `sqlite` (default) or `postgres`                                                               |
-| `DATABASE_URL`                 | Database connection string                                                                     |
-| `AUTH_SECRET_KEY`              | Secret key for JWT token generation                                                            |
-| `ENVIRONMENT`                  | `development` or `production`                                                                  |
-| `ALLOWED_ORIGIN`               | CORS origin (defaults to `localhost:3000` and `localhost:5173`)                                |
-| `ADMIN_USERNAME`               | Email for the super admin created on cold start (set with `ADMIN_PASSWORD` to enable)          |
-| `ADMIN_PASSWORD`               | Password for the super admin created on cold start (set with `ADMIN_USERNAME` to enable)       |
-| `OPENSTATES_API_KEY`           | Required for Illinois legislature imports                                                      |
-| `CHICAGO_CITYSCAPE_API_KEY`    | Required for ward zoning data script                                                           |
-| `SEED_LOCATIONS`               | Locations to seed on cold start (e.g. `chicago`, `chicago,illinois`)                           |
-| `SEED_PROJECTS`                | Project sets to seed on cold start (e.g. `adu`, `example`, `scorecard`)                        |
-| `VITE_API_URL`                 | Frontend API base URL override                                                                 |
-| `VITE_APPLICATION_NAME`        | App display name (default: `Open Advocacy`)                                                    |
-| `VITE_APPLICATION_DESCRIPTION` | App tagline                                                                                    |
+| Variable                       | Description                                                                              |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| `DATABASE_PROVIDER`            | `sqlite` (default) or `postgres`                                                         |
+| `DATABASE_URL`                 | Database connection string                                                               |
+| `AUTH_SECRET_KEY`              | Secret key for JWT token generation                                                      |
+| `ENVIRONMENT`                  | `development` or `production`                                                            |
+| `ALLOWED_ORIGIN`               | CORS origin (defaults to `localhost:3000` and `localhost:5173`)                          |
+| `ADMIN_USERNAME`               | Email for the super admin created on cold start (set with `ADMIN_PASSWORD` to enable)    |
+| `ADMIN_PASSWORD`               | Password for the super admin created on cold start (set with `ADMIN_USERNAME` to enable) |
+| `OPENSTATES_API_KEY`           | Required for Illinois legislature imports                                                |
+| `CHICAGO_CITYSCAPE_API_KEY`    | Required for ward zoning data script                                                     |
+| `SEED_LOCATIONS`               | Locations to seed on cold start (e.g. `chicago`, `chicago,illinois`)                     |
+| `SEED_PROJECTS`                | Project sets to seed on cold start (e.g. `adu`, `example`, `scorecard`)                  |
+| `VITE_API_URL`                 | Frontend API base URL override                                                           |
+| `VITE_APPLICATION_NAME`        | App display name (default: `Open Advocacy`)                                              |
+| `VITE_APPLICATION_DESCRIPTION` | App tagline                                                                              |
 
 See `backend/app/core/config.py` for all available options.
-
-## Development Status
-
-This project is in active development.
-
-Currently completed:
-
-- ✅ Core backend and frontend implementation
-- ✅ Project and representative lookup functionality
-- ✅ Database integration with SQLite and PostgreSQL/PostGIS support
-- ✅ Representative lookup with geographic data integration using Nominatim/OpenStreetMap
-- ✅ Authentication, user management, and role-based access control
-- ✅ Extensible data import system with support for multiple locations and data sources
-- ✅ Multi-issue scorecard with cross-project alignment scoring
-- ✅ Chicago City Clerk eLMS vote/sponsorship data integration
-- ✅ Generic slug-based project dashboards with configurable display
-- ✅ Playwright E2E test coverage
-
-Planned additional work:
-
-- Improved bulk data management and import/export via admin UI
-- Better generalization of scorecard and dashboard systems
-- Enhanced mobile styling and user experience
-- Database migration system (currently tables are recreated on cold start)
-
-## Screenshots
-
-### Project List Page
-
-![Project List Page](./screenshots/project_list.png)
-
-### Project Page
-
-![Project Page](./screenshots/project.png)
-
-### Find Your Representatives Page
-
-![Find Your Representatives Page](./screenshots/find_your_representatives.png)
-
-### Representatives Page
-
-![Representative Page](./screenshots/representative.png)
-
-## Contributing
-
-Contributions are welcome! If you're interested in contributing, please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Implement your changes
-4. Submit a pull request
 
 ## License
 
