@@ -149,7 +149,12 @@ class ScorecardService:
                 # An alder not serving at the time shouldn't affect their score.
                 if status != EntityStatus.UNKNOWN:
                     total_scoreable += 1
-                    if status == sp.preferred_status:
+                    if sp.preferred_status == EntityStatus.SOLID_DISAPPROVAL:
+                        # Opposed bill: cosponsor (solid_disapproval) counts as -1 penalty.
+                        # Non-cosponsors (neutral) are neither penalized nor rewarded.
+                        if status == EntityStatus.SOLID_DISAPPROVAL:
+                            aligned_count -= 1
+                    elif status == sp.preferred_status:
                         aligned_count += 1
 
             entity_rows.append(

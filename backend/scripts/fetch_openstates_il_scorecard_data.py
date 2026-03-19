@@ -1,6 +1,6 @@
 """Fetch IL scorecard data from OpenStates and write it to app/data/il_scorecard_data.py.
 
-Calls the OpenStates API for each IL bill defined in ALL_IL_SCORECARD_PROJECTS,
+Calls the OpenStates API for each IL bill defined in ALL_IL_PROJECTS_TO_FETCH,
 extracts sponsorship or vote data, and writes a static Python module with the
 results.
 
@@ -26,7 +26,12 @@ from app.imports.sources.openstates import (
     openstates_vote_option_to_status,
 )
 from app.models.pydantic.models import EntityStatus
-from scripts.import_scorecard_projects import ALL_IL_SCORECARD_PROJECTS
+from scripts.scorecard_project_data import (
+    ALL_IL_SCORECARD_PROJECTS,
+    STC_ONLY_IL_SCORECARD_PROJECTS,
+)
+
+ALL_IL_PROJECTS_TO_FETCH = ALL_IL_SCORECARD_PROJECTS + STC_ONLY_IL_SCORECARD_PROJECTS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("fetch-openstates-il-scorecard")
@@ -160,13 +165,13 @@ async def main() -> None:
     # bill (e.g. SB 2111 Senate vote and House vote both come from the same OpenStates record).
     unique_fetches: set[tuple[str, str]] = {
         (str(p["bill_identifier"]), str(p["import_type"]))
-        for p in ALL_IL_SCORECARD_PROJECTS
+        for p in ALL_IL_PROJECTS_TO_FETCH
     }
     logger.info(
         "Fetching %d unique IL bill(s) from OpenStates (session=%s) for %d projects",
         len(unique_fetches),
         IL_SESSION,
-        len(ALL_IL_SCORECARD_PROJECTS),
+        len(ALL_IL_PROJECTS_TO_FETCH),
     )
 
     tasks = [
@@ -183,7 +188,7 @@ async def main() -> None:
             logger.warning("Skipping %s (%s) — no data", bill_identifier, import_type)
 
     result: dict[str, dict[str, str]] = {}
-    for project_def in ALL_IL_SCORECARD_PROJECTS:
+    for project_def in ALL_IL_PROJECTS_TO_FETCH:
         base_slug = str(project_def["base_slug"])
         bill_identifier = str(project_def["bill_identifier"])
         import_type = str(project_def["import_type"])

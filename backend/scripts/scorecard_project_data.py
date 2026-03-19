@@ -743,14 +743,151 @@ ALL_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
     },
 ]
 
-# IL Senate bill base slugs
-IL_SENATE_BASE_SLUGS: set[str] = {
+# ---------------------------------------------------------------------------
+# Strong Towns Chicago — STC-only IL project definitions (not in AHIL scorecards)
+# ---------------------------------------------------------------------------
+
+STC_ONLY_IL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
+    {
+        "base_slug": "il-hb2454-sponsorship",
+        "title": "Cyclists as Intended Road Users (HB 2454) — Cosponsors",
+        "description": (
+            "Would designate cyclists as intended users of all roadways (not just bikeways), "
+            "enabling accountability for road hazards and improving safety for people who bike. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2454&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 2454",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb2934-sponsorship",
+        "title": "Lower Urban Speed Limits (HB 2934) — Cosponsors",
+        "description": (
+            "Would lower the default urban speed limit from 30 to 20 mph and the alley speed limit "
+            "from 15 to 10 mph, reducing traffic fatalities and serious injuries. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=2934&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 2934",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb4281-sponsorship",
+        "title": "Speed Camera Expansion (HB 4281) — Cosponsors",
+        "description": (
+            "Would expand automated speed camera eligibility to cities with populations of 25,000 or more "
+            "located in counties with 3 million or more residents, extending proven safety tools to "
+            "Cook County suburbs. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4281&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 4281",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb4333-sponsorship",
+        "title": "Lower DUI BAC Threshold (HB 4333) — Cosponsors",
+        "description": (
+            "Would lower the DUI blood alcohol content threshold from 0.08% to 0.05%, "
+            "in line with NHTSA recommendations and adopted by other states to reduce drunk driving deaths. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4333&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 4333",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb4660-sponsorship",
+        "title": "Idaho Stop for Cyclists (HB 4660) — Cosponsors",
+        "description": (
+            "Would legalize the Idaho Stop, allowing cyclists to treat stop signs as yield signs — "
+            "proceeding through at a reasonable speed after yielding to cross traffic and pedestrians. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4660&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 4660",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb4925-sponsorship",
+        "title": "E-Bike Passenger Age Requirement (HB 4925) — Cosponsors",
+        "description": (
+            "Would require Class 3 e-bike operators carrying passengers under 18 to be at least 18 years old "
+            "(up from 16), improving safety for young passengers on higher-speed e-bikes. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=4925&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 4925",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_APPROVAL,
+        "status_labels": _IL_SPONSORSHIP_LABELS,
+    },
+    {
+        "base_slug": "il-hb5051-sponsorship",
+        "title": "Speed Camera Rollback (HB 5051) — STC Opposes — Cosponsors",
+        "description": (
+            "Would remove school and park safety zones from speed camera eligibility when the speed limit "
+            "drops to 20 mph, undermining automated enforcement in areas where children are present. "
+            "Strong Towns Chicago opposes this bill — cosponsors are shown in red as opposing our preferred outcome. "
+            "Source: https://www.ilga.gov/legislation/BillStatus.asp?DocNum=5051&GAID=18&DocTypeID=HB"
+        ),
+        "bill_identifier": "HB 5051",
+        "chamber": "house",
+        "import_type": "sponsorship",
+        "preferred_status": EntityStatus.SOLID_DISAPPROVAL,
+        "status_labels": {
+            "solid_disapproval": "Cosponsored",
+            "neutral": "Not a Cosponsor",
+            "unknown": "Not in Office",
+        },
+    },
+]
+
+# Abundant Housing Illinois — IL Senate bill slugs (all senate bills in shared pool)
+AHIL_IL_SENATE_BASE_SLUGS: set[str] = {
     p["base_slug"] for p in ALL_IL_SCORECARD_PROJECTS if p["chamber"] == "senate"
 }
 
-# IL House bill base slugs
-IL_HOUSE_BASE_SLUGS: set[str] = {
+# Abundant Housing Illinois — IL House bill slugs (all house bills in shared pool)
+AHIL_IL_HOUSE_BASE_SLUGS: set[str] = {
     p["base_slug"] for p in ALL_IL_SCORECARD_PROJECTS if p["chamber"] == "house"
+}
+
+# Strong Towns Chicago — IL Senate bill base slugs (housing/land-use bills only)
+STC_IL_SENATE_BASE_SLUGS: set[str] = {
+    "il-single-stair-sb4061-sponsorship",
+    "il-build-act-sb4062-sponsorship",
+    "il-build-act-sb4063-sponsorship",
+    "il-build-act-sb4064-sponsorship",
+    "il-yigby-sb3187-sponsorship",
+}
+
+# Strong Towns Chicago — IL House bill base slugs (housing + transportation/safety)
+STC_IL_HOUSE_BASE_SLUGS: set[str] = {
+    # Housing/land-use (shared with AHIL)
+    "il-hb4835-sponsorship",
+    "il-yigby-hb5083-sponsorship",
+    "il-hb5198-sponsorship",
+    # Transportation/safety (STC-specific, proponent)
+    "il-hb2454-sponsorship",
+    "il-hb2934-sponsorship",
+    "il-hb4281-sponsorship",
+    "il-hb4333-sponsorship",
+    "il-hb4660-sponsorship",
+    "il-hb4925-sponsorship",
+    # Opposed bill (cosponsors shown red)
+    "il-hb5051-sponsorship",
 }
 
 # ---------------------------------------------------------------------------
@@ -759,13 +896,31 @@ IL_HOUSE_BASE_SLUGS: set[str] = {
 
 GROUP_CONFIG: list[dict[str, Any]] = [
     {
-        "name": "Strong Towns Chicago",
+        "name": "Strong Towns Chicago — Chicago City Council",
         "description": "Empowers neighborhoods to incrementally build a more financially resilient city.",
         "jurisdiction_name": "Chicago City Council",
         "base_slugs": STC_BASE_SLUGS,
         "slug_prefix": "",
         "data_source": "elms",
         "representative_title": "Alderperson",
+    },
+    {
+        "name": "Strong Towns Chicago — IL House",
+        "description": "Empowers neighborhoods to incrementally build more financially resilient Illinois communities.",
+        "jurisdiction_name": "Illinois House of Representatives",
+        "base_slugs": STC_IL_HOUSE_BASE_SLUGS,
+        "slug_prefix": "stc-il-house-",
+        "data_source": "il_openstates",
+        "representative_title": "Representative",
+    },
+    {
+        "name": "Strong Towns Chicago — IL Senate",
+        "description": "Empowers neighborhoods to incrementally build more financially resilient Illinois communities.",
+        "jurisdiction_name": "Illinois State Senate",
+        "base_slugs": STC_IL_SENATE_BASE_SLUGS,
+        "slug_prefix": "stc-il-senate-",
+        "data_source": "il_openstates",
+        "representative_title": "Senator",
     },
     {
         "name": "Abundant Housing Illinois — Chicago City Council",
@@ -780,7 +935,7 @@ GROUP_CONFIG: list[dict[str, Any]] = [
         "name": "Abundant Housing Illinois — IL House",
         "description": "Advocates for more homes in more places across Illinois.",
         "jurisdiction_name": "Illinois House of Representatives",
-        "base_slugs": IL_HOUSE_BASE_SLUGS,
+        "base_slugs": AHIL_IL_HOUSE_BASE_SLUGS,
         "slug_prefix": "ahil-house-",
         "data_source": "il_openstates",
         "representative_title": "Representative",
@@ -789,7 +944,7 @@ GROUP_CONFIG: list[dict[str, Any]] = [
         "name": "Abundant Housing Illinois — IL Senate",
         "description": "Advocates for more homes in more places across Illinois.",
         "jurisdiction_name": "Illinois State Senate",
-        "base_slugs": IL_SENATE_BASE_SLUGS,
+        "base_slugs": AHIL_IL_SENATE_BASE_SLUGS,
         "slug_prefix": "ahil-senate-",
         "data_source": "il_openstates",
         "representative_title": "Senator",

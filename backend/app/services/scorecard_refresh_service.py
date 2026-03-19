@@ -39,7 +39,10 @@ from scripts.scorecard_project_data import (
     ALL_IL_SCORECARD_PROJECTS,
     ALL_SCORECARD_PROJECTS,
     GROUP_CONFIG,
+    STC_ONLY_IL_SCORECARD_PROJECTS,
 )
+
+ALL_IL_PROJECTS_TO_REFRESH = ALL_IL_SCORECARD_PROJECTS + STC_ONLY_IL_SCORECARD_PROJECTS
 
 logger = logging.getLogger(__name__)
 
@@ -260,7 +263,7 @@ async def run_scorecard_refresh(
             all_projects_for_source = ALL_SCORECARD_PROJECTS
             lookups = elms_lookups
         else:
-            all_projects_for_source = ALL_IL_SCORECARD_PROJECTS
+            all_projects_for_source = ALL_IL_PROJECTS_TO_REFRESH
             lookups = il_lookups
 
         group_projects = [
@@ -282,6 +285,7 @@ async def run_scorecard_refresh(
 
             status_lookup = lookups.get(base_slug, {})
             import_type = str(project_def["import_type"])
+            preferred_status = EntityStatus(project_def["preferred_status"])
 
             default_status = (
                 EntityStatus.NEUTRAL
@@ -302,6 +306,15 @@ async def run_scorecard_refresh(
                     normalized_name = normalize_il_name(entity.name)
 
                 entity_status = status_lookup.get(normalized_name, default_status)
+
+                # For sponsorship projects where the group opposes the bill, flip cosponsors
+                # to solid_disapproval so they render red instead of green.
+                if (
+                    import_type == "sponsorship"
+                    and preferred_status == EntityStatus.SOLID_DISAPPROVAL
+                    and normalized_name in status_lookup
+                ):
+                    entity_status = EntityStatus.SOLID_DISAPPROVAL
 
                 # If paired vote data exists and this entity isn't in it, they weren't
                 # serving at the time — override to UNKNOWN.
@@ -383,12 +396,12 @@ async def _fetch_il_lookups() -> tuple[dict[str, dict[str, EntityStatus]], int]:
     # Deduplicate by (bill_identifier, import_type)
     unique_fetches: set[tuple[str, str]] = {
         (str(p["bill_identifier"]), str(p["import_type"]))
-        for p in ALL_IL_SCORECARD_PROJECTS
+        for p in ALL_IL_PROJECTS_TO_REFRESH
     }
     logger.info(
         "Fetching %d unique IL bill(s) from OpenStates for %d projects",
         len(unique_fetches),
-        len(ALL_IL_SCORECARD_PROJECTS),
+        len(ALL_IL_PROJECTS_TO_REFRESH),
     )
 
     tasks = [

@@ -39,6 +39,7 @@ from scripts.scorecard_project_data import (
     ALL_IL_SCORECARD_PROJECTS,
     ALL_SCORECARD_PROJECTS,
     GROUP_CONFIG,
+    STC_ONLY_IL_SCORECARD_PROJECTS,
 )
 
 # ---------------------------------------------------------------------------
@@ -131,11 +132,14 @@ async def import_scorecard_projects() -> None:
             jurisdiction_name,
         )
 
-        # Determine the correct project list for this group's data source
+        # Determine the correct project list for this group's data source.
+        # STC groups may include STC-only bills not in the AHIL/shared list.
         if data_source == "elms":
             all_projects_for_source = ALL_SCORECARD_PROJECTS
         else:
-            all_projects_for_source = ALL_IL_SCORECARD_PROJECTS
+            all_projects_for_source = (
+                ALL_IL_SCORECARD_PROJECTS + STC_ONLY_IL_SCORECARD_PROJECTS
+            )
 
         group_projects = [
             p for p in all_projects_for_source if p["base_slug"] in base_slugs
@@ -229,6 +233,7 @@ async def import_scorecard_projects() -> None:
             status_lookup = _get_entity_status_lookup(base_slug, data_source, logger)
 
             import_type = str(project_def["import_type"])
+            preferred_status = EntityStatus(project_def["preferred_status"])
             # Sponsorship cache only contains cosponsors; absent legislators didn't
             # cosponsor but were not necessarily out of office.
             # For ELMS: vote data determines "not in office" (UNKNOWN).
@@ -257,6 +262,15 @@ async def import_scorecard_projects() -> None:
                 entity_status = status_lookup.get(
                     normalized_entity_name, default_status
                 )
+
+                # For sponsorship projects where the group opposes the bill, flip cosponsors
+                # to solid_disapproval so they render red instead of green.
+                if (
+                    import_type == "sponsorship"
+                    and preferred_status == EntityStatus.SOLID_DISAPPROVAL
+                    and normalized_entity_name in status_lookup
+                ):
+                    entity_status = EntityStatus.SOLID_DISAPPROVAL
 
                 # If paired vote data exists and this entity isn't in it, they weren't
                 # serving at the time — override to UNKNOWN.

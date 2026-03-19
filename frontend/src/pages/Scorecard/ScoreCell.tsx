@@ -11,7 +11,9 @@ interface ScoreCellProps {
 const ScoreCell: React.FC<ScoreCellProps> = ({ scoreCount, totalScoreable, maxRatio }) => {
   const ratio = totalScoreable > 0 ? scoreCount / totalScoreable : 0;
   const pct = Math.round(ratio * 100);
-  const color = getScoreColor(ratio, maxRatio);
+  const isNegative = scoreCount < 0;
+  const color = isNegative ? '#dc2626' : getScoreColor(ratio, maxRatio);
+  const barPct = Math.max(0, Math.min(100, pct));
 
   return (
     <Tooltip title={`${pct}% score (${scoreCount} of ${totalScoreable} issues)`} arrow>
@@ -21,7 +23,7 @@ const ScoreCell: React.FC<ScoreCellProps> = ({ scoreCount, totalScoreable, maxRa
         </Typography>
         <LinearProgress
           variant="determinate"
-          value={pct}
+          value={barPct}
           sx={{
             width: '100%',
             height: 4,
