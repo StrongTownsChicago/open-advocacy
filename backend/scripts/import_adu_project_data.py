@@ -200,9 +200,14 @@ PROJECT_LINK = "https://www.strongtownschicago.org/milestones/adu-legalization-w
 
 GROUP_CONFIG = [
     {
-        "name": "Strong Towns Chicago",
+        "name": "Strong Towns Chicago — Chicago City Council",
         "description": "Empowers neighborhoods to incrementally build a more financially resilient city.",
         "slug": "adu-opt-in-dashboard",
+    },
+    {
+        "name": "Abundant Housing Illinois — Chicago City Council",
+        "description": "Advocates for more homes in more places across Illinois.",
+        "slug": "ahil-adu-opt-in-dashboard",
     },
 ]
 
