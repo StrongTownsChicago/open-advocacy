@@ -258,10 +258,9 @@ ALL_SCORECARD_PROJECTS: list[dict[str, Any]] = [
     },
 ]
 
-# Strong Towns Chicago: ADU, Parking, Single Stair, CHA Housing (no HED, NWPO, GSH)
+# Strong Towns Chicago: ADU, Parking, Single Stair (no CHA Housing, HED, NWPO, GSH)
 STC_BASE_SLUGS = {
     "single-stair-ordinance",
-    "cha-housing-ordinance",
     "adu-citywide-vote",
     "adu-citywide-sponsorship",
     "no-parking-minimums-vote",
