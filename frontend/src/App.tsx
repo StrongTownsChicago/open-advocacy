@@ -32,7 +32,8 @@ const ConditionalHeader: React.FC = () => {
   const isDashboard = DASHBOARD_PATH_PREFIXES.some(prefix =>
     location.pathname.startsWith(prefix)
   );
-  return isDashboard ? null : <Header />;
+  const isEmbed = new URLSearchParams(location.search).get('embed') === '1';
+  return isDashboard || isEmbed ? null : <Header />;
 };
 
 const App: React.FC = () => {

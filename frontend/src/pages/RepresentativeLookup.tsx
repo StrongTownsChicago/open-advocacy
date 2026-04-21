@@ -23,13 +23,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import { Entity } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRepresentativeLookup } from '../hooks/useRepresentativeLookup';
 import RepresentativeCard from '../components/Entity/RepresentativeCard';
 
 const RepresentativeLookup: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEmbed = searchParams.get('embed') === '1';
 
   const {
     address,
@@ -195,7 +197,7 @@ const RepresentativeLookup: React.FC = () => {
         </MuiAlert>
       </Snackbar>
 
-      <Dialog open={showBackModal} onClose={() => setShowBackModal(false)}>
+      <Dialog open={!isEmbed && showBackModal} onClose={() => setShowBackModal(false)}>
         <DialogTitle>Done viewing your representatives?</DialogTitle>
         <DialogActions>
           <Button
