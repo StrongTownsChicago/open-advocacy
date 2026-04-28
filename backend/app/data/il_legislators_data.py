@@ -28,13 +28,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1991-06-18",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:39.198974+00:00",
             "updated_at": "2026-04-18T00:41:50.951649+00:00",
             "openstates_url": "https://openstates.org/person/aaron-ortiz-55w0dTiU98bQQfi62NSQ68/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Ortíz",
@@ -184,13 +182,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1989-07-24",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:44.065086+00:00",
             "updated_at": "2026-04-18T00:42:13.380608+00:00",
             "openstates_url": "https://openstates.org/person/abdelnasser-rashid-1yfLfC7MinO4y4Q57BkWEE/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Rashid",
@@ -312,13 +308,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1984-03-17",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:13.674749+00:00",
             "updated_at": "2026-04-18T00:42:26.149712+00:00",
             "openstates_url": "https://openstates.org/person/adam-niemerg-4bEmk0fuH8XNAfDTzFcyBu/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Niemerg",
@@ -471,13 +465,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:07.189115+00:00",
             "updated_at": "2026-04-18T00:41:35.982319+00:00",
             "openstates_url": "https://openstates.org/person/amy-elik-5ORI0DqvJ7w8BaxnsAAl3B/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Elik",
@@ -619,13 +611,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:43.007050+00:00",
             "updated_at": "2026-04-18T00:42:24.193583+00:00",
             "openstates_url": "https://openstates.org/person/amy-grant-7ZatzXo2XK4n1hF0ntSvki/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Grant",
@@ -795,13 +785,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-12-16T18:47:59.610570+00:00",
             "updated_at": "2026-04-18T00:42:02.915506+00:00",
             "openstates_url": "https://openstates.org/person/angie-guerrero-cuellar-4EbvbJTpyot8JrdY7P7CDS/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Guerrero-Cuellar",
@@ -939,8 +927,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1968-04-28",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:59.603325+00:00",
             "updated_at": "2026-04-18T00:41:30.105139+00:00",
             "openstates_url": "https://openstates.org/person/ann-williams-5YnM4Pf8QTW4eskXYSjey/",
@@ -1115,8 +1102,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:55.957474+00:00",
             "updated_at": "2026-04-18T00:41:10.411512+00:00",
             "openstates_url": "https://openstates.org/person/anna-moeller-7PYHJs2uw3UNPMDvx7wM3R/",
@@ -1275,13 +1261,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:52.726511+00:00",
             "updated_at": "2026-04-18T00:41:49.375651+00:00",
             "openstates_url": "https://openstates.org/person/anne-stava-4Jw4tQFErBB62nurYyP4aW/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Stava",
@@ -1459,8 +1443,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1970-07-25",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:02.038253+00:00",
             "updated_at": "2026-04-18T00:41:24.967572+00:00",
             "openstates_url": "https://openstates.org/person/anthony-deluca-5JrY3LSwQsCgIjqyfwPdbw/",
@@ -1619,13 +1602,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-03-20T05:07:04.181198+00:00",
             "updated_at": "2026-04-18T00:42:37.297197+00:00",
             "openstates_url": "https://openstates.org/person/barbara-hernandez-7eA16mdk2QIB3afk7gaznB/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Hernandez",
@@ -1783,13 +1764,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:42.883883+00:00",
             "updated_at": "2026-04-18T00:42:34.733193+00:00",
             "openstates_url": "https://openstates.org/person/bill-hauter-7eQmxRMPcrfPQRuKg8L0yq/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Hauter",
@@ -1919,13 +1898,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1982-03-10",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:46.107260+00:00",
             "updated_at": "2026-04-18T00:42:02.309675+00:00",
             "openstates_url": "https://openstates.org/person/blaine-wilhour-2R4hAD94kYSTuq92EO9x94/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Wilhour",
@@ -2063,13 +2040,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:50.504658+00:00",
             "updated_at": "2026-04-18T00:41:19.359708+00:00",
             "openstates_url": "https://openstates.org/person/bob-morgan-2bdBmGZGTieR2rVNWGgxfR/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Morgan",
@@ -2223,8 +2198,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1969-10-02",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:47.388493+00:00",
             "updated_at": "2026-04-18T00:41:12.687853+00:00",
             "openstates_url": "https://openstates.org/person/bob-rita-1qujmv3DmqMlBt4HCU4sTF/",
@@ -2260,7 +2234,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Robert \"Bob\" Rita",
+                    "name": 'Robert "Bob" Rita',
                     "note": "",
                 },
                 {
@@ -2268,7 +2242,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Rita, Robert \"Bob\"",
+                    "name": 'Rita, Robert "Bob"',
                     "note": "",
                 },
             ],
@@ -2387,13 +2361,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "2000-01-08",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:41.019015+00:00",
             "updated_at": "2026-04-18T00:41:11.003096+00:00",
             "openstates_url": "https://openstates.org/person/brad-fritts-5nOgmdhhjsa3BdTCz9Bgm0/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Fritts",
@@ -2531,8 +2503,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1961-07-22",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:58.194862+00:00",
             "updated_at": "2026-04-18T00:41:45.071553+00:00",
             "openstates_url": "https://openstates.org/person/brad-halbrook-6pNk6sx7QUmqXsj8RRC9F8/",
@@ -2726,13 +2697,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1963-12-07",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-01-05T11:05:22.756444+00:00",
             "updated_at": "2026-04-18T00:41:43.117718+00:00",
             "openstates_url": "https://openstates.org/person/brad-stephens-2FAdASxzYOnQuuD6obRriH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Stephens",
@@ -2882,13 +2851,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-01-03T20:38:25.908425+00:00",
             "updated_at": "2026-04-18T00:42:30.746889+00:00",
             "openstates_url": "https://openstates.org/person/brandun-schweizer-4Gzg7WMv5xm6FBHqomYAZE/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "B. Schweizer",
@@ -3009,8 +2976,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1979-07-12",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:50.337579+00:00",
             "updated_at": "2026-04-18T00:42:38.258006+00:00",
             "openstates_url": "https://openstates.org/person/c-d-davidsmeyer-1iEJjsKbXYDLERjsCdArDD/",
@@ -3030,11 +2996,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Christopher \"C.D\" Davidsmeyer",
+                    "name": 'Christopher "C.D" Davidsmeyer',
                     "note": "",
                 },
                 {
-                    "name": "Christopher \"C.D.\" Davidsmeyer",
+                    "name": 'Christopher "C.D." Davidsmeyer',
                     "note": "",
                 },
                 {
@@ -3192,8 +3158,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:13.055295+00:00",
             "updated_at": "2026-04-18T00:41:44.587377+00:00",
             "openstates_url": "https://openstates.org/person/camille-lilly-51V1hi20teKSjGJXCfCFP8/",
@@ -3372,8 +3337,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:01.685992+00:00",
             "updated_at": "2026-04-18T00:41:12.082031+00:00",
             "openstates_url": "https://openstates.org/person/carol-ammons-5jE4aTa0UPVv3GGqzEYmtv/",
@@ -3524,8 +3488,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:08.157849+00:00",
             "updated_at": "2026-04-18T00:42:32.604688+00:00",
             "openstates_url": "https://openstates.org/person/charlie-meier-5y7q0Pll42hLgEHLID2AZn/",
@@ -3696,13 +3659,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1954-06-15",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:44.921934+00:00",
             "updated_at": "2026-04-18T00:41:29.584482+00:00",
             "openstates_url": "https://openstates.org/person/chris-miller-7TUiP6k4rg4iJNi6qnAxeV/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "C. Miller",
@@ -3848,13 +3809,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1971-02-06",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:36.632516+00:00",
             "updated_at": "2026-04-18T00:41:59.587151+00:00",
             "openstates_url": "https://openstates.org/person/chris-welch-1VPEEKoBc9UI4EsMWOvYA/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "C. Welch",
@@ -3865,7 +3824,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Emanuel \"Chris\" Welch",
+                    "name": 'Emanuel "Chris" Welch',
                     "note": "",
                 },
                 {
@@ -3996,13 +3955,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:49.243150+00:00",
             "updated_at": "2026-04-18T00:41:51.533573+00:00",
             "openstates_url": "https://openstates.org/person/curtis-tarver-3im3RrWcyXz86U3lf6xjg7/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "C. Tarver",
@@ -4148,13 +4105,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:36.647299+00:00",
             "updated_at": "2026-04-18T00:42:06.713542+00:00",
             "openstates_url": "https://openstates.org/person/dan-didech-60cWbxftBmkZtTgU6RbZZJ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Didech",
@@ -4316,8 +4271,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1959-07-30",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:01.860956+00:00",
             "updated_at": "2026-04-18T00:41:34.832218+00:00",
             "openstates_url": "https://openstates.org/person/dan-swanson-3MjleloK4c0NR9at3NdVjF/",
@@ -4480,13 +4434,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:37.642842+00:00",
             "updated_at": "2026-04-18T00:41:53.064232+00:00",
             "openstates_url": "https://openstates.org/person/dan-ugaste-5DTohwmnBn0vkBRILHahgO/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Ugaste",
@@ -4632,8 +4584,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:12.519103+00:00",
             "updated_at": "2026-04-18T00:41:47.899620+00:00",
             "openstates_url": "https://openstates.org/person/dave-severin-6CRqnmfRSQ8DQWNfj3TCtb/",
@@ -4795,13 +4746,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:05.608815+00:00",
             "updated_at": "2026-04-18T00:42:17.447311+00:00",
             "openstates_url": "https://openstates.org/person/dave-vella-2qivMKlrXaLAGI3ew8TFaq/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Vella",
@@ -4935,13 +4884,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:01.957389+00:00",
             "updated_at": "2026-04-18T00:41:27.935615+00:00",
             "openstates_url": "https://openstates.org/person/david-friess-5EHKgXBGDtVHSUvqrspY1m/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Friess",
@@ -5083,13 +5030,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:45.527243+00:00",
             "updated_at": "2026-04-18T00:42:25.138374+00:00",
             "openstates_url": "https://openstates.org/person/debbie-meyers-martin-6s8Ttd09eyWzzAofHbR26M/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Meyers-Martin",
@@ -5231,13 +5176,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:09.188414+00:00",
             "updated_at": "2026-04-18T00:42:13.887829+00:00",
             "openstates_url": "https://openstates.org/person/dee-avelar-2JS0u0b360F5wfTXNSjOYf/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Avelar, D.",
@@ -5387,13 +5330,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:44.459041+00:00",
             "updated_at": "2026-04-18T00:41:41.476834+00:00",
             "openstates_url": "https://openstates.org/person/dennis-tipsword-bTWGRfrUo2P0kVfyk5532/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Tipsword",
@@ -5519,13 +5460,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:38.836290+00:00",
             "updated_at": "2026-04-18T00:42:21.698809+00:00",
             "openstates_url": "https://openstates.org/person/diane-blair-sherlock-6VM6FgxY6VoGbz0IAo7wct/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Blair-Sherlock, D.",
@@ -5655,13 +5594,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1996-12-25",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-03-24T05:06:30.890343+00:00",
             "updated_at": "2026-04-18T00:41:11.514910+00:00",
             "openstates_url": "https://openstates.org/person/edgar-gonzalez-759yo2PYi6SkBTRtFzBG3x/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "E. Gonzalez",
@@ -5823,13 +5760,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-01-05T11:05:22.174932+00:00",
             "updated_at": "2026-04-18T00:41:37.060008+00:00",
             "openstates_url": "https://openstates.org/person/eva-dina-delgado-27eCvPSG2Cw3CQS2u7lrH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Delgado, E.",
@@ -5983,8 +5918,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:13.231590+00:00",
             "updated_at": "2026-04-18T00:42:35.219364+00:00",
             "openstates_url": "https://openstates.org/person/fred-crespo-1hicQyF5xPQijLe0F5ugTS/",
@@ -6147,13 +6081,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:38.566727+00:00",
             "updated_at": "2026-04-18T00:42:24.661175+00:00",
             "openstates_url": "https://openstates.org/person/gregg-johnson-1At0ShEFYaYevKkz1K94RD/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "G. Johnson",
@@ -6275,13 +6207,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:38.340946+00:00",
             "updated_at": "2026-04-18T00:41:57.118367+00:00",
             "openstates_url": "https://openstates.org/person/harry-benton-eU91yCxriXKc14migUBSQ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Benton, H.",
@@ -6407,13 +6337,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:33.844835+00:00",
             "updated_at": "2026-04-18T00:41:14.436675+00:00",
             "openstates_url": "https://openstates.org/person/hoan-huynh-63fGUezYtvEDXu1xOKpTLT/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "H. Huynh",
@@ -6539,13 +6467,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:10.209822+00:00",
             "updated_at": "2026-04-18T00:41:34.391317+00:00",
             "openstates_url": "https://openstates.org/person/jackie-haas-2qijZXxq42B6aPexeJVlf2/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Haas, J.",
@@ -6691,8 +6617,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1972-10-07",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:49.154877+00:00",
             "updated_at": "2026-04-18T00:41:53.650468+00:00",
             "openstates_url": "https://openstates.org/person/jaime-andrade-5rrdqbEF21Qg3TZ96XGb5H/",
@@ -6867,13 +6792,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:11.655263+00:00",
             "updated_at": "2026-04-18T00:42:08.938381+00:00",
             "openstates_url": "https://openstates.org/person/janet-yang-rohr-6hC4MNwle8iWfDNhPUIwd0/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Yang Rohr",
@@ -7007,13 +6930,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-05-23T00:05:59.632207+00:00",
             "updated_at": "2026-04-18T00:42:22.139121+00:00",
             "openstates_url": "https://openstates.org/person/jason-bunting-2GHtmN0zgFdPflg1THeaQe/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Bunting, J.",
@@ -7147,8 +7068,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1961-11-06",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:59.408159+00:00",
             "updated_at": "2026-04-18T00:42:07.882709+00:00",
             "openstates_url": "https://openstates.org/person/jay-hoffman-11wTELgZNEZ4NlcCXogRFN/",
@@ -7327,13 +7247,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:44.116374+00:00",
             "updated_at": "2026-04-18T00:42:00.776597+00:00",
             "openstates_url": "https://openstates.org/person/jed-davis-5ANbaZBWdkbjKVVY7z04nm/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Davis, J.",
@@ -7459,8 +7377,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:08.703037+00:00",
             "updated_at": "2026-04-18T00:41:16.227399+00:00",
             "openstates_url": "https://openstates.org/person/jeff-keicher-UpANYEUZMQndG4qkWSbLI/",
@@ -7619,8 +7536,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:16.199330+00:00",
             "updated_at": "2026-04-18T00:42:03.914449+00:00",
             "openstates_url": "https://openstates.org/person/jehan-gordon-booth-4a5VhigCPsIuOhFpwM0v29/",
@@ -7799,13 +7715,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:40.438288+00:00",
             "updated_at": "2026-04-18T00:41:24.478297+00:00",
             "openstates_url": "https://openstates.org/person/jen-gong-gershowitz-6Jir0wkcxdlgcYycpuCpuK/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Gong-Gershowitz, J.",
@@ -7967,13 +7881,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:36.712214+00:00",
             "updated_at": "2026-04-18T00:41:15.693458+00:00",
             "openstates_url": "https://openstates.org/person/jennifer-sanalitro-lzJOyJs9JiVDLNm0i9PH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Sanalitro",
@@ -8087,8 +7999,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1977-04-13",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:12.346112+00:00",
             "updated_at": "2026-04-18T00:41:48.917489+00:00",
             "openstates_url": "https://openstates.org/person/joe-sosnowski-33XAS8iKMcYWrRKM42QE2L/",
@@ -8259,8 +8170,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:14.798435+00:00",
             "updated_at": "2026-04-18T00:41:46.132174+00:00",
             "openstates_url": "https://openstates.org/person/john-cabello-5U9AgCR6gZ3nNZsFyP24vC/",
@@ -8427,13 +8337,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:40.097257+00:00",
             "updated_at": "2026-04-18T00:42:19.819321+00:00",
             "openstates_url": "https://openstates.org/person/joyce-mason-4aoY4MNRCwIbAWqMMOmda8/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Mason",
@@ -8579,13 +8487,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2026-01-29T06:36:37.667612+00:00",
             "updated_at": "2026-04-18T00:41:56.153233+00:00",
             "openstates_url": "https://openstates.org/person/justin-cochran-5M6GWcQP4g0ss9qhGhs8wA/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Cochran",
@@ -8671,8 +8577,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1980-04-24",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:54.548234+00:00",
             "updated_at": "2026-04-18T00:41:27.459699+00:00",
             "openstates_url": "https://openstates.org/person/justin-slaughter-5vB5xHfVnyqtlBLC5WwDsk/",
@@ -8823,13 +8728,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1985-05-12",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-03-20T05:07:06.146104+00:00",
             "updated_at": "2026-04-18T00:41:23.054966+00:00",
             "openstates_url": "https://openstates.org/person/kam-buckner-4F7mYFxTyoYa9zGPSmUuYo/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Buckner, K.",
@@ -8987,8 +8890,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:05.326084+00:00",
             "updated_at": "2026-04-18T00:42:14.825499+00:00",
             "openstates_url": "https://openstates.org/person/katie-stuart-6I4UI4YuA9DipGC67IOh8N/",
@@ -9143,8 +9045,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:06.023864+00:00",
             "updated_at": "2026-04-18T00:41:58.169314+00:00",
             "openstates_url": "https://openstates.org/person/kelly-cassidy-6rJVxNUwABwjoslyZ88cZn/",
@@ -9315,13 +9216,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1993-02-18",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:48.507857+00:00",
             "updated_at": "2026-04-18T00:42:28.751273+00:00",
             "openstates_url": "https://openstates.org/person/kevin-olickal-5vYGVaSRtNswgRtUHm2sxn/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "K. Olickal",
@@ -9455,13 +9354,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:36.773873+00:00",
             "updated_at": "2026-04-18T00:41:39.999677+00:00",
             "openstates_url": "https://openstates.org/person/kevin-schmidt-1AT0aBTwlPxHy24cNiaDWQ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "K. Schmidt",
@@ -9579,13 +9476,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-05-23T00:05:14.918239+00:00",
             "updated_at": "2026-04-18T00:41:09.923577+00:00",
             "openstates_url": "https://openstates.org/person/kimberly-du-buclet-1neBYFfZXRiBLjt0TtzJpk/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Du Buclet, K.",
@@ -9715,13 +9610,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:23:43.150194+00:00",
             "updated_at": "2026-04-18T00:41:21.554543+00:00",
             "openstates_url": "https://openstates.org/person/kyle-moore-3OcQVAdgAbQxmEjovck9il/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "K. Moore",
@@ -9830,8 +9723,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:48.981249+00:00",
             "updated_at": "2026-04-18T00:41:13.236512+00:00",
             "openstates_url": "https://openstates.org/person/la-shawn-ford-4Pm4aMOQbBJkn4jGXirA6t/",
@@ -10026,8 +9918,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:01.512904+00:00",
             "updated_at": "2026-04-18T00:42:05.620073+00:00",
             "openstates_url": "https://openstates.org/person/larry-walsh-4pkdNVGq8ozDjAgtCuew4r/",
@@ -10071,7 +9962,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Lawrence \"Larry\" Walsh, Jr.",
+                    "name": 'Lawrence "Larry" Walsh, Jr.',
                     "note": "",
                 },
                 {
@@ -10091,7 +9982,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Walsh Jr., Lawrence \"Larry\"",
+                    "name": 'Walsh Jr., Lawrence "Larry"',
                     "note": "",
                 },
             ],
@@ -10214,13 +10105,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:34.057765+00:00",
             "updated_at": "2026-04-18T00:41:09.449649+00:00",
             "openstates_url": "https://openstates.org/person/laura-faver-dias-7K8P1Wr6DSZ2QD9er9zqlO/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Dias, L.",
@@ -10370,13 +10259,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:46.828979+00:00",
             "updated_at": "2026-04-18T00:41:39.047852+00:00",
             "openstates_url": "https://openstates.org/person/lilian-jimenez-18bBdulrZZ9ywEn20GntPL/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Jiménez",
@@ -10514,13 +10401,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-01-05T11:05:22.964572+00:00",
             "updated_at": "2026-04-18T00:41:36.441695+00:00",
             "openstates_url": "https://openstates.org/person/lindsey-lapointe-7840IVZkBkhM8f6w5Ht9J2/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "L. LaPointe",
@@ -10662,13 +10547,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:22:25.117745+00:00",
             "updated_at": "2026-04-18T00:41:30.786159+00:00",
             "openstates_url": "https://openstates.org/person/lisa-davis-2w4rhcnZ1h5G2uzNzonsPa/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "L. Davis",
@@ -10762,8 +10645,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1961-07-14",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:17.607111+00:00",
             "updated_at": "2026-04-18T00:42:36.665663+00:00",
             "openstates_url": "https://openstates.org/person/lisa-hernandez-5ZAQyMYmcCEmEAEUMoLS3h/",
@@ -10783,7 +10665,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Elizabeth \"Lisa\" Hernandez",
+                    "name": 'Elizabeth "Lisa" Hernandez',
                     "note": "",
                 },
                 {
@@ -10953,8 +10835,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:02.563018+00:00",
             "updated_at": "2026-04-18T00:41:24.028414+00:00",
             "openstates_url": "https://openstates.org/person/marcus-evans-2NCO2BQz2HYCrUDP5Y8Mad/",
@@ -11129,13 +11010,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:07.676187+00:00",
             "updated_at": "2026-04-18T00:42:11.562630+00:00",
             "openstates_url": "https://openstates.org/person/margaret-croke-5IH4VyMgio6rDMtUFDY54c/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Croke, M.",
@@ -11273,13 +11152,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2026-01-29T06:37:14.577257+00:00",
             "updated_at": "2026-04-18T00:42:16.978262+00:00",
             "openstates_url": "https://openstates.org/person/margaret-delarosa-4obIMK7S2pFGvfYP0mS7Xk/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "M. DeLaRosa",
@@ -11365,13 +11242,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:23:13.289029+00:00",
             "updated_at": "2026-04-18T00:42:34.246240+00:00",
             "openstates_url": "https://openstates.org/person/marti-deuter-6Kd9VsazoFFB70k7Portq/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Deuter, M.",
@@ -11481,13 +11356,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:13.286847+00:00",
             "updated_at": "2026-04-18T00:42:32.151426+00:00",
             "openstates_url": "https://openstates.org/person/marty-mclaughlin-7AZqxtWhv4Wd5npw2wdSip/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "M. McLaughlin",
@@ -11629,13 +11502,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:38.050928+00:00",
             "updated_at": "2026-04-18T00:42:00.136029+00:00",
             "openstates_url": "https://openstates.org/person/mary-beth-canty-2DRoAMENRMV0ooVSttikOI/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Canty",
@@ -11777,13 +11648,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-05-23T00:05:30.816170+00:00",
             "updated_at": "2026-04-18T00:42:27.187697+00:00",
             "openstates_url": "https://openstates.org/person/mary-gill-7MuC2lqPfAQAANAAshhvCW/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Gill, M.",
@@ -11913,13 +11782,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:46.567169+00:00",
             "updated_at": "2026-04-18T00:41:46.748537+00:00",
             "openstates_url": "https://openstates.org/person/matt-hanson-d6VSZBCmvBEyfRYZbQpbV/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Hanson, M.",
@@ -12049,13 +11916,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:06.380938+00:00",
             "updated_at": "2026-04-18T00:42:33.126150+00:00",
             "openstates_url": "https://openstates.org/person/maura-hirschauer-7HaSvCQo1OIzUcaj43tX8S/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Hirschauer, M.",
@@ -12193,13 +12058,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1985-06-20",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:36.832780+00:00",
             "updated_at": "2026-04-18T00:42:23.618696+00:00",
             "openstates_url": "https://openstates.org/person/maurice-west-3dc5XqUR9Log0QbO9zATzL/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "M. West",
@@ -12353,13 +12216,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1975-06-23",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-12-16T18:47:55.458369+00:00",
             "updated_at": "2026-04-18T00:41:55.188014+00:00",
             "openstates_url": "https://openstates.org/person/michael-kelly-68JI4fpYNDV7LfRFfzLvWb/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Kelly, M.",
@@ -12501,8 +12362,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1972-08-17",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:04.634131+00:00",
             "updated_at": "2026-04-18T00:42:03.365355+00:00",
             "openstates_url": "https://openstates.org/person/michelle-mussman-1k8d6iULhk1LAz118i03nu/",
@@ -12649,13 +12509,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:41.448459+00:00",
             "updated_at": "2026-04-18T00:42:18.811767+00:00",
             "openstates_url": "https://openstates.org/person/mike-coffey-45tjic7HFoBL4IRJEvVNCE/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Coffey",
@@ -12786,13 +12644,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:21:27.817769+00:00",
             "updated_at": "2026-04-18T00:42:28.156848+00:00",
             "openstates_url": "https://openstates.org/person/mike-crawford-FsCvuCabHqtyNAtcQsrGi/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Crawford, M.",
@@ -12894,13 +12750,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1974-12-05",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:22:54.226918+00:00",
             "updated_at": "2026-04-18T00:42:16.523769+00:00",
             "openstates_url": "https://openstates.org/person/murri-briel-6XsAPYC90OZt9VF7ZwQ4Ez/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A.M. Briel",
@@ -13002,13 +12856,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:33.360907+00:00",
             "updated_at": "2026-04-18T00:42:16.023270+00:00",
             "openstates_url": "https://openstates.org/person/nabeela-syed-1UcJO8mqryOPKeVrwGAmN2/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "N. Syed",
@@ -13130,8 +12982,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1961-12-25",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:10.976207+00:00",
             "updated_at": "2026-04-18T00:41:20.470802+00:00",
             "openstates_url": "https://openstates.org/person/natalie-manley-6Z34nAnyfESIJa1a3uQkUR/",
@@ -13290,8 +13141,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:04.811478+00:00",
             "updated_at": "2026-04-18T00:41:17.803710+00:00",
             "openstates_url": "https://openstates.org/person/nick-smith-531YOjVDx1iVlZqTaveHqv/",
@@ -13311,7 +13161,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "Nicholas \"Nick\" K. Smith",
+                    "name": 'Nicholas "Nick" K. Smith',
                     "note": "",
                 },
                 {
@@ -13454,13 +13304,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-01-03T20:38:21.602415+00:00",
             "updated_at": "2026-04-18T00:42:39.743169+00:00",
             "openstates_url": "https://openstates.org/person/nicole-la-ha-1iBwetXxh9nDXfhqJex1DW/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "La Ha, N.",
@@ -13582,13 +13430,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-07-10T16:23:57.879917+00:00",
             "updated_at": "2026-04-18T00:42:10.536374+00:00",
             "openstates_url": "https://openstates.org/person/nicolle-grasse-6l0hmDNlOmTzZrVaJenWW/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Grasse, N.",
@@ -13706,8 +13552,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1952-09-21",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:06.401583+00:00",
             "updated_at": "2026-04-18T00:41:08.789409+00:00",
             "openstates_url": "https://openstates.org/person/norine-hammond-6EeW5Men6KWAzVGJq7Mmqy/",
@@ -13893,13 +13738,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:46.626321+00:00",
             "updated_at": "2026-04-18T00:41:33.421844+00:00",
             "openstates_url": "https://openstates.org/person/norma-hernandez-5rskaV5iyotBT5Ue0lwr6f/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Hernandez, N.",
@@ -14029,13 +13872,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1975-03-13",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-01-05T11:05:24.062923+00:00",
             "updated_at": "2026-04-18T00:41:40.960110+00:00",
             "openstates_url": "https://openstates.org/person/omar-williams-5aUAuabIuwgphXIFJmhGLt/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Williams",
@@ -14181,13 +14022,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-07-10T16:23:59.556408+00:00",
             "updated_at": "2026-04-18T00:41:25.521798+00:00",
             "openstates_url": "https://openstates.org/person/patrick-sheehan-Dt9RXhU3hc1WlytBCQaty/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "P. Sheehan",
@@ -14285,13 +14124,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:50.823183+00:00",
             "updated_at": "2026-04-18T00:42:25.629647+00:00",
             "openstates_url": "https://openstates.org/person/patrick-windhorst-3JA3FhZoIx5UkvxTAl12SV/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "L.P. Windhorst",
@@ -14437,13 +14274,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:08.386633+00:00",
             "updated_at": "2026-04-18T00:42:11.019716+00:00",
             "openstates_url": "https://openstates.org/person/paul-jacobs-1SQR2M0hfJhLts079Awi39/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Jacobs, P.",
@@ -14588,13 +14423,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:23:34.737466+00:00",
             "updated_at": "2026-04-18T00:42:01.214592+00:00",
             "openstates_url": "https://openstates.org/person/regan-deering-4J1AGpIHHXIIsBqT6mH7mK/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Deering, R.",
@@ -14692,13 +14525,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:20:57.150307+00:00",
             "updated_at": "2026-04-18T00:41:39.531128+00:00",
             "openstates_url": "https://openstates.org/person/rick-ryan-3Y2l7YTHkGPyEQ1PEgkusF/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "R. Ryan",
@@ -14784,8 +14615,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:52.230664+00:00",
             "updated_at": "2026-04-18T00:41:52.098755+00:00",
             "openstates_url": "https://openstates.org/person/rita-mayfield-6CDDvSaOuXckxGDTaTu3i2/",
@@ -14940,8 +14770,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1953-02-07",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:57.337063+00:00",
             "updated_at": "2026-04-18T00:41:54.099199+00:00",
             "openstates_url": "https://openstates.org/person/robyn-gabel-3oe009cbuouzh7DJgMATie/",
@@ -15112,8 +14941,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1982-10-11",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:02.913710+00:00",
             "updated_at": "2026-04-18T00:42:35.726148+00:00",
             "openstates_url": "https://openstates.org/person/ryan-spain-b0VtVmPn4OA4aOWxPWypm/",
@@ -15264,13 +15092,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:34.886463+00:00",
             "updated_at": "2026-04-18T00:41:22.086519+00:00",
             "openstates_url": "https://openstates.org/person/sharon-chung-4XBIoxplun5SwaF1HriYH4/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Chung, S.",
@@ -15392,8 +15218,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:59.051355+00:00",
             "updated_at": "2026-04-18T00:42:29.776431+00:00",
             "openstates_url": "https://openstates.org/person/sonya-harper-4CpMZVXuBsi5CRJRVTHNRq/",
@@ -15564,8 +15389,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1971-09-14",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:17.961300+00:00",
             "updated_at": "2026-04-18T00:41:07.759656+00:00",
             "openstates_url": "https://openstates.org/person/stephanie-kifowit-RvuY8iN0KF7rwZ7ajzgBj/",
@@ -15732,8 +15556,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:50.868598+00:00",
             "updated_at": "2026-04-18T00:41:58.635475+00:00",
             "openstates_url": "https://openstates.org/person/steve-reick-2dLkNlZjFo7da8CV1YvBBB/",
@@ -15892,8 +15715,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:49.661696+00:00",
             "updated_at": "2026-04-18T00:42:30.224003+00:00",
             "openstates_url": "https://openstates.org/person/sue-scherer-774bHcm00fJx1hhKceTCcX/",
@@ -16032,13 +15854,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:13.972952+00:00",
             "updated_at": "2026-04-18T00:41:48.426657+00:00",
             "openstates_url": "https://openstates.org/person/suzanne-ness-3Apv1D0fKs5FyIDFN0CU4A/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Ness, S.",
@@ -16184,8 +16004,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:12.877096+00:00",
             "updated_at": "2026-04-18T00:41:45.572433+00:00",
             "openstates_url": "https://openstates.org/person/thaddeus-jones-4yc0Lk8BJ65aROBHqVHFWS/",
@@ -16352,8 +16171,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:55.067368+00:00",
             "updated_at": "2026-04-18T00:42:07.176560+00:00",
             "openstates_url": "https://openstates.org/person/theresa-mah-5tvFIxpWcFhPAcXfbEEKNt/",
@@ -16504,13 +16322,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:49.928670+00:00",
             "updated_at": "2026-04-18T00:41:56.673237+00:00",
             "openstates_url": "https://openstates.org/person/tom-weber-5fQp9UgAeumpGgEApsnigH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "T. Weber",
@@ -16648,8 +16464,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1972-10-09",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:03.261512+00:00",
             "updated_at": "2026-04-18T00:41:17.279140+00:00",
             "openstates_url": "https://openstates.org/person/tony-mccombie-6XO2TDtrcQ085C9IWRJV1Q/",
@@ -16816,13 +16631,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-02-12T19:22:45.545553+00:00",
             "updated_at": "2026-04-18T00:41:43.567686+00:00",
             "openstates_url": "https://openstates.org/person/tracy-katz-muhl-2IRzw4Xg3CHiHpus0EVXGw/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Katz Muhl, T.",
@@ -16936,13 +16749,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1992-06-18",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:44.892142+00:00",
             "updated_at": "2026-04-18T00:42:17.889557+00:00",
             "openstates_url": "https://openstates.org/person/travis-weaver-31oUgjzWi5qlhXALJfhykf/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "T. Weaver",
@@ -17071,13 +16882,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1950-05-16",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:43.107084+00:00",
             "updated_at": "2026-04-18T00:41:49.916433+00:00",
             "openstates_url": "https://openstates.org/person/wayne-rosenthal-2k5QlIfGFMLliKCmWyXrWZ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Rosenthal",
@@ -17208,8 +17017,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1968-07-02",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:04.986241+00:00",
             "updated_at": "2026-04-18T00:42:37.785496+00:00",
             "openstates_url": "https://openstates.org/person/will-davis-7gw0yz8AKXfutrSPaT9uYK/",
@@ -17245,7 +17053,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
                     "note": "",
                 },
                 {
-                    "name": "William \"Will\" Davis",
+                    "name": 'William "Will" Davis',
                     "note": "",
                 },
                 {
@@ -17372,8 +17180,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:16.032178+00:00",
             "updated_at": "2026-04-18T00:41:16.769583+00:00",
             "openstates_url": "https://openstates.org/person/will-guzzardi-6mv4JhFIi7SdWUD8dMLxGF/",
@@ -17532,13 +17339,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2024-01-03T20:38:21.341428+00:00",
             "updated_at": "2026-04-18T00:41:47.373310+00:00",
             "openstates_url": "https://openstates.org/person/yolonda-morris-3ZEK6pFybBXGIg6pQGECtv/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Morris, Y.",
@@ -17654,13 +17459,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:10.768263+00:00",
             "updated_at": "2026-04-18T00:42:19.255377+00:00",
             "openstates_url": "https://openstates.org/person/adriane-johnson-6xwu3JuRoxDwW5K1OZlmdw/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Johnson",
@@ -17793,13 +17596,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1982-01-11",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:45.232490+00:00",
             "updated_at": "2026-04-18T00:41:33.895410+00:00",
             "openstates_url": "https://openstates.org/person/andrew-chesney-4o157VLk5ICUtbgcj7E8lM/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "A. Chesney",
@@ -17941,8 +17742,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1967-07-21",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:50.166392+00:00",
             "updated_at": "2026-04-25T00:40:39.822128+00:00",
             "openstates_url": "https://openstates.org/person/bill-cunningham-2uxfrmFPsjguGTbcaZcpNk/",
@@ -18113,8 +17913,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:51.376753+00:00",
             "updated_at": "2026-04-18T00:41:59.090797+00:00",
             "openstates_url": "https://openstates.org/person/celina-villanueva-2Ks28ANkbWhV28xBB5wrq/",
@@ -18265,8 +18064,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1973-12-27",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:47.918021+00:00",
             "updated_at": "2026-04-18T00:41:20.947458+00:00",
             "openstates_url": "https://openstates.org/person/chapin-rose-5Zqvlk6m26zgaP2gzSF881/",
@@ -18454,13 +18252,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-23T15:37:30.401253+00:00",
             "updated_at": "2026-04-18T00:42:05.025101+00:00",
             "openstates_url": "https://openstates.org/person/chris-balkema-7kS98qq6qMzFCiivhJ13mi/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Balkema, C.",
@@ -18576,13 +18372,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:51.827644+00:00",
             "updated_at": "2026-04-18T00:41:23.586839+00:00",
             "openstates_url": "https://openstates.org/person/christopher-belt-6HbpZAgxiBNHuEp1zd98Yn/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Belt, C.",
@@ -18727,8 +18521,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:57.684301+00:00",
             "updated_at": "2026-04-18T00:41:57.596458+00:00",
             "openstates_url": "https://openstates.org/person/craig-wilcox-EsNIdXmBymTXHcGXLn2vW/",
@@ -18879,8 +18672,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1978-02-25",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:06.935320+00:00",
             "updated_at": "2026-04-18T00:42:18.367256+00:00",
             "openstates_url": "https://openstates.org/person/cristina-castro-7TaYmj6QhOHrZwsTv0JZoP/",
@@ -19019,8 +18811,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:52.759934+00:00",
             "updated_at": "2026-04-18T00:42:14.332224+00:00",
             "openstates_url": "https://openstates.org/person/dale-fowler-2knw15XEJCvgJ9YABvRoFH/",
@@ -19175,13 +18966,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-03-29T00:41:06.466660+00:00",
             "updated_at": "2026-04-18T00:41:18.839335+00:00",
             "openstates_url": "https://openstates.org/person/darby-hills-1WtHJ2KKroGBdvRVmig0Wn/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Hills",
@@ -19287,8 +19076,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1948-12-16",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:13.406654+00:00",
             "updated_at": "2026-04-18T00:41:31.225422+00:00",
             "openstates_url": "https://openstates.org/person/dave-koehler-4fdeV7gVB8OnUYLWG8AVBy/",
@@ -19454,8 +19242,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1957-06-29",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:06.760644+00:00",
             "updated_at": "2026-04-18T00:42:15.393604+00:00",
             "openstates_url": "https://openstates.org/person/dave-syverson-6KoTTfYU2AOdtr6NRKj7T8/",
@@ -19629,8 +19416,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:54.718509+00:00",
             "updated_at": "2026-04-18T00:41:26.510009+00:00",
             "openstates_url": "https://openstates.org/person/don-dewitte-5z2TimlZfZ7yv4FDHpxpCd/",
@@ -19792,8 +19578,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1966-11-26",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:10.622902+00:00",
             "updated_at": "2026-04-25T00:40:22.133999+00:00",
             "openstates_url": "https://openstates.org/person/don-harmon-f52c6ssvTxYMYBDyGvEoY/",
@@ -19960,13 +19745,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-03-10T00:07:11.272690+00:00",
             "updated_at": "2026-04-18T00:41:18.275433+00:00",
             "openstates_url": "https://openstates.org/person/doris-turner-2qqkVmooAUM0KGJPqwEoRB/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "D. Turner",
@@ -20103,8 +19886,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1970-09-21",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:12.177770+00:00",
             "updated_at": "2026-04-18T00:42:31.245250+00:00",
             "openstates_url": "https://openstates.org/person/elgie-sims-2SEZjJ2KXt68LC9TP9GtjD/",
@@ -20283,8 +20065,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1978-05-16",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:07.111675+00:00",
             "updated_at": "2026-04-18T00:42:39.273144+00:00",
             "openstates_url": "https://openstates.org/person/emil-jones-9SLxxid7OdMKJ5wRwUXIf/",
@@ -20471,13 +20252,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:47.577089+00:00",
             "updated_at": "2026-04-18T00:42:36.226943+00:00",
             "openstates_url": "https://openstates.org/person/erica-harriss-2MZn1fekFzhcsMDIEmBwk1/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "E. Harriss",
@@ -20599,13 +20378,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-23T15:38:04.476778+00:00",
             "updated_at": "2026-04-18T00:41:22.603901+00:00",
             "openstates_url": "https://openstates.org/person/graciela-guzman-4Yl0T7mATXQ8t9GgrOMaFn/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "G. Guzmán",
@@ -20707,13 +20484,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1982-06-04",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:50.543601+00:00",
             "updated_at": "2026-04-18T00:41:28.474089+00:00",
             "openstates_url": "https://openstates.org/person/jason-plummer-6aMCr9XM4sKW5sHRy4M3eT/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "J. Plummer",
@@ -20859,13 +20634,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:34.475826+00:00",
             "updated_at": "2026-04-18T00:41:26.955696+00:00",
             "openstates_url": "https://openstates.org/person/javier-cervantes-6AxGVFvyiNDssmMD4qW0vI/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Cervantes",
@@ -20999,8 +20772,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1956-02-29",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:17.796647+00:00",
             "updated_at": "2026-04-18T00:42:21.066413+00:00",
             "openstates_url": "https://openstates.org/person/jil-tracy-5nVkyWXMNwxZPhAYqLSL8N/",
@@ -21178,8 +20950,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:11.675153+00:00",
             "updated_at": "2026-04-18T00:41:08.293750+00:00",
             "openstates_url": "https://openstates.org/person/john-curran-6Bn2yENR4MYjZN9gwHO0Tl/",
@@ -21338,8 +21109,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1956-09-20",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:07.636944+00:00",
             "updated_at": "2026-04-18T00:41:14.985512+00:00",
             "openstates_url": "https://openstates.org/person/julie-morrison-ujHBrX3b6700W8I4nZmKU/",
@@ -21498,8 +21268,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1978-09-20",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-03-10T00:07:05.999739+00:00",
             "updated_at": "2026-04-18T00:41:42.546669+00:00",
             "openstates_url": "https://openstates.org/person/karina-villa-6A785C3L22i1hatdN27Br0/",
@@ -21657,8 +21426,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1968-05-10",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:47.553831+00:00",
             "updated_at": "2026-04-25T00:40:11.703512+00:00",
             "openstates_url": "https://openstates.org/person/kimberly-lightford-2idx7GDWD0dSNX2ib8506P/",
@@ -21825,13 +21593,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:06.117406+00:00",
             "updated_at": "2026-04-18T00:41:44.048228+00:00",
             "openstates_url": "https://openstates.org/person/lakesia-collins-1hYfLdJIfJY64dV4oVmKGV/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Collins, L.",
@@ -21977,13 +21743,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:40.138245+00:00",
             "updated_at": "2026-04-25T00:41:00.542893+00:00",
             "openstates_url": "https://openstates.org/person/laura-ellman-4jxZQNrpJXTxLBozlOOwTh/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Ellman, L.",
@@ -22125,8 +21889,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:11.498131+00:00",
             "updated_at": "2026-04-25T00:40:55.061200+00:00",
             "openstates_url": "https://openstates.org/person/laura-fine-OKEsdnkdTCa20zRjQlm2s/",
@@ -22273,8 +22036,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:59.777910+00:00",
             "updated_at": "2026-04-18T00:41:31.755635+00:00",
             "openstates_url": "https://openstates.org/person/laura-murphy-2bnIq87vIl24SAyVGZpRZt/",
@@ -22441,13 +22203,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1981-02-02",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2025-01-11T19:21:18.480325+00:00",
             "updated_at": "2026-04-18T00:42:04.523378+00:00",
             "openstates_url": "https://openstates.org/person/li-arellano-4MYcuwL0kRRVstWFlMv4wi/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Arellano, L.",
@@ -22563,8 +22323,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1959-03-16",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:15.851361+00:00",
             "updated_at": "2026-04-18T00:42:12.103890+00:00",
             "openstates_url": "https://openstates.org/person/linda-holmes-4I9N9k0HEjLrOgsm879fOl/",
@@ -22723,8 +22482,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:47.445366+00:00",
             "updated_at": "2026-04-18T00:42:09.939571+00:00",
             "openstates_url": "https://openstates.org/person/mark-walker-6NoIKVgIGxlrOYsMiU9WST/",
@@ -22895,13 +22653,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:39.712063+00:00",
             "updated_at": "2026-04-18T00:41:54.723678+00:00",
             "openstates_url": "https://openstates.org/person/mary-edly-allen-nGyLS6UgeYAl1LMlCkxyU/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Edly-Allen, M.",
@@ -23019,8 +22775,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1954-06-01",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:58.709252+00:00",
             "updated_at": "2026-04-18T00:42:08.405231+00:00",
             "openstates_url": "https://openstates.org/person/mattie-hunter-47sn6SKXuf4vrWsvlDiiVI/",
@@ -23187,13 +22942,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:02.493756+00:00",
             "updated_at": "2026-04-18T00:42:33.785314+00:00",
             "openstates_url": "https://openstates.org/person/meg-loughran-cappel-6ORnaF6R3lSQIKzEx1k5aJ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Loughran Cappel",
@@ -23335,8 +23088,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:59.233345+00:00",
             "updated_at": "2026-04-18T00:41:32.713364+00:00",
             "openstates_url": "https://openstates.org/person/mike-halpin-3tmQB2xBB81NYPj3C1o3jq/",
@@ -23518,8 +23270,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1980-10-06",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:14.984101+00:00",
             "updated_at": "2026-04-18T00:42:06.198875+00:00",
             "openstates_url": "https://openstates.org/person/mike-hastings-7e7nIaxBwCEdrdMrt7eiXP/",
@@ -23685,13 +23436,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:36.998115+00:00",
             "updated_at": "2026-04-18T00:42:29.234702+00:00",
             "openstates_url": "https://openstates.org/person/mike-porfirio-28qPNlEPEXtlM9RVKotX35/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "M. Porfirio",
@@ -23809,13 +23558,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-03-10T00:07:03.800096+00:00",
             "updated_at": "2026-04-18T00:42:31.694316+00:00",
             "openstates_url": "https://openstates.org/person/mike-simmons-gessesse-2ADRF7Wq9jw0E0huW4ikH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "M. Simmons-Gessesse",
@@ -23957,8 +23704,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1979-02-25",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:16.551386+00:00",
             "updated_at": "2026-04-18T00:42:09.434562+00:00",
             "openstates_url": "https://openstates.org/person/napoleon-harris-7ZfuAsXKLMz87w3YoGv33N/",
@@ -24117,8 +23863,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1982-04-14",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:15.322925+00:00",
             "updated_at": "2026-04-18T00:42:23.121733+00:00",
             "openstates_url": "https://openstates.org/person/neil-anderson-5YIsry1d9uUMW50SXLkSn0/",
@@ -24269,8 +24014,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1987-06-24",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:49.326990+00:00",
             "updated_at": "2026-04-18T00:41:38.603631+00:00",
             "openstates_url": "https://openstates.org/person/omar-aquino-23DtYupEXfMqwaZD1hO2ig/",
@@ -24409,13 +24153,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2020-01-05T11:05:27.876717+00:00",
             "updated_at": "2026-04-18T00:41:32.216046+00:00",
             "openstates_url": "https://openstates.org/person/patrick-joyce-oliBAB58zTCiWYWfJAsRY/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Joyce, P.",
@@ -24569,13 +24311,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:39.219896+00:00",
             "updated_at": "2026-04-18T00:41:13.816477+00:00",
             "openstates_url": "https://openstates.org/person/paul-faraci-40H1U5iePIveqJDQVHVd5N/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Faraci, P.",
@@ -24696,13 +24436,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1981-04-04",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:37.359359+00:00",
             "updated_at": "2026-04-18T00:42:38.764233+00:00",
             "openstates_url": "https://openstates.org/person/rachel-ventura-7DxyYEyoYXZSnvbV8LhpyZ/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "R. Ventura",
@@ -24820,13 +24558,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:50.950997+00:00",
             "updated_at": "2026-04-25T00:40:23.259960+00:00",
             "openstates_url": "https://openstates.org/person/ram-villivalam-6KgJa676o4Wn5YRZTjCTO8/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "R. Villivalam",
@@ -24972,8 +24708,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1966-02-28",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:01.000681+00:00",
             "updated_at": "2026-04-18T00:42:22.655853+00:00",
             "openstates_url": "https://openstates.org/person/rob-martwick-2G2EaACCOZy2wlYNlvjWp8/",
@@ -25152,13 +24887,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1985-04-26",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:52.910548+00:00",
             "updated_at": "2026-04-18T00:41:50.443821+00:00",
             "openstates_url": "https://openstates.org/person/robert-peters-46bsvyeGrs45vQuo0ZtVJ4/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Peters, R.",
@@ -25300,13 +25033,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-03-10T00:07:08.960804+00:00",
             "updated_at": "2026-04-18T00:42:12.877399+00:00",
             "openstates_url": "https://openstates.org/person/sally-turner-6BWt3m2qcn0bwtT1PXQ1tr/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "S. Turner",
@@ -25452,8 +25183,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1956-12-11",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:42:57.510985+00:00",
             "updated_at": "2026-04-18T00:42:27.648441+00:00",
             "openstates_url": "https://openstates.org/person/sara-feigenholtz-3HnML1ug5X6EKw6PxC9uUo/",
@@ -25620,13 +25350,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:12.126806+00:00",
             "updated_at": "2026-04-18T00:41:55.629055+00:00",
             "openstates_url": "https://openstates.org/person/seth-lewis-LvC0CnzCaPVkc16w90UCH/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Lewis, S.",
@@ -25782,13 +25510,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1984-03-08",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:50.023124+00:00",
             "updated_at": "2026-04-18T00:41:35.367311+00:00",
             "openstates_url": "https://openstates.org/person/steve-mcclure-6QevaZ9OLxRPP7HoFnfm7I/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "McClure, S.",
@@ -25937,8 +25663,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1960-10-30",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:00.122200+00:00",
             "updated_at": "2026-04-18T00:41:52.536049+00:00",
             "openstates_url": "https://openstates.org/person/steve-stadelman-5g7zj8OAIdfv7DLbI9DVHg/",
@@ -26089,8 +25814,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1963-08-09",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2018-10-18T14:43:04.301039+00:00",
             "updated_at": "2026-04-18T00:41:38.055457+00:00",
             "openstates_url": "https://openstates.org/person/sue-rezin-4v4YZR0XJdd12xtijPr0y4/",
@@ -26257,13 +25981,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2019-01-19T06:06:39.907561+00:00",
             "updated_at": "2026-04-18T00:41:26.036362+00:00",
             "openstates_url": "https://openstates.org/person/suzy-glowiak-hilton-g2pcEYuZfkYxN3Ch7ZDkl/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Glowiak Hilton",
@@ -26413,8 +26135,7 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Female",
             "birth_date": "1963-03-31",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2021-01-14T00:07:06.187680+00:00",
             "updated_at": "2026-04-25T00:40:18.752572+00:00",
             "openstates_url": "https://openstates.org/person/terri-bryant-1g6dyMDs1GK9N40x5ZFlhy/",
@@ -26576,13 +26297,11 @@ IL_LEGISLATORS_DATA: dict[str, list[dict[str, Any]]] = {
             "gender": "Male",
             "birth_date": "1985-02-01",
             "death_date": "",
-            "extras": {
-            },
+            "extras": {},
             "created_at": "2023-02-13T19:12:47.495537+00:00",
             "updated_at": "2026-04-18T00:41:19.961445+00:00",
             "openstates_url": "https://openstates.org/person/willie-preston-1aPXUcdN0GHUnY6T0Jo1S8/",
-            "other_identifiers": [
-            ],
+            "other_identifiers": [],
             "other_names": [
                 {
                     "name": "Preston, W.",
