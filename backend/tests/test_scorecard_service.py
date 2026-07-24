@@ -5,7 +5,11 @@ from uuid import uuid4
 import pytest
 
 from app.imports.sources.chicago_city_clerk_elms import normalize_name
-from app.models.pydantic.models import DashboardConfig, EntityStatus
+from app.models.pydantic.models import (
+    DashboardConfig,
+    EntityStatus,
+    MetricDisplayConfig,
+)
 from app.services.scorecard_service import ScorecardService
 from tests.factories import make_entity, make_project, make_status_record
 from tests.mock_provider import MockDatabaseProvider
@@ -279,6 +283,277 @@ class TestGetScorecardUnknownExcludedFromDenominator:
         # Only p_other counts toward denominator (p_vote is UNKNOWN = not in office)
         assert row.total_scoreable == 1
         assert row.aligned_count == 1
+
+
+class TestGetScorecardMetrics:
+    """Metric descriptors + per-entity values threaded through the scorecard."""
+
+    @staticmethod
+    def _metrics(*keys: str) -> list[MetricDisplayConfig]:
+        return [
+            MetricDisplayConfig(key=k, label=k.replace("_", " ").title()) for k in keys
+        ]
+
+    @pytest.mark.asyncio
+    async def test_metrics_config_from_first_project_with_metrics(self):
+        """Config comes from the first project in position order that declares metrics."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        p_first = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(position=0),
+        )
+        p_second = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=1, metrics=self._metrics("zoning_median_days")
+            ),
+        )
+        p_third = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=2, metrics=self._metrics("something_else")
+            ),
+        )
+
+        # Seeded out of position order to prove sorting drives the choice.
+        service = _build_scorecard_service(projects_data=[p_third, p_second, p_first])
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        assert [m.key for m in result.metrics] == ["zoning_median_days"]
+
+    @pytest.mark.asyncio
+    async def test_undeclared_metadata_keys_are_dropped(self):
+        """Only keys declared in the metrics config surface on the row."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        project = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=0, metrics=self._metrics("bonus_units")
+            ),
+        )
+        entity = make_entity(jurisdiction_id=jurisdiction_id)
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+            record_metadata={"bonus_units": 42, "internal_note": "not for display"},
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[project],
+            entities_data=[entity],
+            status_records_data=[record],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        assert result.entities[0].metrics == {"bonus_units": 42}
+
+    @pytest.mark.asyncio
+    async def test_lowest_position_project_wins_key_conflicts(self):
+        """When two projects carry the same metric key, the earlier project wins."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        p_first = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=0, metrics=self._metrics("bonus_units")
+            ),
+        )
+        p_second = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(position=1),
+        )
+        entity = make_entity(jurisdiction_id=jurisdiction_id)
+        sr_second = make_status_record(
+            entity_id=entity.id,
+            project_id=p_second.id,
+            status=EntityStatus.NEUTRAL,
+            record_metadata={"bonus_units": 999},
+        )
+        sr_first = make_status_record(
+            entity_id=entity.id,
+            project_id=p_first.id,
+            status=EntityStatus.NEUTRAL,
+            record_metadata={"bonus_units": 1},
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[p_first, p_second],
+            entities_data=[entity],
+            status_records_data=[sr_second, sr_first],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        assert result.entities[0].metrics == {"bonus_units": 1}
+
+    @pytest.mark.asyncio
+    async def test_entity_without_records_has_none_metrics(self):
+        """An entity with no status records gets metrics=None, not an empty dict."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        project = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=0, metrics=self._metrics("bonus_units")
+            ),
+        )
+        with_record = make_entity(jurisdiction_id=jurisdiction_id, name="Has Record")
+        without_record = make_entity(jurisdiction_id=jurisdiction_id, name="No Record")
+        record = make_status_record(
+            entity_id=with_record.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+            record_metadata={"bonus_units": 7},
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[project],
+            entities_data=[with_record, without_record],
+            status_records_data=[record],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        by_name = {row.entity.name: row for row in result.entities}
+        assert by_name["Has Record"].metrics == {"bonus_units": 7}
+        assert by_name["No Record"].metrics is None
+
+    @pytest.mark.asyncio
+    async def test_record_with_only_undeclared_keys_yields_none(self):
+        """Metadata that contributes no declared key leaves metrics as None."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        project = make_project(
+            group_id=group_id,
+            jurisdiction_id=jurisdiction_id,
+            dashboard_config=DashboardConfig(
+                position=0, metrics=self._metrics("bonus_units")
+            ),
+        )
+        entity = make_entity(jurisdiction_id=jurisdiction_id)
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+            record_metadata={"unrelated": 1},
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[project],
+            entities_data=[entity],
+            status_records_data=[record],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        assert result.entities[0].metrics is None
+
+    @pytest.mark.asyncio
+    async def test_no_metrics_config_anywhere(self):
+        """Without any metrics config the response carries [] and rows stay metric-free."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+
+        project = make_project(group_id=group_id, jurisdiction_id=jurisdiction_id)
+        entity = make_entity(jurisdiction_id=jurisdiction_id)
+        record = make_status_record(
+            entity_id=entity.id,
+            project_id=project.id,
+            status=EntityStatus.SOLID_APPROVAL,
+            record_metadata={"bonus_units": 42},
+        )
+
+        service = _build_scorecard_service(
+            projects_data=[project],
+            entities_data=[entity],
+            status_records_data=[record],
+        )
+        result = await service.get_scorecard(group_id, "Test Group")
+
+        assert result.metrics == []
+        assert result.entities[0].metrics is None
+
+    @pytest.mark.asyncio
+    async def test_scores_identical_with_and_without_metrics_config(self):
+        """Adding metrics config must not perturb aligned_count/total_scoreable."""
+        group_id = uuid4()
+        jurisdiction_id = uuid4()
+        metrics = self._metrics("bonus_units")
+
+        def build(with_metrics: bool):
+            p1 = make_project(
+                id=uuid4(),
+                group_id=group_id,
+                jurisdiction_id=jurisdiction_id,
+                preferred_status=EntityStatus.SOLID_APPROVAL,
+                dashboard_config=DashboardConfig(
+                    position=0, metrics=metrics if with_metrics else None
+                ),
+            )
+            p2 = make_project(
+                group_id=group_id,
+                jurisdiction_id=jurisdiction_id,
+                preferred_status=EntityStatus.SOLID_DISAPPROVAL,
+                dashboard_config=DashboardConfig(position=1),
+            )
+            p3 = make_project(
+                group_id=group_id,
+                jurisdiction_id=jurisdiction_id,
+                preferred_status=EntityStatus.SOLID_APPROVAL,
+                dashboard_config=DashboardConfig(position=2),
+            )
+            entity = make_entity(jurisdiction_id=jurisdiction_id)
+            records = [
+                make_status_record(
+                    entity_id=entity.id,
+                    project_id=p1.id,
+                    status=EntityStatus.SOLID_APPROVAL,
+                    record_metadata={"bonus_units": 42},
+                ),
+                make_status_record(
+                    entity_id=entity.id,
+                    project_id=p2.id,
+                    status=EntityStatus.SOLID_DISAPPROVAL,
+                ),
+                make_status_record(
+                    entity_id=entity.id,
+                    project_id=p3.id,
+                    status=EntityStatus.UNKNOWN,
+                ),
+            ]
+            return _build_scorecard_service(
+                projects_data=[p1, p2, p3],
+                entities_data=[entity],
+                status_records_data=records,
+            )
+
+        without = await build(False).get_scorecard(group_id, "Test Group")
+        with_metrics = await build(True).get_scorecard(group_id, "Test Group")
+
+        assert without.entities[0].metrics is None
+        assert with_metrics.entities[0].metrics == {"bonus_units": 42}
+        assert (
+            with_metrics.entities[0].aligned_count == without.entities[0].aligned_count
+        )
+        assert (
+            with_metrics.entities[0].total_scoreable
+            == without.entities[0].total_scoreable
+        )
+        # Sanity: the scenario actually exercises scoring (approve +1, cosponsor -1, unknown skipped)
+        assert without.entities[0].aligned_count == 0
+        assert without.entities[0].total_scoreable == 2
 
 
 class TestNormalizeNameEdgeCases:

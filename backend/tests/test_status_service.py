@@ -269,3 +269,117 @@ class TestCreateStatusRecordUpsert:
         result = await self.service.create_status_record(record)
 
         assert result.record_metadata is None
+
+
+class TestCreateStatusRecordPreservesCuratedFields:
+    """Upserts must not wipe curated metadata/notes written by other writers.
+
+    Automated writers (scorecard refresh, import re-runs) build records without
+    ``record_metadata``/``notes``. ``None`` means "keep what's stored"; an
+    explicit empty value is an intentional clear.
+    """
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from app.services.status_service import StatusService
+
+        self.status_records_provider = MockDatabaseProvider()
+        self.projects_provider = MockDatabaseProvider()
+        self.entities_provider = MockDatabaseProvider()
+        self.service = StatusService(
+            status_records_provider=self.status_records_provider,
+            projects_provider=self.projects_provider,
+            entities_provider=self.entities_provider,
+        )
+        self.project = make_project()
+        self.projects_provider.seed(self.project)
+        self.entity = make_entity()
+        self.entities_provider.seed(self.entity)
+
+    async def _seed_curated(self) -> None:
+        await self.service.create_status_record(
+            make_status_record(
+                entity_id=self.entity.id,
+                project_id=self.project.id,
+                status=EntityStatus.NEUTRAL,
+                record_metadata={"bonus_units": 120, "lost_units": 0},
+                notes="Curated by a human",
+            )
+        )
+
+    async def _upsert(self, **kwargs):
+        return await self.service.create_status_record(
+            make_status_record(
+                entity_id=self.entity.id,
+                project_id=self.project.id,
+                status=EntityStatus.SOLID_APPROVAL,
+                **kwargs,
+            )
+        )
+
+    async def test_none_metadata_preserves_existing_metadata(self):
+        """A refresh that omits record_metadata must not erase curated metadata."""
+        await self._seed_curated()
+
+        result = await self._upsert()
+
+        assert result.record_metadata == {"bonus_units": 120, "lost_units": 0}
+        # The rest of the incoming record still wins
+        assert result.status == EntityStatus.SOLID_APPROVAL
+
+    async def test_empty_dict_metadata_clears_existing_metadata(self):
+        """An explicit empty dict is an intentional clear, not a no-op."""
+        await self._seed_curated()
+
+        result = await self._upsert(record_metadata={})
+
+        assert result.record_metadata == {}
+
+    async def test_new_metadata_replaces_existing_metadata(self):
+        """A non-empty incoming dict replaces the stored one wholesale."""
+        await self._seed_curated()
+
+        result = await self._upsert(record_metadata={"bonus_units": 5})
+
+        assert result.record_metadata == {"bonus_units": 5}
+
+    async def test_none_notes_preserves_existing_notes(self):
+        """A refresh that omits notes must not erase curated notes."""
+        await self._seed_curated()
+
+        result = await self._upsert()
+
+        assert result.notes == "Curated by a human"
+
+    async def test_empty_string_notes_clears_existing_notes(self):
+        """An explicit empty string is an intentional clear."""
+        await self._seed_curated()
+
+        result = await self._upsert(notes="")
+
+        assert result.notes == ""
+
+    async def test_preservation_is_persisted_not_just_returned(self):
+        """The stored record (not just the return value) keeps the curated values."""
+        await self._seed_curated()
+        await self._upsert()
+
+        stored = await self.status_records_provider.list()
+        assert len(stored) == 1
+        assert stored[0].record_metadata == {"bonus_units": 120, "lost_units": 0}
+        assert stored[0].notes == "Curated by a human"
+
+    async def test_no_existing_metadata_stays_none(self):
+        """Nothing to preserve leaves the field None."""
+        await self.service.create_status_record(
+            make_status_record(
+                entity_id=self.entity.id,
+                project_id=self.project.id,
+                status=EntityStatus.NEUTRAL,
+            )
+        )
+
+        result = await self._upsert()
+
+        assert result.record_metadata is None
+        assert result.notes is None

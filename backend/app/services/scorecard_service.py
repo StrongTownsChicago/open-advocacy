@@ -6,6 +6,7 @@ from uuid import UUID
 from app.db.base import DatabaseProvider
 from app.models.pydantic.models import (
     EntityStatus,
+    MetricDisplayConfig,
     ScorecardEntityRow,
     ScorecardEntityStatus,
     ScorecardProject,
@@ -103,6 +104,18 @@ class ScorecardService:
         ):
             representative_title = first_project.dashboard_config.representative_title
 
+        # Metric descriptors live on the first project (in position order) that
+        # declares any — same "position-0 carrier" convention as representative_title.
+        metrics_config: list[MetricDisplayConfig] = next(
+            (
+                p.dashboard_config.metrics
+                for p in projects
+                if p.dashboard_config and p.dashboard_config.metrics
+            ),
+            [],
+        )
+        metric_keys = {m.key for m in metrics_config}
+
         # 2. Get jurisdiction from the first project (all scorecard projects share one jurisdiction)
         jurisdiction_id = first_project.jurisdiction_id
 
@@ -114,6 +127,7 @@ class ScorecardService:
                 representative_title=representative_title,
                 projects=scorecard_projects,
                 entities=[],
+                metrics=metrics_config,
             )
 
         # Enrich entities with district names
@@ -126,12 +140,28 @@ class ScorecardService:
             in_filters={"project_id": project_ids},
         )
 
-        # Build lookup: (entity_id, project_id) -> status
+        # Build lookup: (entity_id, project_id) -> status, plus per-entity metric
+        # values merged from record_metadata across the group's projects.
         entity_ids = {e.id for e in entities}
         status_lookup: dict[tuple[UUID, UUID], EntityStatus] = {}
-        for record in all_status_records:
-            if record.entity_id in entity_ids:
-                status_lookup[(record.entity_id, record.project_id)] = record.status
+        metrics_lookup: dict[UUID, dict[str, float | int | str]] = {}
+        project_rank = {p.id: rank for rank, p in enumerate(projects)}
+        # Lowest-position project wins key conflicts, so walk records in that order.
+        ordered_records = sorted(
+            all_status_records,
+            key=lambda r: project_rank.get(r.project_id, len(project_rank)),
+        )
+        for record in ordered_records:
+            if record.entity_id not in entity_ids:
+                continue
+            status_lookup[(record.entity_id, record.project_id)] = record.status
+            if not metric_keys or not record.record_metadata:
+                continue
+            entity_metrics = metrics_lookup.setdefault(record.entity_id, {})
+            for key, value in record.record_metadata.items():
+                # Only declared keys, and only scalars the response can carry.
+                if key in metric_keys and isinstance(value, (int, float, str)):
+                    entity_metrics.setdefault(key, value)
 
         # 5. Build entity rows
         entity_rows: list[ScorecardEntityRow] = []
@@ -163,6 +193,7 @@ class ScorecardService:
                     statuses=statuses,
                     aligned_count=aligned_count,
                     total_scoreable=total_scoreable,
+                    metrics=metrics_lookup.get(entity.id) or None,
                 )
             )
 
@@ -171,6 +202,7 @@ class ScorecardService:
             representative_title=representative_title,
             projects=scorecard_projects,
             entities=entity_rows,
+            metrics=metrics_config,
         )
 
     async def _enrich_with_district_names(self, entities: list) -> list:

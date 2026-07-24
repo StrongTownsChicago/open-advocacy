@@ -198,6 +198,7 @@ class ScorecardEntityRow(BaseModel):
     statuses: dict[str, ScorecardEntityStatus]  # keyed by project_id as str
     aligned_count: int
     total_scoreable: int
+    metrics: dict[str, float | int | str] | None = None
 
 
 class ScorecardResponse(BaseModel):
@@ -205,6 +206,7 @@ class ScorecardResponse(BaseModel):
     representative_title: str = "Representative"
     projects: list[ScorecardProject]
     entities: list[ScorecardEntityRow]
+    metrics: list[MetricDisplayConfig] = []
 
 
 class UserBase(BaseModel):

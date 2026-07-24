@@ -1,8 +1,30 @@
+from typing import Any
 from uuid import UUID
 
 from app.models.pydantic.models import EntityStatusRecord
 from app.db.base import DatabaseProvider
 from app.exceptions import NotFoundError
+
+
+def _merge_preserved_fields(
+    incoming: EntityStatusRecord, existing: EntityStatusRecord
+) -> EntityStatusRecord:
+    """Carry curated fields forward when the incoming record omits them.
+
+    The upsert in :meth:`StatusService.create_status_record` replaces the whole
+    record, so automated writers (scorecard refresh, import re-runs) that build
+    records without ``record_metadata``/``notes`` would otherwise erase curated
+    values. Semantics: ``None`` means "no opinion, keep what's stored"; an
+    explicit empty value (``{}`` / ``""``) is an intentional clear.
+    """
+    preserved: dict[str, Any] = {}
+    if incoming.record_metadata is None and existing.record_metadata is not None:
+        preserved["record_metadata"] = existing.record_metadata
+    if incoming.notes is None and existing.notes is not None:
+        preserved["notes"] = existing.notes
+    if not preserved:
+        return incoming
+    return incoming.model_copy(update=preserved)
 
 
 class StatusService:
@@ -66,9 +88,8 @@ class StatusService:
         )
         if existing_records:
             record = existing_records[0]
-            updated = await self.status_records_provider.update(
-                record.id, status_record
-            )
+            payload = _merge_preserved_fields(status_record, record)
+            updated = await self.status_records_provider.update(record.id, payload)
             if updated is None:
                 raise ValueError("Failed to update existing status record")
             return updated

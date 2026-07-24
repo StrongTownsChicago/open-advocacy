@@ -14,6 +14,7 @@ import { scorecardService } from '../../services/scorecard';
 import { EntityStatus, ScorecardEntityRow, ScorecardResponse } from '../../types';
 import { compareDistrictNames } from '../../utils/districtSort';
 import DesktopTable from './DesktopTable';
+import { compareByMetric } from './metricSort';
 import MobileCardList from './MobileCardList';
 
 type SortField = string;
@@ -61,6 +62,11 @@ const Scorecard: React.FC = () => {
     );
   }, [data]);
 
+  const metricKeys = useMemo(
+    () => new Set((data?.metrics ?? []).map(metric => metric.key)),
+    [data]
+  );
+
   const sortedEntities = useMemo(() => {
     if (!data) return [];
     const rows = [...data.entities];
@@ -77,6 +83,11 @@ const Scorecard: React.FC = () => {
         if (comparison === 0) {
           comparison = a.entity.name.localeCompare(b.entity.name);
         }
+      } else if (metricKeys.has(sortField)) {
+        comparison = compareByMetric(a, b, sortField);
+        if (comparison === 0) {
+          comparison = a.entity.name.localeCompare(b.entity.name);
+        }
       } else {
         // Sort by a specific project's status (sortField is the project UUID)
         const aRank = STATUS_SORT_ORDER[a.statuses[sortField]?.status ?? EntityStatus.UNKNOWN] ?? 5;
@@ -86,14 +97,14 @@ const Scorecard: React.FC = () => {
       return sortDirection === 'asc' ? comparison : -comparison;
     });
     return rows;
-  }, [data, sortField, sortDirection]);
+  }, [data, sortField, sortDirection, metricKeys]);
 
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(d => (d === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
-      setSortDirection(field === 'score' ? 'desc' : 'asc');
+      setSortDirection(field === 'score' || metricKeys.has(field) ? 'desc' : 'asc');
     }
   };
 

@@ -109,6 +109,52 @@ const extendedScorecardResponse: ScorecardResponse = {
   ],
 };
 
+// Scorecard with config-driven metric columns
+const metricsScorecardResponse: ScorecardResponse = {
+  group_name: 'Test Group',
+  representative_title: 'Alderperson',
+  metrics: [
+    {
+      key: 'zoning_median_days',
+      label: 'Zoning Delay (median days)',
+      description: "Median days from introduction to final action for the ward's zoning matters.",
+    },
+    { key: 'zoning_stalled_count', label: 'Stalled >180d' },
+    { key: 'bonus_units', label: 'Bonus Units', show_in_table: false },
+  ],
+  projects: [
+    {
+      id: 'project-1',
+      title: 'ADU Citywide Vote',
+      slug: 'adu-citywide-vote',
+      preferred_status: EntityStatus.SOLID_APPROVAL,
+      status_labels: { solid_approval: 'Voted Yes', unknown: 'Absent' },
+    },
+  ],
+  entities: [
+    {
+      entity: { id: 'e-1', name: 'Alder Fast', entity_type: 'alderperson', district_name: 'Ward 1', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.SOLID_APPROVAL, label: 'Voted Yes' } },
+      aligned_count: 1,
+      total_scoreable: 1,
+      metrics: { zoning_median_days: 45, zoning_stalled_count: 1, bonus_units: 300 },
+    },
+    {
+      entity: { id: 'e-2', name: 'Alder Slow', entity_type: 'alderperson', district_name: 'Ward 2', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.SOLID_APPROVAL, label: 'Voted Yes' } },
+      aligned_count: 1,
+      total_scoreable: 1,
+      metrics: { zoning_median_days: 1250, zoning_stalled_count: 4 },
+    },
+    {
+      entity: { id: 'e-3', name: 'Alder Missing', entity_type: 'alderperson', district_name: 'Ward 3', jurisdiction_id: 'jur-1' },
+      statuses: { 'project-1': { status: EntityStatus.SOLID_APPROVAL, label: 'Voted Yes' } },
+      aligned_count: 1,
+      total_scoreable: 1,
+    },
+  ],
+};
+
 function renderScorecard(groupSlug = 'strong-towns-chicago') {
   return render(
     <MemoryRouter initialEntries={[`/scorecard/${groupSlug}`]}>
@@ -285,5 +331,86 @@ describe('Scorecard', () => {
     await screen.findByText('Maria Hadden');
     expect(screen.getByText('Senator')).toBeInTheDocument();
     expect(screen.queryByText('Alderperson')).not.toBeInTheDocument();
+  });
+
+  describe('metric columns', () => {
+    function mockMetrics() {
+      vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+        data: metricsScorecardResponse,
+      } as never);
+    }
+
+    it('renders no extra columns for a payload without metrics', async () => {
+      vi.mocked(scorecardService.getScorecard).mockResolvedValue({
+        data: mockScorecardResponse,
+      } as never);
+      renderScorecard();
+      await screen.findByText('Maria Hadden');
+
+      const headerCells = screen.getAllByRole('row')[0].querySelectorAll('th');
+      // Ward, Alderperson, Score + 2 projects
+      expect(headerCells).toHaveLength(5);
+      expect(screen.queryByText(/Zoning Delay/i)).not.toBeInTheDocument();
+    });
+
+    it('renders a header per visible metric and hides show_in_table: false metrics', async () => {
+      mockMetrics();
+      renderScorecard();
+      await screen.findByText('Alder Fast');
+
+      expect(screen.getByText('Zoning Delay (median days)')).toBeInTheDocument();
+      expect(screen.getByText('Stalled >180d')).toBeInTheDocument();
+      expect(screen.queryByText('Bonus Units')).not.toBeInTheDocument();
+
+      const headerCells = screen.getAllByRole('row')[0].querySelectorAll('th');
+      // Ward, Alderperson, Score + 2 visible metrics + 1 project
+      expect(headerCells).toHaveLength(6);
+    });
+
+    it('renders metric values, formatted, with an em dash when absent', async () => {
+      mockMetrics();
+      renderScorecard();
+      await screen.findByText('Alder Fast');
+
+      expect(screen.getByText((1250).toLocaleString())).toBeInTheDocument();
+      expect(screen.getByText('45')).toBeInTheDocument();
+      // Alder Missing has no metrics at all → em dash in both metric cells
+      const missingRow = screen.getAllByRole('row').find(r => r.textContent?.includes('Alder Missing'))!;
+      expect(missingRow.textContent).toContain('—');
+    });
+
+    it('does not render values for metrics hidden from the table', async () => {
+      mockMetrics();
+      renderScorecard();
+      await screen.findByText('Alder Fast');
+      expect(screen.queryByText('300')).not.toBeInTheDocument();
+    });
+
+    it('clicking a metric header sorts descending first, missing values last', async () => {
+      mockMetrics();
+      renderScorecard();
+      await screen.findByText('Alder Fast');
+
+      fireEvent.click(screen.getByText('Zoning Delay (median days)'));
+
+      const rows = screen.getAllByRole('row');
+      expect(rows[1]).toHaveTextContent('Alder Slow');
+      expect(rows[2]).toHaveTextContent('Alder Fast');
+      expect(rows[3]).toHaveTextContent('Alder Missing');
+    });
+
+    it('clicking a metric header twice reverses the order', async () => {
+      mockMetrics();
+      renderScorecard();
+      await screen.findByText('Alder Fast');
+
+      const header = screen.getByText('Zoning Delay (median days)');
+      fireEvent.click(header); // desc
+      fireEvent.click(header); // asc
+
+      const rows = screen.getAllByRole('row');
+      expect(rows[1]).toHaveTextContent('Alder Missing');
+      expect(rows[3]).toHaveTextContent('Alder Slow');
+    });
   });
 });

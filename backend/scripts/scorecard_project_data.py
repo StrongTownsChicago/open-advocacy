@@ -6,7 +6,7 @@ Used by both import_scorecard_projects.py and scorecard_refresh_service.
 
 from typing import Any
 
-from app.models.pydantic.models import EntityStatus
+from app.models.pydantic.models import EntityStatus, MetricDisplayConfig
 
 # ---------------------------------------------------------------------------
 # Chicago project definitions (ELMS data source)
@@ -890,6 +890,82 @@ STC_IL_HOUSE_BASE_SLUGS: set[str] = {
 }
 
 # ---------------------------------------------------------------------------
+# Chicago ward-metric display config (attached to the position-0 project of
+# Chicago City Council groups; per-ward values come from record_metadata).
+# ---------------------------------------------------------------------------
+
+CHICAGO_WARD_METRICS: list[MetricDisplayConfig] = [
+    MetricDisplayConfig(
+        key="zoning_median_days",
+        label="Zoning Delay (median days)",
+        description=(
+            "Median number of days from introduction to final action for this "
+            "ward's zoning reclassifications introduced since May 2023 (the start "
+            "of the current City Council term). Ward-scoped, not person-scoped: it "
+            "reflects the ward's zoning docket across the term regardless of alder "
+            "turnover. Computed from Chicago City Clerk eLMS records; matters still "
+            "pending are excluded from the median."
+        ),
+        format="number",
+        show_in_table=True,
+        show_in_tooltip=True,
+    ),
+    MetricDisplayConfig(
+        key="zoning_stalled_count",
+        label="Stalled >180d",
+        description=(
+            "Count of this ward's zoning reclassifications (introduced since May "
+            "2023) that are still in committee more than 180 days after "
+            "introduction, as of the data's frozen as-of date. Ward-scoped, not "
+            "person-scoped. This is a proxy for delay: re-referred or substituted "
+            "ordinances can appear stalled even when work is ongoing, so treat the "
+            "count as indicative rather than exact."
+        ),
+        format="number",
+        show_in_table=True,
+        show_in_tooltip=True,
+    ),
+    # Declared now but hidden until the Phase 2 curated units registry has data.
+    MetricDisplayConfig(
+        key="bonus_units",
+        label="Bonus Units",
+        description=(
+            "Housing units enabled by alder-initiated proactive upzonings since "
+            "the alder's election. Sourced from a curated, citation-backed registry "
+            "(Phase 2); shown once populated."
+        ),
+        format="number",
+        show_in_table=False,
+        show_in_tooltip=False,
+    ),
+    MetricDisplayConfig(
+        key="lost_units",
+        label="Lost Units",
+        description=(
+            "Housing units lost via alder-initiated downzonings and developments "
+            "shrunk under alder pressure since the alder's election. Sourced from a "
+            "curated, citation-backed registry (Phase 2); shown once populated."
+        ),
+        format="number",
+        show_in_table=False,
+        show_in_tooltip=False,
+    ),
+    MetricDisplayConfig(
+        key="mention_to_passage_days",
+        label="Mention → Passage (median days)",
+        description=(
+            "Median days from the earliest public mention (e.g. a ward newsletter "
+            "or community meeting) to passage for curated alder-initiated zoning "
+            "changes. Sourced from a curated, citation-backed registry (Phase 2); "
+            "shown once populated."
+        ),
+        format="number",
+        show_in_table=False,
+        show_in_tooltip=False,
+    ),
+]
+
+# ---------------------------------------------------------------------------
 # Group configuration
 # ---------------------------------------------------------------------------
 
@@ -902,6 +978,7 @@ GROUP_CONFIG: list[dict[str, Any]] = [
         "slug_prefix": "",
         "data_source": "elms",
         "representative_title": "Alderperson",
+        "ward_metrics": True,
     },
     {
         "name": "Strong Towns Chicago — IL House",
@@ -929,6 +1006,7 @@ GROUP_CONFIG: list[dict[str, Any]] = [
         "slug_prefix": "ahil-",
         "data_source": "elms",
         "representative_title": "Alderperson",
+        "ward_metrics": True,
     },
     {
         "name": "Abundant Housing Illinois — IL House",

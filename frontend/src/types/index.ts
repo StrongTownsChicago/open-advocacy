@@ -187,6 +187,7 @@ export interface ScorecardEntityRow {
   statuses: Record<string, ScorecardEntityStatus>; // keyed by project_id
   aligned_count: number;
   total_scoreable: number;
+  metrics?: Record<string, number | string | null>; // keyed by metric key
 }
 
 export interface ScorecardResponse {
@@ -194,6 +195,7 @@ export interface ScorecardResponse {
   representative_title: string;
   projects: ScorecardProject[];
   entities: ScorecardEntityRow[];
+  metrics?: MetricDisplayConfig[];
 }
 
 export interface UserRoleChangeData {

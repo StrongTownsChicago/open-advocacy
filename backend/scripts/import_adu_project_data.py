@@ -8,6 +8,7 @@ from app.services.service_factory import (
     get_cached_status_service,
 )
 from app.data.ward_zoning_data import WARD_RS_ZONED_PCT
+from app.imports.sources.ward_utils import parse_ward_number
 from app.models.pydantic.models import (
     DashboardConfig,
     MetricDisplayConfig,
@@ -294,18 +295,7 @@ async def import_adu_project_data():
         )
 
         for entity in entities:
-            ward_number = None
-            if hasattr(entity, "district_name") and entity.district_name:
-                if entity.district_name.lower().startswith("ward "):
-                    try:
-                        ward_number = int(entity.district_name.split(" ")[1])
-                    except Exception:
-                        pass
-            elif hasattr(entity, "district_code") and entity.district_code:
-                try:
-                    ward_number = int(entity.district_code)
-                except Exception:
-                    pass
+            ward_number = parse_ward_number(entity)
 
             info = (
                 WARD_OPT_IN_INFO.get(ward_number) if ward_number is not None else None

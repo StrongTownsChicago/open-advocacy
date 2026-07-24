@@ -21,10 +21,13 @@ from app.data.elms_scorecard_data import ELMS_SCORECARD_DATA
 from app.data.il_scorecard_data import IL_SCORECARD_DATA
 from app.imports.sources.chicago_city_clerk_elms import normalize_name
 from app.imports.sources.openstates import normalize_il_name
+from app.imports.sources.ward_metrics import build_ward_metric_values
+from app.imports.sources.ward_utils import parse_ward_number
 from app.models.pydantic.models import (
     DashboardConfig,
     EntityStatus,
     EntityStatusRecord,
+    MetricDisplayConfig,
     ProjectBase,
     ProjectStatus,
 )
@@ -38,6 +41,7 @@ from app.services.service_factory import (
 from scripts.scorecard_project_data import (
     ALL_IL_SCORECARD_PROJECTS,
     ALL_SCORECARD_PROJECTS,
+    CHICAGO_WARD_METRICS,
     GROUP_CONFIG,
     STC_ONLY_IL_SCORECARD_PROJECTS,
 )
@@ -145,6 +149,17 @@ async def import_scorecard_projects() -> None:
             p for p in all_projects_for_source if p["base_slug"] in base_slugs
         ]
 
+        # Ward-metrics groups (Chicago City Council) carry per-ward metric
+        # descriptors on their first project and per-alder values in that
+        # project's record_metadata. Values are computed once per group.
+        ward_metrics_group = bool(group_cfg.get("ward_metrics"))
+        carrier_base_slug = (
+            str(group_projects[0]["base_slug"])
+            if ward_metrics_group and group_projects
+            else None
+        )
+        ward_metric_values = build_ward_metric_values() if ward_metrics_group else {}
+
         # Pre-build vote lookup for ELMS sponsorship "not in office" detection
         vote_data_by_guid: dict[str, dict[str, EntityStatus]] = {}
         if data_source == "elms":
@@ -168,23 +183,42 @@ async def import_scorecard_projects() -> None:
 
             position: int | None = project_def.get("position")  # type: ignore[assignment]
 
+            # The group's carrier project holds the ward-metric descriptors.
+            is_metrics_carrier = (
+                carrier_base_slug is not None and base_slug == carrier_base_slug
+            )
+            project_metrics: list[MetricDisplayConfig] | None = (
+                CHICAGO_WARD_METRICS if is_metrics_carrier else None
+            )
+
             # Idempotency: check for existing project by slug
             existing_project = await project_service.get_project_by_slug(slug)
             if existing_project:
                 project = existing_project
                 total_found += 1
                 logger.info("Project already exists: %s (%s)", slug, project.id)
-                # Update position if it has changed
+                # Re-sync position and (for the carrier) metrics if either drifted.
+                existing_config = existing_project.dashboard_config
                 existing_position = (
-                    existing_project.dashboard_config.position
-                    if existing_project.dashboard_config
-                    else None
+                    existing_config.position if existing_config else None
                 )
-                if existing_position != position:
+                existing_metric_keys = (
+                    {m.key for m in existing_config.metrics}
+                    if existing_config and existing_config.metrics
+                    else set()
+                )
+                desired_metric_keys = (
+                    {m.key for m in project_metrics} if project_metrics else set()
+                )
+                if (
+                    existing_position != position
+                    or existing_metric_keys != desired_metric_keys
+                ):
                     updated_config = DashboardConfig(
                         representative_title=representative_title,
                         status_labels=project_def["status_labels"],
                         position=position,
+                        metrics=project_metrics,
                     )
                     await project_service.update_project(
                         existing_project.id,
@@ -202,10 +236,12 @@ async def import_scorecard_projects() -> None:
                         ),
                     )
                     logger.info(
-                        "Updated position for %s: %s → %s",
+                        "Updated config for %s: position %s → %s, metrics %s → %s",
                         slug,
                         existing_position,
                         position,
+                        sorted(existing_metric_keys),
+                        sorted(desired_metric_keys),
                     )
             else:
                 project = await project_service.create_project(
@@ -223,6 +259,7 @@ async def import_scorecard_projects() -> None:
                             representative_title=representative_title,
                             status_labels=project_def["status_labels"],
                             position=position,
+                            metrics=project_metrics,
                         ),
                     )
                 )
@@ -293,10 +330,21 @@ async def import_scorecard_projects() -> None:
                 else:
                     matched += 1
 
+                # On the carrier project, attach this alder's ward metric values.
+                # None = "preserve existing" per the status-service contract, so
+                # only the carrier ever writes metadata and non-carrier records
+                # never wipe it.
+                record_metadata: dict[str, float | int] | None = None
+                if is_metrics_carrier:
+                    ward_number = parse_ward_number(entity)
+                    if ward_number is not None:
+                        record_metadata = ward_metric_values.get(ward_number)
+
                 status_record = EntityStatusRecord(
                     entity_id=entity.id,
                     project_id=project.id,
                     status=entity_status,
+                    record_metadata=record_metadata,
                     updated_by="admin",
                 )
                 await status_service.create_status_record(status_record)
