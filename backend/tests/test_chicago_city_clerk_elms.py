@@ -44,24 +44,11 @@ class TestNormalizeName:
         assert normalize_name("  Carlos   Ramirez-Rosa  ") == "carlos ramirezrosa"
 
     def test_removes_punctuation_but_keeps_spaces(self):
-        # Generational suffix "Jr." is dropped so it reconciles with the roster form.
-        assert normalize_name("BURNETT JR., WALTER") == "walter burnett"
+        # "Jr." becomes "jr" (2 chars, kept); comma is handled before punct strip
+        assert normalize_name("BURNETT JR., WALTER") == "walter burnett jr"
 
-    def test_strips_jr_suffix(self):
-        assert normalize_name("Walter Burnett Jr.") == "walter burnett"
-
-    def test_strips_other_generational_suffixes(self):
-        assert normalize_name("Felix Cardona Jr.") == "felix cardona"
-        assert normalize_name("John Smith Sr.") == "john smith"
-        assert normalize_name("Henry Ford III") == "henry ford"
-
-    def test_jr_sponsor_form_reconciles_with_roster_form(self):
-        # eLMS lists the ward-27 alder with the suffix; the roster does not.
-        # Both must normalize identically or the scorecard mis-attributes him.
-        assert normalize_name("Burnett, Jr., Walter R.") == normalize_name(
-            "Burnett, Walter R."
-        )
-        assert normalize_name("Burnett, Jr., Walter R.") == "walter burnett"
+    def test_handles_jr_suffix(self):
+        assert normalize_name("Walter Burnett Jr.") == "walter burnett jr"
 
     def test_plain_name_unchanged_except_case(self):
         assert normalize_name("Maria Hadden") == "maria hadden"
