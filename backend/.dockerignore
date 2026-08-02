@@ -3,3 +3,10 @@ __pycache__/
 *$py.class
 .env
 venv/
+# Local caches / virtualenvs — never belong in the image build context
+.elms_cache/
+.oa-test-venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
