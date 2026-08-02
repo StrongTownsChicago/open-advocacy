@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Version Control
+
+Always prefer the `gh` CLI over raw `git` for GitHub operations (pushing branches, creating/updating PRs, issues, API calls) — it authenticates and works more reliably in this environment. Use plain `git` only for local operations `gh` doesn't cover (staging, committing, branching, diffs).
+
 ## Project Overview
 
 Open Advocacy is a civic engagement platform for tracking legislative advocacy projects and representatives. It consists of a FastAPI backend, React/TypeScript frontend, and a PostgreSQL/PostGIS database, deployed on Railway.
