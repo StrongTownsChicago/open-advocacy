@@ -182,13 +182,22 @@ curl -s localhost:8000/api/scorecard/strong-towns-chicago-chicago-city-council \
   term. Where an alder changed mid-term, some of the ward's delay history predates the sitting
   alder. Unit metrics (Phase 2), by contrast, are per-alder and gated on each alder's
   `elected` date in the registry.
-- **Candidate-seed name-normalization gap (Phase 2 action item).** `ALDER_ZONING_CANDIDATES`
-  keys sponsors by `normalize_name`. Four sponsor names matched no roster entry: two are
-  non-persons ("Misc. Transmittal", "Dept./Agency", expected), but **two are real alders whose
-  sponsored matters are currently dropped from the seed** — Carlos Ramirez-Rosa (Ward 35) and
-  Walter Burnett Jr. (Ward 27). Reconcile these before the Phase-2 research relies on the seed,
-  or their proactive rezonings will be missed. This affects only the research *seed*, not any
-  shipped delay number.
+- **Generational-suffix name matching (fixed).** `normalize_name` (eLMS) now strips
+  generational suffixes (`jr, sr, ii, iii, iv`), mirroring the IL normalizer, so
+  `Burnett, Jr., Walter R.` reconciles with the roster's `Burnett, Walter R.`. This corrected
+  a live-scorecard mis-attribution for three *current* alders whose eLMS records carried the
+  suffix — **Walter Burnett Jr. (Ward 27), Andre Vasquez Jr. (Ward 40), Felix Cardona Jr.
+  (Ward 31)** — whose votes/sponsorships previously dropped to neutral on the bills where the
+  suffix form was stored. Committed keys generated before the fix are re-normalized on load
+  (`import_scorecard_projects._renormalize_status_lookup`), and `elms_scorecard_data.py` has
+  been regenerated so its keys are suffix-free. Pinned by `test_chicago_city_clerk_elms.py`.
+- **Predecessor-sponsored matters (Ward 35, by design).** Carlos Ramirez-Rosa (former Ward 35
+  alder, resigned mid-term and replaced by Anthony Quezada) is correctly **not** matched to the
+  current roster — Quezada did not cast Ramirez-Rosa's votes, so those matters stay unattributed
+  to the sitting alder rather than being mis-credited. This is intended: the scorecard reflects
+  the *current* officeholder. For the Phase-2 units research, predecessor-era rezonings in a
+  ward are attributed by **ward** (via the geocoded matter), not by matching a former alder's
+  name to the roster.
 - **"Shrunk development" scope.** Counts units removed from a specific project during
   negotiation/downsizing that is attributable to the alder; it does not attempt to model
   hypothetical "could-have-been" capacity.

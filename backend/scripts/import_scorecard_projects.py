@@ -16,6 +16,7 @@ Four groups are seeded:
 
 import asyncio
 import logging
+from collections.abc import Callable
 
 from app.data.elms_scorecard_data import ELMS_SCORECARD_DATA
 from app.data.il_scorecard_data import IL_SCORECARD_DATA
@@ -51,6 +52,28 @@ from scripts.scorecard_project_data import (
 # ---------------------------------------------------------------------------
 
 
+def _renormalize_status_lookup(
+    raw: dict[str, str],
+    normalizer: Callable[[str], str],
+) -> dict[str, EntityStatus]:
+    """Re-key a frozen {name: status} cache through the current normalizer.
+
+    The committed data files store keys normalized at generation time. Re-normalizing
+    on load lets a later normalizer fix (e.g. stripping the "Jr." generational suffix)
+    take effect without regenerating the files, so "jr walter burnett" collapses to
+    "walter burnett" and matches the roster entity. On the rare key collision, a known
+    status wins over UNKNOWN.
+    """
+    lookup: dict[str, EntityStatus] = {}
+    for name, status in raw.items():
+        key = normalizer(name)
+        st = EntityStatus(status)
+        existing = lookup.get(key)
+        if existing is None or existing == EntityStatus.UNKNOWN:
+            lookup[key] = st
+    return lookup
+
+
 def _get_entity_status_lookup(
     base_slug: str,
     data_source: str,
@@ -60,6 +83,7 @@ def _get_entity_status_lookup(
 
     For ELMS (Chicago) projects, reads from ELMS_SCORECARD_DATA.
     For IL OpenStates projects, reads from IL_SCORECARD_DATA.
+    Keys are re-normalized on load (see :func:`_renormalize_status_lookup`).
     Logs a warning if the base_slug has no cached entry.
     """
     if data_source == "elms":
@@ -70,7 +94,7 @@ def _get_entity_status_lookup(
                 base_slug,
             )
             raw = {}
-        return {name: EntityStatus(status) for name, status in raw.items()}
+        return _renormalize_status_lookup(raw, normalize_name)
     else:
         # il_openstates
         raw = IL_SCORECARD_DATA.get(base_slug)
@@ -81,7 +105,7 @@ def _get_entity_status_lookup(
                 base_slug,
             )
             raw = {}
-        return {name: EntityStatus(status) for name, status in raw.items()}
+        return _renormalize_status_lookup(raw, normalize_il_name)
 
 
 def _normalize_entity_name(entity_name: str, data_source: str) -> str:
@@ -166,9 +190,9 @@ async def import_scorecard_projects() -> None:
             for pd in group_projects:
                 if pd["import_type"] == "vote":
                     raw = ELMS_SCORECARD_DATA.get(str(pd["base_slug"])) or {}
-                    vote_data_by_guid[str(pd["matter_guid"])] = {
-                        name: EntityStatus(status) for name, status in raw.items()
-                    }
+                    vote_data_by_guid[str(pd["matter_guid"])] = (
+                        _renormalize_status_lookup(raw, normalize_name)
+                    )
 
         group = await group_service.find_or_create_by_name(
             group_name,

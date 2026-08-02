@@ -20,6 +20,11 @@ logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.chicityclerkelms.chicago.gov"
 
+# Generational suffixes are dropped for matching so "Burnett, Jr., Walter R."
+# reconciles with the roster's "Burnett, Walter R.". Mirrors the IL normalizer
+# (app.imports.sources.openstates._GENERATIONAL_SUFFIXES).
+_GENERATIONAL_SUFFIXES = frozenset({"jr", "sr", "ii", "iii", "iv"})
+
 VOTE_VALUE_TO_STATUS: dict[str, EntityStatus] = {
     "yea": EntityStatus.SOLID_APPROVAL,
     "nay": EntityStatus.SOLID_DISAPPROVAL,
@@ -58,8 +63,9 @@ def normalize_name(name: str) -> str:
             name = name[len(prefix) :]
             break
 
-    # Strip middle initials (single-character tokens), e.g. "nicole t lee" → "nicole lee"
-    tokens = [t for t in name.split() if len(t) > 1]
+    # Strip middle initials (single-character tokens), e.g. "nicole t lee" → "nicole lee",
+    # and generational suffixes, e.g. "jr walter burnett" → "walter burnett".
+    tokens = [t for t in name.split() if len(t) > 1 and t not in _GENERATIONAL_SUFFIXES]
     return " ".join(tokens)
 
 
