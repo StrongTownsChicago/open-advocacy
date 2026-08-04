@@ -17,19 +17,21 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from 'react-router-dom';
 import { useUserRepresentatives } from '../../contexts/UserRepresentativesContext';
 import { Project, EntityStatusRecord, EntityStatus, Entity } from '../../types';
-import { getStatusColor, makeStatusLabelFn } from '../../utils/statusColors';
+import { makeStatusColorFn, makeStatusLabelFn } from '../../utils/statusColors';
 import EntityContactInfo from './EntityContactInfo';
 
 interface RepresentativeItemProps {
   entity: Entity;
   statusRecord?: EntityStatusRecord;
   statusLabels?: Record<string, string>;
+  statusColors?: Record<string, string>;
 }
 
 const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
   entity,
   statusRecord,
   statusLabels,
+  statusColors,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
@@ -37,6 +39,7 @@ const RepresentativeItem: React.FC<RepresentativeItemProps> = ({
   const isLight = theme.palette.mode === 'light';
 
   const getStatusLabel = makeStatusLabelFn(statusLabels);
+  const getStatusColor = makeStatusColorFn(statusColors);
   const status = statusRecord?.status || 'unknown';
   const notes = statusRecord?.notes;
   const statusColor = getStatusColor(status as EntityStatus);
@@ -348,6 +351,7 @@ const UserEntityProjectSection: React.FC<UserEntityProjectSectionProps> = ({
             entity={entity}
             statusRecord={statusMap[entity.id]}
             statusLabels={project.dashboard_config?.status_labels}
+            statusColors={project.dashboard_config?.status_colors}
           />
         ))}
       </List>

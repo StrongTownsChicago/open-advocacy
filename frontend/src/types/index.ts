@@ -75,6 +75,7 @@ export interface MetricDisplayConfig {
 export interface DashboardConfig {
   representative_title?: string;
   status_labels?: Record<string, string>;
+  status_colors?: Record<string, string>;
   metrics?: MetricDisplayConfig[];
 }
 

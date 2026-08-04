@@ -2,8 +2,8 @@ import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Entity, EntityStatus, EntityStatusRecord, DashboardConfig } from '../../types';
-import { getStatusColor, makeStatusLabelFn } from '@/utils/statusColors';
-import { formatMetricValue } from '@/utils/dataTransformers';
+import { makeStatusColorFn, makeStatusLabelFn } from '@/utils/statusColors';
+import { buildDistrictTooltip } from './districtTooltip';
 
 interface EntityDistrictMapProps {
   entities: Entity[];
@@ -37,6 +37,7 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
   );
 
   const getStatusLabel = makeStatusLabelFn(dashboardConfig?.status_labels);
+  const getStatusColor = makeStatusColorFn(dashboardConfig?.status_colors);
   const tooltipMetrics = dashboardConfig?.metrics?.filter(m => m.show_in_tooltip !== false) ?? [];
 
   const entityByDistrict: Record<string, Entity | undefined> = {};
@@ -67,16 +68,17 @@ const EntityDistrictMap: React.FC<EntityDistrictMapProps> = ({
             })}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onEachFeature={(_feature: GeoJSON.Feature, layer: any) => {
-              let tooltipContent = `<strong>${districtName}</strong>`;
-              if (entity) {
-                tooltipContent += `<br/>${entity.name} (${entity.title || ''})<br/>Status: ${getStatusLabel(status)}`;
-                const record = recordMap[entity.id];
-                for (const metric of tooltipMetrics) {
-                  const value = record?.record_metadata?.[metric.key];
-                  tooltipContent += `<br/>${metric.label}: ${formatMetricValue(value, metric.format ?? 'text')}`;
-                }
-              }
-              layer.bindTooltip(tooltipContent, { sticky: true });
+              layer.bindTooltip(
+                buildDistrictTooltip({
+                  districtName,
+                  entity,
+                  record: entity ? recordMap[entity.id] : undefined,
+                  statusLabel: getStatusLabel(status),
+                  statusColor: getStatusColor(status),
+                  metrics: tooltipMetrics,
+                }),
+                { sticky: true, className: 'district-tooltip', direction: 'top', offset: [0, -8] }
+              );
             }}
           />
         );

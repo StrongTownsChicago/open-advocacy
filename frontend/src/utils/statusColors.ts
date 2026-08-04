@@ -40,3 +40,16 @@ export const makeStatusLabelFn = (
   if (statusLabels?.[status]) return statusLabels[status];
   return getStatusLabel(status);
 };
+
+/**
+ * Mirrors makeStatusLabelFn for colors. A project whose statuses carry meanings
+ * the default green-to-red ramp does not express (e.g. the ADU dashboard, where
+ * statuses encode ward coverage crossed with permitting restrictions) can
+ * override individual entries via dashboard_config.status_colors.
+ */
+export const makeStatusColorFn = (
+  statusColors?: Record<string, string>
+) => (status: EntityStatus): string => {
+  if (statusColors?.[status]) return statusColors[status];
+  return getStatusColor(status);
+};

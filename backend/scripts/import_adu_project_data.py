@@ -212,15 +212,79 @@ GROUP_CONFIG = [
 ]
 
 
+RESTRICTION_LABELS = [
+    ("block_limits", "Block cap", "Annual block cap applies"),
+    ("homeowner_req", "Owner occupancy", "Owner-occupancy requirement applies"),
+    ("admin_adj", "Admin adjustment", "Administrative adjustment required"),
+]
+
+# The dashboard conveys two independent axes -- how much of the ward opted in,
+# and whether limitations apply -- through the single status field that drives
+# the map colour. EntityStatus is used here as a six-point ordinal scale, with
+# the per-project labels and colours below.
+STATUS_LABELS = {
+    "solid_approval": "Whole ward — no added restrictions",
+    "leaning_approval": "Whole ward — with restrictions",
+    "neutral": "Part of ward — no added restrictions",
+    "leaning_disapproval": "Part of ward — with restrictions",
+    "solid_disapproval": "Not opted in",
+    "unknown": "Not eligible (no RS zoning)",
+}
+
+# The default palette reserves grey for "not applicable", leaving only four
+# ordinal colours. Crossing the two axes needs five, so this project supplies
+# its own ramp: green -> lime -> amber -> orange -> red, plus grey.
+STATUS_COLORS = {
+    "solid_approval": "#166534",
+    "leaning_approval": "#65a30d",
+    "neutral": "#eab308",
+    "leaning_disapproval": "#f97316",
+    "solid_disapproval": "#dc2626",
+    "unknown": "#94a3b8",
+}
+
+
 def format_restriction_notes(info):
-    restrictions = []
-    if info["block_limits"]:
-        restrictions.append("Block limits apply")
-    if info["homeowner_req"]:
-        restrictions.append("Homeowner requirement applies")
-    if info["admin_adj"]:
-        restrictions.append("Administrative adjustment applies")
-    return "; ".join(restrictions)
+    return "; ".join(
+        sentence for key, _short, sentence in RESTRICTION_LABELS if info[key]
+    )
+
+
+def summarize_restrictions(info):
+    """Compact restrictions value for the table column and map tooltip."""
+    if info is None or info["type"] == "not_eligible":
+        return "—"
+    short = [short for key, short, _ in RESTRICTION_LABELS if info[key]]
+    return ", ".join(short) if short else "None"
+
+
+def resolve_status(info):
+    """Cross ward extent with restrictions to get one ordinal status."""
+    if info is None:
+        return EntityStatus.SOLID_DISAPPROVAL
+    if info["type"] == "not_eligible":
+        return EntityStatus.UNKNOWN
+    restricted = any(info[key] for key, _, _ in RESTRICTION_LABELS)
+    if info["type"] == "full":
+        return (
+            EntityStatus.LEANING_APPROVAL if restricted else EntityStatus.SOLID_APPROVAL
+        )
+    return EntityStatus.LEANING_DISAPPROVAL if restricted else EntityStatus.NEUTRAL
+
+
+def build_notes(info):
+    """Status note. Restrictions are always stated, with or without a note."""
+    if info is None:
+        return None
+    parts = []
+    if "notes" in info:
+        parts.append(str(info["notes"]).rstrip("."))
+    restrictions = format_restriction_notes(info)
+    if restrictions:
+        parts.append(f"Restrictions: {restrictions}")
+    elif info["type"] in ("full", "partial"):
+        parts.append("No added restrictions apply")
+    return ". ".join(parts) + "." if parts else None
 
 
 async def import_adu_project_data():
@@ -268,23 +332,25 @@ async def import_adu_project_data():
                 slug=slug,
                 dashboard_config=DashboardConfig(
                     representative_title="Alderperson",
-                    status_labels={
-                        "solid_approval": "Fully Opted In",
-                        "leaning_approval": "Partially Opted In",
-                        "neutral": "Not Eligible",
-                        "leaning_disapproval": "Not Opted In",
-                        "solid_disapproval": "Strongly Opposed",
-                        "unknown": "Unknown",
-                    },
+                    status_labels=STATUS_LABELS,
+                    status_colors=STATUS_COLORS,
                     metrics=[
+                        MetricDisplayConfig(
+                            key="restrictions",
+                            label="Restrictions",
+                            description="Limitations the alderperson attached to their opt-in. Annual block cap limits how many ADU permits can be issued per block per year; owner occupancy requires the owner to live on the property; administrative adjustment requires Zoning Administrator approval and a fee.",
+                            format="text",
+                            show_in_table=True,
+                            show_in_tooltip=True,
+                        ),
                         MetricDisplayConfig(
                             key="rs_zoned_pct",
                             label="RS-Zoned Land",
                             description="Percentage of land in this ward zoned RS (Residential Single-Unit). RS zoning restricts land to single-family homes and affects how many properties are eligible for ADU construction. Data sourced from the Chicago Cityscape Zoning Explorer API.",
                             format="percentage",
                             show_in_table=True,
-                            show_in_tooltip=True,
-                        )
+                            show_in_tooltip=False,
+                        ),
                     ],
                 ),
             )
@@ -310,26 +376,14 @@ async def import_adu_project_data():
             info = (
                 WARD_OPT_IN_INFO.get(ward_number) if ward_number is not None else None
             )
-            notes: str | None = None
-            status: EntityStatus = EntityStatus.UNKNOWN
-            if info:
-                if info["type"] == "not_eligible":
-                    status = EntityStatus.NEUTRAL
-                elif info["type"] == "full":
-                    status = EntityStatus.SOLID_APPROVAL
-                elif info["type"] == "partial":
-                    status = EntityStatus.LEANING_APPROVAL
-                if "notes" in info:
-                    notes = str(info["notes"])
-                    restriction_notes = format_restriction_notes(info)
-                    if restriction_notes:
-                        notes = f"{notes}. Restrictions: {restriction_notes}"
-            else:
-                status = EntityStatus.LEANING_DISAPPROVAL
+            status = resolve_status(info)
+            notes = build_notes(info)
 
-            record_metadata: dict[str, float] | None = None
+            record_metadata: dict[str, object] = {
+                "restrictions": summarize_restrictions(info)
+            }
             if ward_number is not None and ward_number in WARD_RS_ZONED_PCT:
-                record_metadata = {"rs_zoned_pct": WARD_RS_ZONED_PCT[ward_number]}
+                record_metadata["rs_zoned_pct"] = WARD_RS_ZONED_PCT[ward_number]
 
             status_record = EntityStatusRecord(
                 entity_id=entity.id,

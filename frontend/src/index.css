@@ -36,7 +36,103 @@ a {
   font-family: inherit !important;
 }
 
+/* District hover tooltips: a compact card, glanceable rather than readable. */
+.leaflet-tooltip.district-tooltip {
+  /* max-content stops the card collapsing to a narrow column and forcing
+     long values to wrap after two or three words. */
+  width: max-content;
+  max-width: 250px;
+  white-space: normal;
+  padding: 11px 13px;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.06),
+    0 8px 24px rgba(16, 24, 40, 0.12);
+  color: #1f2937;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.leaflet-tooltip.district-tooltip::before {
+  display: none; /* drop Leaflet's arrow; the card reads cleaner without it */
+}
+
+.district-tooltip .dt-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.district-tooltip .dt-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.district-tooltip .dt-sub {
+  margin-top: 1px;
+  padding-left: 14px;
+  color: #6b7280;
+  font-size: 11.5px;
+}
+
+.district-tooltip .dt-status {
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.district-tooltip .dt-rows {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(16, 24, 40, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label above value, both flush left. A key/value row would leave a short
+   label stranded beside a wrapped block of right-aligned text. */
+.district-tooltip .dt-key {
+  display: block;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.district-tooltip .dt-val {
+  display: block;
+  margin-top: 2px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.district-tooltip .dt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.district-tooltip .dt-tag {
+  background: rgba(16, 24, 40, 0.06);
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* Smooth theme transition on body-level elements only */
-body, #root {
+body,
+#root {
   transition: background-color 0.2s ease;
 }

@@ -21,7 +21,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { Entity, Project, EntityStatus, EntityStatusRecord, MetricDisplayConfig, UserRole } from '../../types';
-import { getStatusColor, makeStatusLabelFn } from '../../utils/statusColors';
+import { makeStatusColorFn, makeStatusLabelFn } from '../../utils/statusColors';
 import { formatMetricValue } from '../../utils/dataTransformers';
 import ConditionalUI from '../auth/ConditionalUI';
 import EntityContactInfo from './EntityContactInfo';
@@ -47,6 +47,7 @@ const EntityRow: React.FC<EntityRowProps> = ({
   const navigate = useNavigate();
 
   const getStatusLabel = makeStatusLabelFn(project.dashboard_config?.status_labels);
+  const getStatusColor = makeStatusColorFn(project.dashboard_config?.status_colors);
 
   const { status, notes, loading, error, handleStatusChange, handleNotesChange, handleSubmit } =
     useEntityStatusForm({
@@ -243,6 +244,7 @@ const EntityRow: React.FC<EntityRowProps> = ({
                           onChange={handleStatusChange}
                           disabled={loading}
                           statusLabels={project.dashboard_config?.status_labels}
+                          statusColors={project.dashboard_config?.status_colors}
                         />
 
                         <TextField

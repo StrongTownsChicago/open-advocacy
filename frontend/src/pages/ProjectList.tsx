@@ -196,6 +196,7 @@ const ProjectList: React.FC = () => {
                       showCounts={true}
                       showLabels={true}
                       statusLabels={project.dashboard_config?.status_labels}
+                      statusColors={project.dashboard_config?.status_colors}
                     />
                   </Box>
                 )}

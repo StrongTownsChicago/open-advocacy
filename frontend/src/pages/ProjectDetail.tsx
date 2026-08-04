@@ -237,6 +237,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
               showCounts
               showLabels
               statusLabels={project.dashboard_config?.status_labels}
+              statusColors={project.dashboard_config?.status_colors}
             />
           </Box>
         ) : (

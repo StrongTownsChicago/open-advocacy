@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { EntityStatus } from '../../types';
-import { getStatusColor, makeStatusLabelFn } from '../../utils/statusColors';
+import { makeStatusColorFn, makeStatusLabelFn } from '../../utils/statusColors';
 
 interface StatusSelectMenuProps {
   entityId: string;
@@ -9,6 +9,7 @@ interface StatusSelectMenuProps {
   onChange: (event: SelectChangeEvent<EntityStatus>) => void;
   disabled?: boolean;
   statusLabels?: Record<string, string>;
+  statusColors?: Record<string, string>;
 }
 
 const StatusSelectMenu: React.FC<StatusSelectMenuProps> = ({
@@ -17,8 +18,10 @@ const StatusSelectMenu: React.FC<StatusSelectMenuProps> = ({
   onChange,
   disabled = false,
   statusLabels,
+  statusColors,
 }) => {
   const getStatusLabel = makeStatusLabelFn(statusLabels);
+  const getStatusColor = makeStatusColorFn(statusColors);
   return (
     <FormControl fullWidth sx={{ mb: 2 }}>
       <InputLabel id={`status-select-label-${entityId}`}>Status</InputLabel>

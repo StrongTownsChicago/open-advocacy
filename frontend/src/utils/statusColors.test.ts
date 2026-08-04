@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { getStatusColor, getStatusLabel, makeStatusLabelFn } from './statusColors';
+import {
+  getStatusColor,
+  getStatusLabel,
+  makeStatusColorFn,
+  makeStatusLabelFn,
+} from './statusColors';
 import { EntityStatus } from '../types';
 
 describe('getStatusColor', () => {
@@ -82,5 +87,49 @@ describe('makeStatusLabelFn', () => {
   it('falls back to default when custom label is an empty string', () => {
     const fn = makeStatusLabelFn({ solid_approval: '' });
     expect(fn(EntityStatus.SOLID_APPROVAL)).toBe('Solid Approval');
+  });
+});
+
+describe('makeStatusColorFn', () => {
+  it('falls back to the default palette when no overrides are given', () => {
+    const fn = makeStatusColorFn();
+    expect(fn(EntityStatus.SOLID_APPROVAL)).toBe(getStatusColor(EntityStatus.SOLID_APPROVAL));
+  });
+
+  it('uses an override when one is supplied', () => {
+    const fn = makeStatusColorFn({ neutral: '#eab308' });
+    expect(fn(EntityStatus.NEUTRAL)).toBe('#eab308');
+  });
+
+  it('falls back per-status for entries with no override', () => {
+    const fn = makeStatusColorFn({ neutral: '#eab308' });
+    expect(fn(EntityStatus.SOLID_DISAPPROVAL)).toBe(
+      getStatusColor(EntityStatus.SOLID_DISAPPROVAL)
+    );
+  });
+
+  it('supports the ADU dashboard ramp, which recolors neutral as a mid-scale value', () => {
+    const aduColors = {
+      solid_approval: '#166534',
+      leaning_approval: '#65a30d',
+      neutral: '#eab308',
+      leaning_disapproval: '#f97316',
+      solid_disapproval: '#dc2626',
+      unknown: '#94a3b8',
+    };
+    const fn = makeStatusColorFn(aduColors);
+    const ramp = [
+      EntityStatus.SOLID_APPROVAL,
+      EntityStatus.LEANING_APPROVAL,
+      EntityStatus.NEUTRAL,
+      EntityStatus.LEANING_DISAPPROVAL,
+      EntityStatus.SOLID_DISAPPROVAL,
+    ].map(fn);
+    expect(new Set(ramp).size).toBe(5);
+  });
+
+  it('falls back to default when a custom color is an empty string', () => {
+    const fn = makeStatusColorFn({ neutral: '' });
+    expect(fn(EntityStatus.NEUTRAL)).toBe(getStatusColor(EntityStatus.NEUTRAL));
   });
 });
